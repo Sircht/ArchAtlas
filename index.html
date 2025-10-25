@@ -103,18 +103,31 @@
       });
 
       // Busca
-const searchBox = document.getElementById("searchBox");
+// Busca atualizada (compatível com 2025)
+const input = document.getElementById("searchBox");
+const container = document.createElement("div");
+container.style.position = "absolute";
+container.style.top = "60px";
+container.style.left = "10px";
+container.style.zIndex = "9999";
+document.body.appendChild(container);
 
-// Novo sistema de autocomplete (2025)
 const autocomplete = new google.maps.places.PlaceAutocompleteElement();
-autocomplete.inputElement = searchBox;
+autocomplete.id = "pac-input";
+autocomplete.style.width = "250px";
+autocomplete.style.background = "#222";
+autocomplete.style.color = "#fff";
+autocomplete.style.border = "1px solid #444";
+autocomplete.style.borderRadius = "6px";
+autocomplete.style.padding = "6px";
+autocomplete.placeholder = "Buscar endereço...";
 
-autocomplete.addEventListener("gmp-placeselect", (event) => {
-  const place = event.place;
-  if (place?.location) {
-    map.setCenter(place.location);
-    map.setZoom(17);
-  }
+container.appendChild(autocomplete);
+
+autocomplete.addEventListener("gmp-placeselect", async ({ place }) => {
+  if (!place?.location) return;
+  await map.setCenter(place.location);
+  map.setZoom(17);
 });
 
 
@@ -172,3 +185,4 @@ document.getElementById("exportPNG").addEventListener("click", () => {
 ></script>
 
 </html>
+
