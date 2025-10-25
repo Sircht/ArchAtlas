@@ -24,18 +24,32 @@
     }
 
     .toolbar {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      background: rgba(0, 0, 0, 0.65);
-      border-radius: 8px;
-      padding: 10px;
-      backdrop-filter: blur(4px);
-      z-index: 10;
-    }
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.65);
+  border-radius: 8px;
+  padding: 10px;
+  backdrop-filter: blur(4px);
+  z-index: 9999; /* aumenta a prioridade da camada */
+  pointer-events: auto;
+}
+
+gmp-place-autocomplete {
+  width: 240px;
+  padding: 8px;
+  border-radius: 4px;
+  border: none;
+  font-size: 14px;
+  background: #2A2A2A;
+  color: white;
+  z-index: 10000; /* garante que o campo fique clicável */
+  pointer-events: auto;
+}
+
 
     .btn {
       padding: 8px 12px;
@@ -156,12 +170,13 @@ autocomplete.addEventListener("gmp-placeselect", async ({ place }) => {
   </script>
 
 <script
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOJb2_2hPShr2KC7AJaFFUZvKrKdvAZmI&libraries=marker&callback=initMap&v=weekly"
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOJb2_2hPShr2KC7AJaFFUZvKrKdvAZmI&libraries=places,marker&callback=initMap&v=weekly"
   async
   defer>
 </script>
 
 </body>
 </html>
+
 
 
