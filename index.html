@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#111111">
+<link rel="icon" href="icon.png" type="image/png">
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+  }
+</script>
+
+
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #111;
+      color: #fff;
+    }
+    #map {
+      width: 100vw;
+      height: 100vh;
+    }
+    .toolbar {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.65);
+      border-radius: 8px;
+      padding: 10px;
+      backdrop-filter: blur(4px);
+      z-index: 10;
+    }
+    .btn {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      background: #2A2A2A;
+      color: #fff;
+      transition: 0.15s;
+    }
+    .btn:hover {
+      background: #444;
+    }
+    .btn.active {
+      background: #0099ff;
+    }
+    #searchBox {
+      width: 200px;
+      padding: 8px;
+      border-radius: 4px;
+      border: none;
+      font-size: 14px;
+      outline: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+
+  <div class="toolbar">
+    <input id="searchBox" type="text" placeholder="Buscar endereço..." />
+    <button class="btn active" data-map="f06444fc1b6b5f66ec5f8299">Mapa Base</button>
+    <button class="btn" data-map="f06444fc1b6b5f669fa1e951">Cheios e Vazios</button>
+    <button class="btn" id="exportPNG">Exportar PNG</button>
+    <button class="btn" id="exportDWG">Exportar DWG Real</button>
+  </div>
+
+  <script>
+    let map;
+    let currentMapId = "f06444fc1b6b5f66ec5f8299";
+
+    function createMap(mapId) {
+      if (map) map = null;
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: -22.3708, lng: -41.7869 },
+        zoom: 17,
+        mapId: mapId,
+        disableDefaultUI: false
+      });
+    }
+
+    function initMap() {
+      createMap(currentMapId);
+
+      // Alternar estilo
+      const buttons = document.querySelectorAll(".btn[data-map]");
+      buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = btn.dataset.map;
+          currentMapId = id;
+          createMap(id);
+          buttons.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+        });
+      });
+
+      // Busca
+const searchBox = document.getElementById("searchBox");
+
+// Novo sistema de autocomplete (2025)
+const autocomplete = new google.maps.places.PlaceAutocompleteElement();
+autocomplete.inputElement = searchBox;
+
+autocomplete.addEventListener("gmp-placeselect", (event) => {
+  const place = event.place;
+  if (place?.location) {
+    map.setCenter(place.location);
+    map.setZoom(17);
+  }
+});
+
+
+      // Função utilitária para opções de exportação
+      async function getExportOptions(defaultName) {
+        const nome = prompt("Nome do arquivo:", defaultName);
+        if (!nome) return null;
+        const res = prompt("Resolução (HD, 2K, 4K):", "HD");
+        let size = { width: 1920, height: 1080 };
+        if (res?.toUpperCase() === "2K") size = { width: 2560, height: 1440 };
+        if (res?.toUpperCase() === "4K") size = { width: 3840, height: 2160 };
+        return { nome, size };
+      }
+
+      // --- Exportar PNG via Static Maps API ---
+document.getElementById("exportPNG").addEventListener("click", () => {
+  const center = map.getCenter();
+  const zoom = Math.round(map.getZoom());
+  const size = "2048x2048"; // tamanho máximo permitido
+  const url = `https://maps.googleapis.com/maps/api/staticmap?center=${center.lat()},${center.lng()}&zoom=${zoom}&size=${size}&map_id=${currentMapId}&key=AIzaSyDOJb2_2hPShr2KC7AJaFFUZvKrKdvAZmI`;
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `mapa_${currentMapId}_max.png`;
+  link.click();
+});
+
+
+
+      // Exportar DWG
+      document.getElementById("exportDWG").addEventListener("click", async () => {
+        try {
+          const opts = await getExportOptions("macae_urban");
+          if (!opts) return;
+          const bounds = map.getBounds();
+          const sw = bounds.getSouthWest();
+          const ne = bounds.getNorthEast();
+          const url = `http://localhost:3001/export-dwg?south=${sw.lat()}&west=${sw.lng()}&north=${ne.lat()}&east=${ne.lng()}`;
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `${opts.nome}.dxf`;
+          link.click();
+        } catch (e) {
+          console.error("Erro ao exportar DWG:", e);
+          alert("Falha ao exportar DWG.");
+        }
+      });
+    }
+  </script>
+
+  <script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOJb2_2hPShr2KC7AJaFFUZvKrKdvAZmI&libraries=places&callback=initMap&v=weekly"
+  async
+  defer
+></script>
+
+</html>

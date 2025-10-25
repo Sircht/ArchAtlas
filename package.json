@@ -1,0 +1,23 @@
+{
+  "name": "mapa-arquitetonico",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "App para visualização e exportação de mapas arquitetônicos (PNG e DWG)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "concurrently \"npm run start\" \"npx serve\""
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "electron": "^38.4.0",
+    "serve": "^14.2.5"
+  },
+  "author": "Christopher T. Duarte",
+  "license": "MIT"
+}
