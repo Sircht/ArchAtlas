@@ -115,13 +115,22 @@
         });
       });
 
-      // Busca (nova API)
-      const autocomplete = document.querySelector("#autocomplete");
-      autocomplete.addEventListener("gmp-placeselect", async ({ place }) => {
-        if (!place?.location) return;
-        await map.setCenter(place.location);
-        map.setZoom(17);
-      });
+      / Busca (nova API com centralização funcional)
+const autocomplete = document.querySelector("#autocomplete");
+const placesService = new google.maps.places.PlacesService(document.createElement("div"));
+
+autocomplete.addEventListener("gmp-placeselect", async ({ place }) => {
+  if (!place?.id) return;
+
+  placesService.getDetails({ placeId: place.id, fields: ["geometry"] }, (result, status) => {
+    if (status === google.maps.places.PlacesServiceStatus.OK && result.geometry?.location) {
+      map.panTo(result.geometry.location);
+      map.setZoom(17);
+    } else {
+      console.warn("Falha ao obter detalhes do local:", status);
+    }
+  });
+});
 
       // Exportar PNG
       document.getElementById("exportPNG").addEventListener("click", async () => {
@@ -154,4 +163,5 @@
 
 </body>
 </html>
+
 
