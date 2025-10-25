@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#111111">
-<link rel="icon" href="icon.png" type="image/png">
-<script>
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js");
-  }
-</script>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArchAtlas</title>
 
-
+  <!-- Manifesto PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#111111">
+  <link rel="icon" href="icon.png" type="image/png">
 
   <style>
     body {
@@ -18,10 +17,12 @@
       background: #111;
       color: #fff;
     }
+
     #map {
       width: 100vw;
       height: 100vh;
     }
+
     .toolbar {
       position: absolute;
       top: 10px;
@@ -35,6 +36,7 @@
       backdrop-filter: blur(4px);
       z-index: 10;
     }
+
     .btn {
       padding: 8px 12px;
       border: none;
@@ -45,19 +47,27 @@
       color: #fff;
       transition: 0.15s;
     }
+
     .btn:hover {
       background: #444;
     }
+
     .btn.active {
       background: #0099ff;
     }
-    #searchBox {
-      width: 200px;
+
+    gmp-place-autocomplete {
+      width: 240px;
       padding: 8px;
       border-radius: 4px;
       border: none;
       font-size: 14px;
-      outline: none;
+      background: #2A2A2A;
+      color: white;
+    }
+
+    ::placeholder {
+      color: #aaa;
     }
   </style>
 </head>
@@ -66,7 +76,11 @@
   <div id="map"></div>
 
   <div class="toolbar">
-    <input id="searchBox" type="text" placeholder="Buscar endereço..." />
+    <gmp-place-autocomplete
+      id="autocomplete"
+      placeholder="Buscar endereço...">
+    </gmp-place-autocomplete>
+
     <button class="btn active" data-map="f06444fc1b6b5f66ec5f8299">Mapa Base</button>
     <button class="btn" data-map="f06444fc1b6b5f669fa1e951">Cheios e Vazios</button>
     <button class="btn" id="exportPNG">Exportar PNG</button>
@@ -78,7 +92,6 @@
     let currentMapId = "f06444fc1b6b5f66ec5f8299";
 
     function createMap(mapId) {
-      if (map) map = null;
       map = new google.maps.Map(document.getElementById("map"), {
         center: { lat: -22.3708, lng: -41.7869 },
         zoom: 17,
@@ -90,7 +103,7 @@
     function initMap() {
       createMap(currentMapId);
 
-      // Alternar estilo
+      // Alternar estilos
       const buttons = document.querySelectorAll(".btn[data-map]");
       buttons.forEach(btn => {
         btn.addEventListener("click", () => {
@@ -102,87 +115,40 @@
         });
       });
 
-      // Busca
-// Busca atualizada (compatível com 2025)
-const input = document.getElementById("searchBox");
-const container = document.createElement("div");
-container.style.position = "absolute";
-container.style.top = "60px";
-container.style.left = "10px";
-container.style.zIndex = "9999";
-document.body.appendChild(container);
-
-const autocomplete = new google.maps.places.PlaceAutocompleteElement();
-autocomplete.id = "pac-input";
-autocomplete.style.width = "250px";
-autocomplete.style.background = "#222";
-autocomplete.style.color = "#fff";
-autocomplete.style.border = "1px solid #444";
-autocomplete.style.borderRadius = "6px";
-autocomplete.style.padding = "6px";
-autocomplete.placeholder = "Buscar endereço...";
-
-container.appendChild(autocomplete);
-
-autocomplete.addEventListener("gmp-placeselect", async ({ place }) => {
-  if (!place?.location) return;
-  await map.setCenter(place.location);
-  map.setZoom(17);
-});
-
-
-      // Função utilitária para opções de exportação
-      async function getExportOptions(defaultName) {
-        const nome = prompt("Nome do arquivo:", defaultName);
-        if (!nome) return null;
-        const res = prompt("Resolução (HD, 2K, 4K):", "HD");
-        let size = { width: 1920, height: 1080 };
-        if (res?.toUpperCase() === "2K") size = { width: 2560, height: 1440 };
-        if (res?.toUpperCase() === "4K") size = { width: 3840, height: 2160 };
-        return { nome, size };
-      }
-
-      // --- Exportar PNG via Static Maps API ---
-document.getElementById("exportPNG").addEventListener("click", () => {
-  const center = map.getCenter();
-  const zoom = Math.round(map.getZoom());
-  const size = "2048x2048"; // tamanho máximo permitido
-  const url = `https://maps.googleapis.com/maps/api/staticmap?center=${center.lat()},${center.lng()}&zoom=${zoom}&size=${size}&map_id=${currentMapId}&key=AIzaSyDOJb2_2hPShr2KC7AJaFFUZvKrKdvAZmI`;
-
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `mapa_${currentMapId}_max.png`;
-  link.click();
-});
-
-
-
-      // Exportar DWG
-      document.getElementById("exportDWG").addEventListener("click", async () => {
-        try {
-          const opts = await getExportOptions("macae_urban");
-          if (!opts) return;
-          const bounds = map.getBounds();
-          const sw = bounds.getSouthWest();
-          const ne = bounds.getNorthEast();
-          const url = `http://localhost:3001/export-dwg?south=${sw.lat()}&west=${sw.lng()}&north=${ne.lat()}&east=${ne.lng()}`;
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = `${opts.nome}.dxf`;
-          link.click();
-        } catch (e) {
-          console.error("Erro ao exportar DWG:", e);
-          alert("Falha ao exportar DWG.");
-        }
+      // Busca (nova API)
+      const autocomplete = document.querySelector("#autocomplete");
+      autocomplete.addEventListener("gmp-placeselect", async ({ place }) => {
+        if (!place?.location) return;
+        await map.setCenter(place.location);
+        map.setZoom(17);
       });
+
+      // Exportar PNG
+      document.getElementById("exportPNG").addEventListener("click", async () => {
+        const mapCanvas = document.querySelector("#map canvas");
+        if (!mapCanvas) return alert("Mapa ainda não foi carregado!");
+        const image = mapCanvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.href = image;
+        link.download = `archatlas_${currentMapId}.png`;
+        link.click();
+      });
+
+      // Exportar DWG (placeholder por enquanto)
+      document.getElementById("exportDWG").addEventListener("click", () => {
+        alert("Função de exportar DWG será ativada em breve.");
+      });
+    }
+
+    // Registrar service worker
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
     }
   </script>
 
   <script
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOJb2_2hPShr2KC7AJaFFUZvKrKdvAZmI&libraries=places&callback=initMap&v=weekly"
-  async
-  defer
-></script>
-
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOJb2_2hPShr2KC7AJaFFUZvKrKdvAZmI&libraries=places,marker&callback=initMap&v=weekly"
+    async defer>
+  </script>
+</body>
 </html>
-
