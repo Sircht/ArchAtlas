@@ -21,35 +21,24 @@
     #map {
       width: 100vw;
       height: 100vh;
+      position: relative;
+      z-index: 1;
     }
 
     .toolbar {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  background: rgba(0, 0, 0, 0.65);
-  border-radius: 8px;
-  padding: 10px;
-  backdrop-filter: blur(4px);
-  z-index: 9999; /* aumenta a prioridade da camada */
-  pointer-events: auto;
-}
-
-gmp-place-autocomplete {
-  width: 240px;
-  padding: 8px;
-  border-radius: 4px;
-  border: none;
-  font-size: 14px;
-  background: #2A2A2A;
-  color: white;
-  z-index: 10000; /* garante que o campo fique clicável */
-  pointer-events: auto;
-}
-
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.65);
+      border-radius: 8px;
+      padding: 10px;
+      backdrop-filter: blur(4px);
+      z-index: 9999;
+      pointer-events: auto;
+    }
 
     .btn {
       padding: 8px 12px;
@@ -78,6 +67,7 @@ gmp-place-autocomplete {
       font-size: 14px;
       background: #2A2A2A;
       color: white;
+      pointer-events: auto;
     }
 
     ::placeholder {
@@ -129,22 +119,22 @@ gmp-place-autocomplete {
         });
       });
 
-      / Busca (nova API com centralização funcional)
-const autocomplete = document.querySelector("#autocomplete");
-const placesService = new google.maps.places.PlacesService(document.createElement("div"));
+      // Busca (nova API com centralização funcional)
+      const autocomplete = document.querySelector("#autocomplete");
+      const placesService = new google.maps.places.PlacesService(document.createElement("div"));
 
-autocomplete.addEventListener("gmp-placeselect", async ({ place }) => {
-  if (!place?.id) return;
+      autocomplete.addEventListener("gmp-placeselect", async ({ place }) => {
+        if (!place?.id) return;
 
-  placesService.getDetails({ placeId: place.id, fields: ["geometry"] }, (result, status) => {
-    if (status === google.maps.places.PlacesServiceStatus.OK && result.geometry?.location) {
-      map.panTo(result.geometry.location);
-      map.setZoom(17);
-    } else {
-      console.warn("Falha ao obter detalhes do local:", status);
-    }
-  });
-});
+        placesService.getDetails({ placeId: place.id, fields: ["geometry"] }, (result, status) => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && result.geometry?.location) {
+            map.panTo(result.geometry.location);
+            map.setZoom(17);
+          } else {
+            console.warn("Falha ao obter detalhes do local:", status);
+          }
+        });
+      });
 
       // Exportar PNG
       document.getElementById("exportPNG").addEventListener("click", async () => {
@@ -157,26 +147,22 @@ autocomplete.addEventListener("gmp-placeselect", async ({ place }) => {
         link.click();
       });
 
-      // Exportar DWG (placeholder por enquanto)
+      // Exportar DWG (placeholder)
       document.getElementById("exportDWG").addEventListener("click", () => {
         alert("Função de exportar DWG será ativada em breve.");
       });
     }
 
-    // Registrar service worker
+    // Registrar service worker (PWA)
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("service-worker.js");
     }
   </script>
 
-<script
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOJb2_2hPShr2KC7AJaFFUZvKrKdvAZmI&libraries=places,marker&callback=initMap&v=weekly"
-  async
-  defer>
-</script>
-
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOJb2_2hPShr2KC7AJaFFUZvKrKdvAZmI&libraries=places,marker&callback=initMap&v=weekly"
+    async
+    defer>
+  </script>
 </body>
 </html>
-
-
-
