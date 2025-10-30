@@ -419,75 +419,30 @@
       });
     }
 
-    function normalizeCenter(center) {
-      if (!center) {
-        return DEFAULT_VIEW.center;
-      }
-
-      if (typeof center.lat === "function" && typeof center.lng === "function") {
-        return center;
-      }
-
-      const lat = typeof center.lat === "function" ? center.lat() : center.lat;
-      const lng = typeof center.lng === "function" ? center.lng() : center.lng;
-
-      if (typeof lat === "number" && typeof lng === "number") {
-        return { lat, lng };
-      }
-
-      return DEFAULT_VIEW.center;
-    }
-
-    function createMapInstance(mapId, viewOverrides = {}) {
-      const mapElement = document.getElementById("map");
-      if (!mapElement) {
-        return null;
-      }
-
-      const previousMap = map;
-      const center = normalizeCenter(
-        viewOverrides.center ?? previousMap?.getCenter?.() ?? DEFAULT_VIEW.center
-      );
-
-      const zoom = viewOverrides.zoom ?? previousMap?.getZoom?.() ?? DEFAULT_VIEW.zoom;
-      const heading = viewOverrides.heading ?? previousMap?.getHeading?.() ?? DEFAULT_VIEW.heading;
-      const tilt = viewOverrides.tilt ?? previousMap?.getTilt?.() ?? DEFAULT_VIEW.tilt;
-
-      map = new google.maps.Map(mapElement, {
-        ...DEFAULT_VIEW,
-        center,
-        zoom,
-        heading,
-        tilt,
-        mapId,
-        disableDefaultUI: false,
-        gestureHandling: "greedy"
-      });
-
-      map.addListener("idle", () => updateStatusPanel());
-      updateStatusPanel();
-
-      if (placeMarker) {
-        placeMarker.map = map;
-      }
-
-      return map;
-    }
-
     function switchMapStyle(mapId) {
       if (!map || mapId === currentMapId) {
         return;
       }
 
       currentMapId = mapId;
-      createMapInstance(mapId);
+      map.setOptions({ mapId });
       setActiveMapButton(mapId);
       updateStatusPanel();
       showToast(`Estilo alterado para ${MAP_STYLES[mapId] ?? "mapa personalizado"}.`);
     }
 
     function initMap() {
-      createMapInstance(currentMapId, DEFAULT_VIEW);
+      const mapElement = document.getElementById("map");
+
+      map = new google.maps.Map(mapElement, {
+        ...DEFAULT_VIEW,
+        mapId: currentMapId,
+        disableDefaultUI: false,
+        gestureHandling: "greedy"
+      });
+
+      map.addListener("idle", () => updateStatusPanel());
+      updateStatusPanel();
       setActiveMapButton(currentMapId);
 
       document.querySelectorAll(".btn[data-map]").forEach((btn) => {
