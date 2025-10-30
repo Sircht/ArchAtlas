@@ -74,6 +74,8 @@ app.get("/export-png", async (req, res) => {
   }
 });
 
+app.use(express.static(publicDir));
+
 app.get("/export-dwg", async (req, res) => {
   let { south, west, north, east } = req.query;
 
