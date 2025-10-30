@@ -315,6 +315,19 @@
       }, 3200);
     }
 
+    function triggerDownload(url, filename) {
+      const link = document.createElement("a");
+      link.href = url;
+      link.rel = "noopener";
+      if (filename) {
+        link.download = filename;
+      }
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
     function handlePlaceSelection({ location, description }) {
       if (!location) {
         showToast("Não foi possível obter a localização do lugar selecionado.", "error");
@@ -469,36 +482,43 @@
 
         showToast("Gerando exportação PNG...");
 
+        const params = new URLSearchParams({
+          center: `${center.lat()},${center.lng()}`,
+          zoom: String(zoom),
+          scale: String(scale),
+          width: String(width),
+          height: String(height)
+        });
+
+        if (currentMapId) {
+          params.append("mapId", currentMapId);
+        }
+
+        const downloadUrl = `/export-png?${params.toString()}`;
+        const filename = `archatlas_${Date.now()}.png`;
+
         try {
-          const params = new URLSearchParams({
-            center: `${center.lat()},${center.lng()}`,
-            zoom: String(zoom),
-            scale: String(scale),
-            width: String(width),
-            height: String(height)
-          });
-
-          if (currentMapId) {
-            params.append("mapId", currentMapId);
-          }
-
-          const response = await fetch(`/export-png?${params.toString()}`);
+          const response = await fetch(downloadUrl);
           if (!response.ok) {
             throw new Error("Falha ao gerar imagem");
           }
 
           const blob = await response.blob();
-          const downloadUrl = URL.createObjectURL(blob);
+          const blobUrl = URL.createObjectURL(blob);
           const link = document.createElement("a");
-          link.href = downloadUrl;
-          link.download = `archatlas_${Date.now()}.png`;
+          link.href = blobUrl;
+          link.download = filename;
           link.click();
-          window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1500);
+          window.setTimeout(() => URL.revokeObjectURL(blobUrl), 1500);
 
           showToast("Exportação em PNG concluída.");
         } catch (error) {
           console.error(error);
-          showToast("Não foi possível exportar o mapa.", "error");
+          triggerDownload(downloadUrl, filename);
+          showToast(
+            "Não foi possível gerar o PNG automaticamente. Abrimos o mapa em nova guia.",
+            "info"
+          );
         }
       });
 
