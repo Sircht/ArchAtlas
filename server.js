@@ -1,14 +1,25 @@
 import express from "express";
 import fetch from "node-fetch";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
 app.use(cors());
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const publicDir = __dirname;
+
+app.use(express.static(publicDir));
+
 app.get("/export-dwg", async (req, res) => {
   let { south, west, north, east } = req.query;
 
-  // Se os limites forem muito pequenos, expande levemente
+  if (!south || !west || !north || !east) {
+    return res.status(400).send("Parâmetros incompletos para exportação DWG.");
+  }
+
   const expand = 0.002;
   south = parseFloat(south) - expand;
   west = parseFloat(west) - expand;
@@ -29,13 +40,16 @@ app.get("/export-dwg", async (req, res) => {
 out geom;
 `;
 
-
   try {
     const response = await fetch("https://overpass-api.de/api/interpreter", {
       method: "POST",
       body: query,
-      headers: { "Content-Type": "text/plain" },
+      headers: { "Content-Type": "text/plain" }
     });
+
+    if (!response.ok) {
+      throw new Error(`Overpass API respondeu com ${response.status}`);
+    }
 
     const data = await response.json();
 
@@ -43,7 +57,6 @@ out geom;
       return res.status(404).send("Nenhuma geometria encontrada nesta área.");
     }
 
-    // Montagem DXF aprimorada
     let dxf = `0
 SECTION
 2
@@ -63,7 +76,11 @@ ENTITIES
     for (const el of data.elements) {
       if (!el.geometry) continue;
 
-      const layer = el.tags?.building ? "EDIFICIOS" : el.tags?.highway ? "VIAS" : "OUTROS";
+      const layer = el.tags?.building
+        ? "EDIFICIOS"
+        : el.tags?.highway
+        ? "VIAS"
+        : "OUTROS";
       const closed =
         el.geometry[0].lat === el.geometry[el.geometry.length - 1].lat &&
         el.geometry[0].lon === el.geometry[el.geometry.length - 1].lon;
@@ -79,7 +96,6 @@ ${closed ? 1 : 0}
 `;
 
       for (const pt of el.geometry) {
-        // conversão simples: longitude → X, latitude → Y
         dxf += `10
 ${pt.lon}
 20
@@ -102,5 +118,9 @@ EOF`;
   }
 });
 
-const PORT = process.env.PORT || 3001;
+app.get("*", (req, res) => {
+  res.sendFile(path.join(publicDir, "index.html"));
+});
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`✅ Servidor rodando em http://localhost:${PORT}`));
