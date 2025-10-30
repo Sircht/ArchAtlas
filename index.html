@@ -262,6 +262,30 @@
 
     const defaultCenter = { lat: -22.3708, lng: -41.7869 };
 
+    function createMap(mapId, viewState = {}) {
+      const mapContainer = document.getElementById("map");
+      const {
+        center = defaultCenter,
+        zoom = 17,
+        heading = 0,
+        tilt = 0
+      } = viewState;
+
+      map = new google.maps.Map(mapContainer, {
+        center,
+        zoom,
+        heading,
+        tilt,
+        mapId,
+        disableDefaultUI: false
+      });
+
+      currentMapId = mapId;
+
+      map.addListener("idle", () => updateStatusPanel());
+
+      if (placeMarker) {
+        placeMarker.map = map;
     function createMap(mapId) {
       if (!map) {
         map = new google.maps.Map(document.getElementById("map"), {
@@ -303,11 +327,66 @@
       }, 3200);
     }
 
+    function triggerDownload(url, filename) {
+      const link = document.createElement("a");
+      link.href = url;
+      link.rel = "noopener";
+      if (filename) {
+        link.download = filename;
+      }
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function handlePlaceSelection({ location, description }) {
+      if (!location) {
     function handlePlaceSelection(place) {
       if (!place.geometry?.location) {
         showToast("Não foi possível obter a localização do lugar selecionado.", "error");
         return;
       }
+
+      const latLng =
+        location instanceof google.maps.LatLng
+          ? location
+          : new google.maps.LatLng(location);
+
+      if (!placeMarker) {
+        placeMarker = new google.maps.marker.AdvancedMarkerElement({
+          position: latLng,
+          map,
+          title: description
+        });
+      } else {
+        placeMarker.position = latLng;
+        placeMarker.title = description;
+      }
+
+      map.panTo(latLng);
+      map.setZoom(Math.max(map.getZoom(), 17));
+
+      updateStatusPanel(`<span class="highlight">${description}</span>`);
+    }
+
+    function resolvePlaceDescription(placeLike) {
+      if (!placeLike) return "Local selecionado";
+      const displayName = placeLike.displayName;
+      if (typeof displayName === "string") {
+        return displayName;
+      }
+      if (displayName?.text) {
+        return displayName.text;
+      }
+      return (
+        placeLike.formattedAddress ||
+        placeLike.formatted_address ||
+        placeLike.name ||
+        placeLike.description ||
+        "Local selecionado"
+      );
+    }
 
       if (!placeMarker) {
         placeMarker = new google.maps.marker.AdvancedMarkerElement({
@@ -333,6 +412,23 @@
       const buttons = document.querySelectorAll(".btn[data-map]");
       buttons.forEach((btn) => {
         btn.addEventListener("click", () => {
+          if (!map || btn.classList.contains("active")) return;
+          const id = btn.dataset.map;
+          const viewState = {
+            center: map.getCenter(),
+            zoom: map.getZoom(),
+            heading: map.getHeading?.() ?? 0,
+            tilt: map.getTilt?.() ?? 0
+          };
+
+          if (typeof map.setOptions === "function") {
+            map.setOptions({ mapId: id });
+            currentMapId = id;
+            updateStatusPanel();
+          } else {
+            createMap(id, viewState);
+          }
+
           if (btn.classList.contains("active")) return;
           const id = btn.dataset.map;
           currentMapId = id;
@@ -345,6 +441,32 @@
 
       const autocomplete = document.querySelector("#autocomplete");
       autocomplete.addEventListener("gmp-placeselect", async (event) => {
+        const detail = event.detail || {};
+        const place = detail.place || detail.placeResult;
+
+        if (!place) {
+          showToast("Não foi possível completar a busca.", "error");
+          return;
+        }
+
+        try {
+          if (typeof place.fetchFields === "function") {
+            await place.fetchFields({
+              fields: ["displayName", "formattedAddress", "geometry", "location", "name"]
+            });
+          }
+
+          const location =
+            place.geometry?.location || place.location || detail?.location || null;
+
+          handlePlaceSelection({
+            location,
+            description: resolvePlaceDescription(place)
+          });
+        } catch (error) {
+          console.error(error);
+          showToast("Não foi possível obter detalhes do lugar selecionado.", "error");
+        }
         const place = event.place;
         await place.fetchFields({ fields: ["geometry", "displayName"] });
         handlePlaceSelection(place);
@@ -384,6 +506,8 @@
         );
       });
 
+      document.getElementById("exportPNG").addEventListener("click", async () => {
+        if (!map) {
       document.getElementById("exportPNG").addEventListener("click", () => {
         const mapCanvas = document.querySelector("#map canvas");
         if (!mapCanvas) {
@@ -391,6 +515,97 @@
           return;
         }
 
+        const center = map.getCenter();
+        const zoom = Math.round(map.getZoom());
+        const scale = window.devicePixelRatio > 1 ? 2 : 1;
+        const mapElement = document.getElementById("map");
+        const width = Math.max(200, Math.min(640, Math.round(mapElement.offsetWidth || 640)));
+        const height = Math.max(200, Math.min(640, Math.round(mapElement.offsetHeight || 360)));
+
+        showToast("Gerando exportação PNG...");
+
+        const params = new URLSearchParams({
+          center: `${center.lat()},${center.lng()}`,
+          zoom: String(zoom),
+          scale: String(scale),
+          width: String(width),
+          height: String(height)
+        });
+
+        if (currentMapId) {
+          params.append("mapId", currentMapId);
+        }
+
+        const downloadUrl = `/export-png?${params.toString()}`;
+        const filename = `archatlas_${Date.now()}.png`;
+
+        try {
+          const response = await fetch(downloadUrl);
+          if (!response.ok) {
+            throw new Error("Falha ao gerar imagem");
+          }
+
+          const blob = await response.blob();
+          const blobUrl = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = blobUrl;
+          link.download = filename;
+          link.click();
+          window.setTimeout(() => URL.revokeObjectURL(blobUrl), 1500);
+
+          showToast("Exportação em PNG concluída.");
+        } catch (error) {
+          console.error(error);
+          triggerDownload(downloadUrl, filename);
+          showToast(
+            "Não foi possível gerar o PNG automaticamente. Abrimos o mapa em nova guia.",
+            "info"
+          );
+        }
+      });
+
+      document.getElementById("exportDWG").addEventListener("click", async () => {
+        if (!map) {
+          showToast("Mapa ainda não foi carregado.", "error");
+          return;
+        }
+
+        const bounds = map.getBounds();
+        if (!bounds) {
+          showToast("Não foi possível determinar a área do mapa.", "error");
+          return;
+        }
+
+        const ne = bounds.getNorthEast();
+        const sw = bounds.getSouthWest();
+        const params = new URLSearchParams({
+          north: String(ne.lat()),
+          east: String(ne.lng()),
+          south: String(sw.lat()),
+          west: String(sw.lng())
+        });
+
+        showToast("Gerando exportação DWG...");
+
+        try {
+          const response = await fetch(`/export-dwg?${params.toString()}`);
+          if (!response.ok) {
+            throw new Error("Falha ao gerar DWG");
+          }
+
+          const blob = await response.blob();
+          const downloadUrl = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = downloadUrl;
+          link.download = `archatlas_${Date.now()}.dxf`;
+          link.click();
+          window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1500);
+
+          showToast("Exportação DWG concluída.");
+        } catch (error) {
+          console.error(error);
+          showToast("Não foi possível exportar o mapa em DWG.", "error");
+        }
         try {
           const image = mapCanvas.toDataURL("image/png");
           const link = document.createElement("a");
