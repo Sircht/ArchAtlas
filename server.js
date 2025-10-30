@@ -11,7 +11,68 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const publicDir = __dirname;
 
+const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY || "AIzaSyDOJb2_2hPShr2KC7AJaFFUZvKrKdvAZmI";
+
 app.use(express.static(publicDir));
+
+app.get("/export-png", async (req, res) => {
+  if (!GOOGLE_MAPS_API_KEY) {
+    return res.status(500).send("Chave da API do Google Maps não configurada.");
+  }
+
+  const { center, zoom, scale = 1, width = 640, height = 360, mapId } = req.query;
+
+  if (!center || !zoom) {
+    return res.status(400).send("Parâmetros insuficientes para exportação PNG.");
+  }
+
+  const [lat, lng] = String(center)
+    .split(",")
+    .map((value) => Number.parseFloat(value));
+
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+    return res.status(400).send("Centro do mapa inválido.");
+  }
+
+  const parsedZoom = Number.parseFloat(String(zoom));
+  const parsedScale = Number.parseInt(String(scale), 10);
+  const parsedWidth = Number.parseInt(String(width), 10);
+  const parsedHeight = Number.parseInt(String(height), 10);
+
+  const safeZoom = Number.isFinite(parsedZoom) ? Math.max(0, Math.min(22, parsedZoom)) : 17;
+  const safeScale = Number.isFinite(parsedScale) ? Math.max(1, Math.min(2, parsedScale)) : 1;
+  const safeWidth = Number.isFinite(parsedWidth) ? Math.max(1, Math.min(640, parsedWidth)) : 640;
+  const safeHeight = Number.isFinite(parsedHeight) ? Math.max(1, Math.min(640, parsedHeight)) : 360;
+
+  const params = new URLSearchParams({
+    center: `${lat},${lng}`,
+    zoom: String(Math.round(safeZoom)),
+    size: `${safeWidth}x${safeHeight}`,
+    scale: String(safeScale),
+    key: GOOGLE_MAPS_API_KEY
+  });
+
+  if (mapId) {
+    params.append("map_id", String(mapId));
+  }
+
+  const staticMapUrl = `https://maps.googleapis.com/maps/api/staticmap?${params.toString()}`;
+
+  try {
+    const response = await fetch(staticMapUrl);
+    if (!response.ok) {
+      throw new Error(`Static Maps API respondeu com ${response.status}`);
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+    res.setHeader("Content-Type", "image/png");
+    res.setHeader("Content-Disposition", "attachment; filename=archatlas.png");
+    res.send(Buffer.from(arrayBuffer));
+  } catch (err) {
+    console.error("Erro ao gerar PNG:", err);
+    res.status(500).send("Erro ao gerar imagem PNG.");
+  }
+});
 
 app.get("/export-dwg", async (req, res) => {
   let { south, west, north, east } = req.query;
