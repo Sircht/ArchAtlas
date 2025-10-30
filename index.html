@@ -14,8 +14,10 @@
   <style>
     :root {
       color-scheme: dark;
-      --panel-bg: rgba(12, 12, 12, 0.85);
-      --accent: #0099ff;
+      --panel-bg: rgba(12, 12, 12, 0.82);
+      --panel-border: rgba(255, 255, 255, 0.08);
+      --accent: #0aa9ff;
+      --accent-strong: #2cc1ff;
       --text-muted: #9aa0a6;
       --error: #ff6464;
     }
@@ -26,8 +28,8 @@
 
     body {
       margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      background: #0b0b0b;
+      font-family: "Segoe UI", "Inter", Arial, sans-serif;
+      background: radial-gradient(circle at 20% 20%, rgba(25, 25, 25, 0.95), #060606);
       color: #fff;
       overflow: hidden;
     }
@@ -45,38 +47,50 @@
       left: 16px;
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
       background: var(--panel-bg);
-      border-radius: 12px;
-      padding: 12px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-      backdrop-filter: blur(6px);
+      border: 1px solid var(--panel-border);
+      border-radius: 16px;
+      padding: 14px;
+      max-width: min(420px, calc(100vw - 32px));
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(10px);
       z-index: 9999;
       pointer-events: auto;
     }
 
     .toolbar h1 {
-      margin: 0 0 8px;
-      font-size: 16px;
+      margin: 0 0 4px;
+      font-size: 18px;
       font-weight: 600;
       flex-basis: 100%;
       color: #fff;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
     }
 
+    .toolbar small {
+      flex-basis: 100%;
+      margin: -2px 0 6px;
+      color: var(--text-muted);
+      font-size: 12px;
+      letter-spacing: 0.03em;
+    }
+
     .btn {
-      padding: 8px 12px;
-      border: 1px solid transparent;
-      border-radius: 6px;
+      padding: 9px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
       cursor: pointer;
       font-size: 14px;
-      background: #1c1c1c;
-      color: #fff;
-      transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+      background: rgba(25, 25, 25, 0.85);
+      color: #f0f4ff;
+      transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease,
+        box-shadow 0.18s ease;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
+      min-height: 40px;
     }
 
     .btn svg {
@@ -85,32 +99,40 @@
       fill: currentColor;
     }
 
-    .btn:hover {
-      background: #2f2f2f;
-      border-color: rgba(255, 255, 255, 0.12);
+    .btn:hover,
+    .btn:focus-visible {
+      background: rgba(40, 40, 40, 0.92);
+      border-color: rgba(255, 255, 255, 0.18);
       transform: translateY(-1px);
+      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.35);
+      outline: none;
     }
 
     .btn.active {
-      background: var(--accent);
-      border-color: rgba(255, 255, 255, 0.25);
-      color: #001320;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      border-color: rgba(255, 255, 255, 0.24);
+      color: #021b2a;
       font-weight: 600;
     }
 
     gmp-place-autocomplete {
-      width: 260px;
-      padding: 8px 10px;
-      border-radius: 6px;
+      flex: 1;
+      min-width: 220px;
+      padding: 10px 12px;
+      border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, 0.08);
       font-size: 14px;
-      background: #1c1c1c;
+      background: rgba(20, 20, 20, 0.85);
       color: #fff;
       pointer-events: auto;
       outline: none;
     }
 
-    ::placeholder {
+    gmp-place-autocomplete::part(input) {
+      color: inherit;
+    }
+
+    gmp-place-autocomplete::part(input)::placeholder {
       color: var(--text-muted);
     }
 
@@ -118,12 +140,13 @@
       position: absolute;
       right: 16px;
       bottom: 16px;
-      max-width: 260px;
+      max-width: 280px;
       background: var(--panel-bg);
-      border-radius: 12px;
-      padding: 12px 14px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-      backdrop-filter: blur(6px);
+      border: 1px solid var(--panel-border);
+      border-radius: 14px;
+      padding: 14px 18px;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
       font-size: 13px;
       line-height: 1.6;
       pointer-events: none;
@@ -132,9 +155,9 @@
     .status-panel strong {
       display: block;
       font-size: 14px;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       color: #fff;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.04em;
     }
 
     .status-panel span {
@@ -143,7 +166,7 @@
     }
 
     .status-panel .highlight {
-      color: var(--accent);
+      color: var(--accent-strong);
       font-weight: 600;
     }
 
@@ -152,9 +175,10 @@
       left: 50%;
       bottom: 32px;
       transform: translateX(-50%) translateY(20px);
-      padding: 10px 16px;
-      border-radius: 20px;
-      background: rgba(30, 30, 30, 0.95);
+      padding: 10px 18px;
+      border-radius: 24px;
+      background: rgba(30, 30, 30, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       color: #fff;
       font-size: 14px;
       opacity: 0;
@@ -164,6 +188,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      z-index: 10000;
     }
 
     .toast.visible {
@@ -172,33 +197,54 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    .toast svg {
-      width: 18px;
-      height: 18px;
-      fill: currentColor;
+    .toast.error {
+      background: rgba(110, 16, 16, 0.92);
+      border-color: rgba(255, 120, 120, 0.4);
     }
 
-    .toast.error {
-      background: rgba(80, 0, 0, 0.9);
+    @media (max-width: 1024px) {
+      .toolbar {
+        max-width: min(480px, calc(100vw - 32px));
+      }
     }
 
     @media (max-width: 720px) {
-      .toolbar {
-        right: 16px;
-        left: 16px;
-        top: auto;
-        bottom: 16px;
-        justify-content: center;
+      body {
+        overflow: auto;
       }
 
-      .toolbar h1 {
+      #map {
+        height: 100dvh;
+      }
+
+      .toolbar {
+        position: fixed;
+        inset: auto 16px 16px 16px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 16px;
+      }
+
+      .toolbar h1,
+      .toolbar small {
         text-align: center;
+      }
+
+      .btn,
+      gmp-place-autocomplete {
+        width: 100%;
+        justify-content: center;
       }
 
       .status-panel {
         position: static;
         max-width: none;
         margin: 16px;
+      }
+
+      .toast {
+        bottom: 120px;
       }
     }
   </style>
@@ -209,6 +255,7 @@
 
   <div class="toolbar" role="group" aria-label="Ferramentas do ArchAtlas">
     <h1>ArchAtlas</h1>
+    <small>Explore, busque lugares e exporte camadas urbanas</small>
     <gmp-place-autocomplete
       id="autocomplete"
       placeholder="Buscar endereço ou lugar..."
@@ -252,67 +299,41 @@
       "f06444fc1b6b5f669fa1e951": "Cheios e Vazios"
     };
 
+    const DEFAULT_VIEW = {
+      center: { lat: -22.3708, lng: -41.7869 },
+      zoom: 17,
+      heading: 0,
+      tilt: 0
+    };
+
     let map;
     let placeMarker = null;
     let currentMapId = "f06444fc1b6b5f66ec5f8299";
+    let lastSelectionMarkup = "Nenhum lugar selecionado";
+
     const statusMapStyle = document.getElementById("statusMapStyle");
     const statusCoordinates = document.getElementById("statusCoordinates");
     const statusSelection = document.getElementById("statusSelection");
     const toastElement = document.getElementById("toast");
 
-    const defaultCenter = { lat: -22.3708, lng: -41.7869 };
-
-    function createMap(mapId, viewState = {}) {
-      const mapContainer = document.getElementById("map");
-      const {
-        center = defaultCenter,
-        zoom = 17,
-        heading = 0,
-        tilt = 0
-      } = viewState;
-
-      map = new google.maps.Map(mapContainer, {
-        center,
-        zoom,
-        heading,
-        tilt,
-        mapId,
-        disableDefaultUI: false
-      });
-
-      currentMapId = mapId;
-
-      map.addListener("idle", () => updateStatusPanel());
-
-      if (placeMarker) {
-        placeMarker.map = map;
-    function createMap(mapId) {
+    function updateStatusPanel(selectionMarkup) {
       if (!map) {
-        map = new google.maps.Map(document.getElementById("map"), {
-          center: defaultCenter,
-          zoom: 17,
-          mapId,
-          disableDefaultUI: false
-        });
-
-        map.addListener("idle", () => updateStatusPanel());
-      } else {
-        map.setOptions({ mapId });
+        return;
       }
 
-      updateStatusPanel();
-    }
+      if (selectionMarkup) {
+        lastSelectionMarkup = selectionMarkup;
+      }
 
-    function updateStatusPanel(selectionText) {
-      if (!map) return;
       const center = map.getCenter();
-      const lat = center.lat().toFixed(6);
-      const lng = center.lng().toFixed(6);
-      statusMapStyle.innerHTML = `Estilo: <span class="highlight">${MAP_STYLES[currentMapId] ?? "Mapa personalizado"}</span>`;
-      statusCoordinates.textContent = `Centro: lat ${lat}, lng ${lng}`;
-      if (selectionText) {
-        statusSelection.innerHTML = selectionText;
-      }
+      const lat = center?.lat?.() ?? DEFAULT_VIEW.center.lat;
+      const lng = center?.lng?.() ?? DEFAULT_VIEW.center.lng;
+
+      statusMapStyle.innerHTML = `Estilo: <span class="highlight">${
+        MAP_STYLES[currentMapId] ?? "Mapa personalizado"
+      }</span>`;
+      statusCoordinates.textContent = `Centro: lat ${lat.toFixed(6)}, lng ${lng.toFixed(6)}`;
+      statusSelection.innerHTML = lastSelectionMarkup;
     }
 
     function showToast(message, type = "info") {
@@ -340,10 +361,26 @@
       document.body.removeChild(link);
     }
 
+    function resolvePlaceDescription(placeLike) {
+      if (!placeLike) return "Local selecionado";
+      const displayName = placeLike.displayName;
+      if (typeof displayName === "string") {
+        return displayName;
+      }
+      if (displayName?.text) {
+        return displayName.text;
+      }
+      return (
+        placeLike.formattedAddress ||
+        placeLike.formatted_address ||
+        placeLike.name ||
+        placeLike.description ||
+        "Local selecionado"
+      );
+    }
+
     function handlePlaceSelection({ location, description }) {
-      if (!location) {
-    function handlePlaceSelection(place) {
-      if (!place.geometry?.location) {
+      if (!map || !location) {
         showToast("Não foi possível obter a localização do lugar selecionado.", "error");
         return;
       }
@@ -364,84 +401,57 @@
         placeMarker.title = description;
       }
 
-      map.panTo(latLng);
-      map.setZoom(Math.max(map.getZoom(), 17));
+      if (typeof map.panTo === "function") {
+        map.panTo(latLng);
+      }
+
+      const currentZoom = typeof map.getZoom === "function" ? map.getZoom() : DEFAULT_VIEW.zoom;
+      if (typeof map.setZoom === "function") {
+        map.setZoom(Math.max(currentZoom ?? DEFAULT_VIEW.zoom, 17));
+      }
 
       updateStatusPanel(`<span class="highlight">${description}</span>`);
     }
 
-    function resolvePlaceDescription(placeLike) {
-      if (!placeLike) return "Local selecionado";
-      const displayName = placeLike.displayName;
-      if (typeof displayName === "string") {
-        return displayName;
-      }
-      if (displayName?.text) {
-        return displayName.text;
-      }
-      return (
-        placeLike.formattedAddress ||
-        placeLike.formatted_address ||
-        placeLike.name ||
-        placeLike.description ||
-        "Local selecionado"
-      );
+    function setActiveMapButton(mapId) {
+      document.querySelectorAll(".btn[data-map]").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.map === mapId);
+      });
     }
 
-      if (!placeMarker) {
-        placeMarker = new google.maps.marker.AdvancedMarkerElement({
-          position: place.geometry.location,
-          map,
-          title: place.displayName || "Local selecionado"
-        });
-      } else {
-        placeMarker.position = place.geometry.location;
-        placeMarker.title = place.displayName || "Local selecionado";
+    function switchMapStyle(mapId) {
+      if (!map || mapId === currentMapId) {
+        return;
       }
 
-      map.panTo(place.geometry.location);
-      map.setZoom(Math.max(map.getZoom(), 17));
-
-      const description = place.displayName || "Local selecionado";
-      updateStatusPanel(`<span class="highlight">${description}</span>`);
+      currentMapId = mapId;
+      map.setOptions({ mapId });
+      setActiveMapButton(mapId);
+      updateStatusPanel();
+      showToast(`Estilo alterado para ${MAP_STYLES[mapId] ?? "mapa personalizado"}.`);
     }
 
     function initMap() {
-      createMap(currentMapId);
+      const mapElement = document.getElementById("map");
 
-      const buttons = document.querySelectorAll(".btn[data-map]");
-      buttons.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          if (!map || btn.classList.contains("active")) return;
-          const id = btn.dataset.map;
-          const viewState = {
-            center: map.getCenter(),
-            zoom: map.getZoom(),
-            heading: map.getHeading?.() ?? 0,
-            tilt: map.getTilt?.() ?? 0
-          };
-
-          if (typeof map.setOptions === "function") {
-            map.setOptions({ mapId: id });
-            currentMapId = id;
-            updateStatusPanel();
-          } else {
-            createMap(id, viewState);
-          }
-
-          if (btn.classList.contains("active")) return;
-          const id = btn.dataset.map;
-          currentMapId = id;
-          createMap(id);
-          buttons.forEach((b) => b.classList.remove("active"));
-          btn.classList.add("active");
-          showToast(`Estilo alterado para ${MAP_STYLES[id] ?? "mapa personalizado"}.`);
-        });
+      map = new google.maps.Map(mapElement, {
+        ...DEFAULT_VIEW,
+        mapId: currentMapId,
+        disableDefaultUI: false,
+        gestureHandling: "greedy"
       });
 
-      const autocomplete = document.querySelector("#autocomplete");
+      map.addListener("idle", () => updateStatusPanel());
+      updateStatusPanel();
+      setActiveMapButton(currentMapId);
+
+      document.querySelectorAll(".btn[data-map]").forEach((btn) => {
+        btn.addEventListener("click", () => switchMapStyle(btn.dataset.map));
+      });
+
+      const autocomplete = document.getElementById("autocomplete");
       autocomplete.addEventListener("gmp-placeselect", async (event) => {
-        const detail = event.detail || {};
+        const detail = event.detail ?? {};
         const place = detail.place || detail.placeResult;
 
         if (!place) {
@@ -457,7 +467,7 @@
           }
 
           const location =
-            place.geometry?.location || place.location || detail?.location || null;
+            place.geometry?.location || detail.location || place.location || null;
 
           handlePlaceSelection({
             location,
@@ -467,9 +477,6 @@
           console.error(error);
           showToast("Não foi possível obter detalhes do lugar selecionado.", "error");
         }
-        const place = event.place;
-        await place.fetchFields({ fields: ["geometry", "displayName"] });
-        handlePlaceSelection(place);
       });
 
       document.getElementById("locateMe").addEventListener("click", () => {
@@ -483,44 +490,42 @@
           (position) => {
             const { latitude, longitude } = position.coords;
             const location = { lat: latitude, lng: longitude };
-            map.panTo(location);
-            map.setZoom(Math.max(map.getZoom(), 17));
 
-            if (!placeMarker) {
-              placeMarker = new google.maps.marker.AdvancedMarkerElement({
-                position: location,
-                map,
-                title: "Minha localização"
-              });
-            } else {
-              placeMarker.position = location;
-              placeMarker.title = "Minha localização";
-            }
-
-            updateStatusPanel('<span class="highlight">Minha localização</span>');
+            handlePlaceSelection({
+              location,
+              description: "Minha localização"
+            });
           },
           () => {
             showToast("Não foi possível acessar sua localização.", "error");
           },
-          { enableHighAccuracy: true, timeout: 8000 }
+          { enableHighAccuracy: true, timeout: 8000, maximumAge: 1000 }
         );
       });
 
       document.getElementById("exportPNG").addEventListener("click", async () => {
         if (!map) {
-      document.getElementById("exportPNG").addEventListener("click", () => {
-        const mapCanvas = document.querySelector("#map canvas");
-        if (!mapCanvas) {
           showToast("Mapa ainda não foi carregado.", "error");
           return;
         }
 
         const center = map.getCenter();
-        const zoom = Math.round(map.getZoom());
+        if (!center) {
+          showToast("Não foi possível calcular o centro do mapa.", "error");
+          return;
+        }
+
+        const zoom = Math.round(map.getZoom?.() ?? DEFAULT_VIEW.zoom);
         const scale = window.devicePixelRatio > 1 ? 2 : 1;
-        const mapElement = document.getElementById("map");
-        const width = Math.max(200, Math.min(640, Math.round(mapElement.offsetWidth || 640)));
-        const height = Math.max(200, Math.min(640, Math.round(mapElement.offsetHeight || 360)));
+        const mapElementSize = document.getElementById("map");
+        const width = Math.max(
+          200,
+          Math.min(640, Math.round(mapElementSize.offsetWidth || 640))
+        );
+        const height = Math.max(
+          200,
+          Math.min(640, Math.round(mapElementSize.offsetHeight || 360))
+        );
 
         showToast("Gerando exportação PNG...");
 
@@ -547,11 +552,8 @@
 
           const blob = await response.blob();
           const blobUrl = URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = blobUrl;
-          link.download = filename;
-          link.click();
-          window.setTimeout(() => URL.revokeObjectURL(blobUrl), 1500);
+          triggerDownload(blobUrl, filename);
+          window.setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
 
           showToast("Exportação em PNG concluída.");
         } catch (error) {
@@ -570,7 +572,7 @@
           return;
         }
 
-        const bounds = map.getBounds();
+        const bounds = map.getBounds?.();
         if (!bounds) {
           showToast("Não foi possível determinar a área do mapa.", "error");
           return;
@@ -594,35 +596,19 @@
           }
 
           const blob = await response.blob();
-          const downloadUrl = URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = downloadUrl;
-          link.download = `archatlas_${Date.now()}.dxf`;
-          link.click();
-          window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1500);
+          const blobUrl = URL.createObjectURL(blob);
+          triggerDownload(blobUrl, `archatlas_${Date.now()}.dxf`);
+          window.setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
 
           showToast("Exportação DWG concluída.");
         } catch (error) {
           console.error(error);
           showToast("Não foi possível exportar o mapa em DWG.", "error");
         }
-        try {
-          const image = mapCanvas.toDataURL("image/png");
-          const link = document.createElement("a");
-          link.href = image;
-          link.download = `archatlas_${currentMapId}.png`;
-          link.click();
-          showToast("Exportação em PNG concluída.");
-        } catch (error) {
-          console.error(error);
-          showToast("Não foi possível exportar o mapa.", "error");
-        }
-      });
-
-      document.getElementById("exportDWG").addEventListener("click", () => {
-        showToast("Exportação DWG ainda não disponível.");
       });
     }
+
+    window.initMap = initMap;
 
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
