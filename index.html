@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Anual de Namoro</title>
+  <title>Anuário de Namoro</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -175,11 +175,105 @@
       color: rgba(213, 217, 230, 0.7);
     }
 
-    .cards-grid {
+    .years-collection {
+      display: grid;
+      gap: 40px;
+      margin-top: 32px;
+    }
+
+    .year-folder {
+      background: linear-gradient(135deg, rgba(21, 24, 33, 0.92), rgba(14, 17, 26, 0.92));
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 28px;
+      padding: clamp(22px, 4vw, 34px);
+      box-shadow: 0 28px 60px rgba(5, 7, 16, 0.55);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .year-folder::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 28px;
+      border: 1px solid rgba(255, 198, 217, 0.08);
+      pointer-events: none;
+    }
+
+    .year-folder-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .year-header-text {
+      display: grid;
+      gap: 6px;
+    }
+
+    .year-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--chip-border);
+      background: linear-gradient(135deg, rgba(255, 143, 171, 0.2), rgba(255, 198, 217, 0.1));
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.85rem;
+      color: var(--chip-text);
+    }
+
+    .year-title {
+      margin: 0;
+      font-size: clamp(1.6rem, 3.8vw, 2.1rem);
+      font-weight: 600;
+    }
+
+    .year-summary {
+      margin: 6px 0 0;
+      max-width: 520px;
+      color: rgba(233, 237, 250, 0.78);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .year-folder-body {
+      display: grid;
+      gap: 28px;
+    }
+
+    .category-section {
+      display: grid;
+      gap: 18px;
+    }
+
+    .category-title {
+      margin: 0;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: rgba(255, 198, 217, 0.8);
+    }
+
+    .category-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 22px;
+    }
+
+    .movie-list {
+      display: grid;
       gap: 24px;
-      margin-top: 32px;
+    }
+
+    .category-empty {
+      margin: 0;
+      font-size: 0.9rem;
+      color: rgba(213, 217, 230, 0.7);
     }
 
     .card {
@@ -203,6 +297,18 @@
       outline: none;
     }
 
+    .card-tag {
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--chip-text);
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      padding: 6px 12px;
+      border-radius: 999px;
+      width: fit-content;
+    }
+
     .card-image {
       position: relative;
       border-radius: 16px;
@@ -224,29 +330,139 @@
       transform: scale(1.06);
     }
 
-    .card-year {
-      font-size: 0.8rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--chip-text);
-      background: var(--chip-bg);
-      border: 1px solid var(--chip-border);
-      padding: 6px 12px;
-      border-radius: 999px;
-      width: fit-content;
-    }
-
     .card h3 {
       margin: 0;
       font-size: 1.1rem;
       font-weight: 600;
     }
 
-    .card-type {
-      font-size: 0.8rem;
+    .card-description {
+      margin: 0;
+      color: rgba(213, 217, 230, 0.8);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .movie-ticket {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(160px, 220px) 1fr;
+      gap: 22px;
+      padding: 20px;
+      border-radius: 24px;
+      background: rgba(21, 24, 33, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 24px 45px rgba(3, 5, 12, 0.55);
+      overflow: hidden;
+    }
+
+    .movie-ticket::before,
+    .movie-ticket::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 16px;
+      height: 16px;
+      background: var(--bg-gradient);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      transform: translateY(-50%);
+      box-shadow: inset 0 0 0 2px rgba(21, 24, 33, 0.9);
+    }
+
+    .movie-ticket::before {
+      left: -8px;
+    }
+
+    .movie-ticket::after {
+      right: -8px;
+    }
+
+    .ticket-media {
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.05);
+      display: grid;
+    }
+
+    .ticket-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .ticket-rating {
+      position: absolute;
+      inset: auto 14px 14px 14px;
+      padding: 10px 14px;
+      background: rgba(7, 9, 16, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      display: grid;
+      gap: 6px;
+      text-align: center;
+    }
+
+    .ticket-rating-label {
+      font-size: 0.7rem;
       text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: rgba(255, 198, 217, 0.75);
+      letter-spacing: 0.16em;
+      color: rgba(255, 231, 239, 0.65);
+    }
+
+    .ticket-rating-value {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--accent-strong);
+    }
+
+    .ticket-details {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .ticket-year-tag {
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255, 231, 239, 0.7);
+    }
+
+    .ticket-details h4 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .ticket-meta {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 6px;
+      font-size: 0.9rem;
+      color: rgba(233, 237, 250, 0.85);
+    }
+
+    .ticket-meta strong {
+      color: rgba(255, 231, 239, 0.85);
+      font-weight: 600;
+    }
+
+    .ticket-comment {
+      margin: 0;
+      font-size: 0.9rem;
+      color: rgba(213, 217, 230, 0.85);
+      line-height: 1.6;
+    }
+
+    .ticket-highlight {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--accent-strong);
+      font-weight: 500;
     }
 
     footer {
@@ -395,6 +611,27 @@
         padding: 16px;
       }
 
+      .year-folder {
+        padding: 24px;
+      }
+
+      .year-folder-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .category-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .movie-ticket {
+        grid-template-columns: 1fr;
+      }
+
+      .ticket-media {
+        max-height: 220px;
+      }
+
       .modal {
         padding: 24px;
       }
@@ -404,11 +641,11 @@
 <body>
   <header class="top-header">
     <div class="header-content">
-      <h1>Anual de Namoro</h1>
-      <h2>Coleção de badges e cartas dos nossos anos juntos</h2>
-      <p>Clique nas badges para ver as cartas e detalhes de cada ano. Use os filtros para navegar pela nossa história.</p>
-      <nav class="filters" aria-label="Filtrar por ano">
-        <!-- Botões de filtro são gerados dinamicamente via JavaScript -->
+      <h1>Anuário de Namoro</h1>
+      <h2>Um arquivo carinhoso com tudo o que vivemos ano após ano</h2>
+      <p>Escolha um ano para abrir a pasta, explorar badges, cartas especiais e agora até os nossos filmes favoritos.</p>
+      <nav class="filters" aria-label="Navegar por ano">
+        <!-- Botões de navegação são gerados dinamicamente via JavaScript -->
       </nav>
     </div>
   </header>
@@ -429,8 +666,8 @@
           <p>P.s.: espero que goste da surpresa</p>
         </div>
       </section>
-      <section class="cards-grid" aria-live="polite">
-        <!-- Cards são gerados dinamicamente via JavaScript -->
+      <section class="years-collection" aria-live="polite">
+        <!-- Pastas anuais são geradas dinamicamente via JavaScript -->
       </section>
     </div>
   </main>
@@ -460,75 +697,136 @@
   </footer>
 
   <script>
-    // Adicione, remova ou reorganize os objetos abaixo para atualizar sua coleção.
-    // Para trocar as imagens, substitua os caminhos em "imagem" pelas URLs corretas.
-    // Exemplo: "img/ano1-badge.png" pode virar "https://seuservidor.com/imagens/ano1.png".
+    // Novo formato: organize cada ano como uma pasta com badges, cartas e filmes.
+    // Substitua os textos e imagens abaixo pelos seus registros favoritos.
     const colecaoAnual = [
       {
         anoNumero: 1,
         anoLabel: "Ano 1 (2023)",
-        titulo: "Ano do Tênis da Nike",
-        tipo: "Badge",
-        imagem: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80", // troque esta URL pela imagem da badge do Ano 1
-        descricao: "Esse ano foi marcado pelo tênis da Nike, nosso símbolo de aventuras compartilhadas e trilhas de risadas.",
-        momentos: [
-          "Primeiro filme juntos",
-          "Nossa viagem para X",
-          "O presente do tênis da Nike"
+        tema: "Ano do Tênis da Nike",
+        resumo: "O começo de tudo, com descobertas e o símbolo do nosso tênis inseparável.",
+        badges: [
+          {
+            titulo: "Ano do Tênis da Nike",
+            tipo: "Badge",
+            imagem: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80",
+            descricao: "Esse ano foi marcado pelo tênis da Nike, nosso símbolo de aventuras compartilhadas e trilhas de risadas.",
+            momentos: [
+              "Primeiro filme juntos",
+              "Nossa viagem para X",
+              "O presente do tênis da Nike"
+            ]
+          }
+        ],
+        cartas: [
+          {
+            titulo: "Carta Ano 1",
+            tipo: "Carta",
+            imagem: "https://images.unsplash.com/photo-1483794344563-d27a8d18014e?auto=format&fit=crop&w=800&q=80",
+            descricao: "Resumo da carta do Ano 1: memórias escritas à mão com promessas de novos capítulos juntos.",
+            momentos: []
+          }
+        ],
+        filmes: [
+          {
+            nome: "La La Land",
+            nota: "9.5/10",
+            capa: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=800&q=80",
+            dataSessao: "26 de setembro de 2023",
+            local: "Cinemark Downtown",
+            comentario: "Nosso primeiro filme como casal, com direito a mãos dadas do começo ao fim.",
+            destaque: "Saímos cantando \"City of Stars\" até chegar no carro."
+          }
         ]
-      },
-      {
-        anoNumero: 1,
-        anoLabel: "Ano 1 (2023)",
-        titulo: "Carta Ano 1",
-        tipo: "Carta",
-        imagem: "https://images.unsplash.com/photo-1483794344563-d27a8d18014e?auto=format&fit=crop&w=800&q=80", // troque esta URL pela imagem da carta do Ano 1
-        descricao: "Resumo da carta do Ano 1: memórias escritas à mão com promessas de novos capítulos juntos.",
-        momentos: []
       },
       {
         anoNumero: 2,
         anoLabel: "Ano 2 (2024)",
-        titulo: "Ano das Constelações",
-        tipo: "Badge",
-        imagem: "https://images.unsplash.com/photo-1527176930608-09cb256ab504?auto=format&fit=crop&w=800&q=80", // troque esta URL pela imagem da badge do Ano 2
-        descricao: "Colecionamos estrelas e sonhos, com noites observando constelações e planos para o futuro.",
-        momentos: [
-          "Piquenique sob as estrelas",
-          "Nosso show favorito",
-          "Descobrimos a música que virou trilha sonora"
-        ]
-      },
-      {
-        anoNumero: 2,
-        anoLabel: "Ano 2 (2024)",
-        titulo: "Carta Ano 2",
-        tipo: "Carta",
-        imagem: "https://images.unsplash.com/photo-1447069387593-a5de0862481e?auto=format&fit=crop&w=800&q=80", // troque esta URL pela imagem da carta do Ano 2
-        descricao: "Carta cheia de constelações desenhadas à mão e desejos para todos os próximos aniversários de namoro.",
-        momentos: [
-          "Compramos plantas para a sala",
-          "Aprendemos uma receita nova juntos"
+        tema: "Ano das Constelações",
+        resumo: "Transformamos o céu em mapa para os nossos planos e sonhos compartilhados.",
+        badges: [
+          {
+            titulo: "Ano das Constelações",
+            tipo: "Badge",
+            imagem: "https://images.unsplash.com/photo-1527176930608-09cb256ab504?auto=format&fit=crop&w=800&q=80",
+            descricao: "Colecionamos estrelas e sonhos, com noites observando constelações e planos para o futuro.",
+            momentos: [
+              "Piquenique sob as estrelas",
+              "Nosso show favorito",
+              "Descobrimos a música que virou trilha sonora"
+            ]
+          }
+        ],
+        cartas: [
+          {
+            titulo: "Carta Ano 2",
+            tipo: "Carta",
+            imagem: "https://images.unsplash.com/photo-1447069387593-a5de0862481e?auto=format&fit=crop&w=800&q=80",
+            descricao: "Carta cheia de constelações desenhadas à mão e desejos para todos os próximos aniversários de namoro.",
+            momentos: [
+              "Compramos plantas para a sala",
+              "Aprendemos uma receita nova juntos"
+            ]
+          }
+        ],
+        filmes: [
+          {
+            nome: "Past Lives",
+            nota: "9/10",
+            capa: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=800&q=80",
+            dataSessao: "14 de maio de 2024",
+            local: "Kinoplex Jardim",
+            comentario: "Saímos refletindo sobre destino e as vidas que poderíamos viver.",
+            destaque: "Guardamos os ingressos dobradinhos dentro do seu livro favorito."
+          }
         ]
       },
       {
         anoNumero: 3,
         anoLabel: "Ano 3 (2025)",
-        titulo: "Ano do Lar Doce Lar",
-        tipo: "Badge",
-        imagem: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=80", // troque esta URL pela imagem da badge do Ano 3
-        descricao: "Celebramos a casa que construímos juntos, com cada cantinho contando uma lembrança.",
-        momentos: [
-          "Primeira noite no novo lar",
-          "Pintamos a parede da sala",
-          "Nossos jantares de domingo"
+        tema: "Ano do Lar Doce Lar",
+        resumo: "Construímos um cantinho só nosso, cheio de detalhes e promessas de futuro.",
+        badges: [
+          {
+            titulo: "Ano do Lar Doce Lar",
+            tipo: "Badge",
+            imagem: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=80",
+            descricao: "Celebramos a casa que construímos juntos, com cada cantinho contando uma lembrança.",
+            momentos: [
+              "Primeira noite no novo lar",
+              "Pintamos a parede da sala",
+              "Nossos jantares de domingo"
+            ]
+          }
+        ],
+        cartas: [
+          {
+            titulo: "Carta Ano 3",
+            tipo: "Carta",
+            imagem: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=800&q=80",
+            descricao: "Escrevemos sobre transformar casa em lar e os sonhos que já começam a ganhar forma.",
+            momentos: [
+              "Primeira receita na cozinha nova",
+              "Sessão de filmes com o cobertor que compramos juntos"
+            ]
+          }
+        ],
+        filmes: [
+          {
+            nome: "Little Women",
+            nota: "10/10",
+            capa: "https://images.unsplash.com/photo-1517602302552-471fe67acf66?auto=format&fit=crop&w=800&q=80",
+            dataSessao: "09 de março de 2025",
+            local: "Sessão especial em casa",
+            comentario: "Virou tradição chorar juntinhos e comentar cada cena com cuidado.",
+            destaque: "Você preparou chocolate quente enquanto eu ajeitava as almofadas novas do sofá."
+          }
         ]
       }
-      // Para adicionar um novo item, replique o objeto acima, ajuste anoNumero/anoLabel e personalize os campos.
     ];
 
     const filtersContainer = document.querySelector(".filters");
-    const cardsGrid = document.querySelector(".cards-grid");
+    const yearsCollection = document.querySelector(".years-collection");
     const modalOverlay = document.querySelector(".modal-overlay");
     const modalTitle = document.getElementById("modal-title");
     const modalImage = document.getElementById("modal-image");
@@ -537,102 +835,196 @@
     const modalMomentsList = document.querySelector(".moments-list");
     const closeButton = document.querySelector(".close-button");
 
-    let activeYear = null;
+    function criarNavegacaoAnos() {
+      if (!filtersContainer) {
+        return;
+      }
 
-    function obterAnosUnicos() {
-      const anos = new Set(colecaoAnual.map(item => item.anoNumero));
-      return Array.from(anos).sort((a, b) => a - b);
-    }
-
-    function criarBotaoFiltro(label, valorAno) {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "filter-button";
-      button.textContent = label;
-      button.dataset.year = valorAno ?? "todos";
-      button.addEventListener("click", () => {
-        activeYear = valorAno ?? null;
-        atualizarEstadoFiltros();
-        renderizarCards();
-      });
-      return button;
-    }
-
-    function atualizarEstadoFiltros() {
-      const botoes = filtersContainer.querySelectorAll(".filter-button");
-      botoes.forEach(botao => {
-        const ano = botao.dataset.year === "todos" ? null : Number(botao.dataset.year);
-        if (ano === activeYear) {
-          botao.classList.add("active");
-        } else if (botao.dataset.year === "todos" && activeYear === null) {
-          botao.classList.add("active");
-        } else {
-          botao.classList.remove("active");
-        }
-      });
-    }
-
-    function renderizarFiltros() {
       filtersContainer.innerHTML = "";
-      const botaoTodos = criarBotaoFiltro("Todos os anos", null);
-      filtersContainer.appendChild(botaoTodos);
-
-      obterAnosUnicos().forEach(anoNumero => {
-        const anoLabel = colecaoAnual.find(item => item.anoNumero === anoNumero)?.anoLabel ?? `Ano ${anoNumero}`;
-        filtersContainer.appendChild(criarBotaoFiltro(anoLabel, anoNumero));
-      });
-
-      activeYear = null;
-      atualizarEstadoFiltros();
+      colecaoAnual
+        .slice()
+        .sort((a, b) => a.anoNumero - b.anoNumero)
+        .forEach(ano => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "filter-button";
+          button.textContent = ano.anoLabel;
+          button.addEventListener("click", () => {
+            const destino = document.getElementById(`ano-${ano.anoNumero}`);
+            if (destino) {
+              destino.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          });
+          filtersContainer.appendChild(button);
+        });
     }
 
-    function criarCard(item) {
+    function criarCardItem(item, ano) {
       const card = document.createElement("article");
       card.className = "card";
       card.tabIndex = 0;
-      card.dataset.index = colecaoAnual.indexOf(item);
+      card.setAttribute("aria-label", `${item.tipo}: ${item.titulo}`);
 
       card.innerHTML = `
-        <span class="card-year">${item.anoLabel}</span>
+        <span class="card-tag">${item.tipo}</span>
         <div class="card-image">
           <img src="${item.imagem}" alt="${item.titulo}" loading="lazy">
         </div>
         <h3>${item.titulo}</h3>
-        <span class="card-type">${item.tipo}</span>
+        <p class="card-description">${item.descricao}</p>
       `;
 
-      card.addEventListener("click", () => abrirModal(item));
+      const abrir = () => abrirModal(item, ano.anoLabel);
+      card.addEventListener("click", abrir);
       card.addEventListener("keypress", event => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
-          abrirModal(item);
+          abrir();
         }
       });
 
       return card;
     }
 
-    function renderizarCards() {
-      cardsGrid.innerHTML = "";
-      const itensFiltrados = activeYear === null
-        ? colecaoAnual
-        : colecaoAnual.filter(item => item.anoNumero === activeYear);
+    function criarCategoriaGenerica(titulo, itens, ano) {
+      const section = document.createElement("section");
+      section.className = "category-section";
 
-      if (itensFiltrados.length === 0) {
-        const mensagem = document.createElement("p");
-        mensagem.textContent = "Nenhum item encontrado para este ano (ainda).";
-        mensagem.style.color = "rgba(255, 231, 239, 0.8)";
-        cardsGrid.appendChild(mensagem);
+      const heading = document.createElement("h3");
+      heading.className = "category-title";
+      heading.textContent = titulo;
+      section.appendChild(heading);
+
+      if (!itens || itens.length === 0) {
+        const empty = document.createElement("p");
+        empty.className = "category-empty";
+        empty.textContent = "Ainda não registramos nada aqui (por enquanto!).";
+        section.appendChild(empty);
+        return section;
+      }
+
+      const grid = document.createElement("div");
+      grid.className = "category-grid";
+      itens.forEach(item => {
+        grid.appendChild(criarCardItem(item, ano));
+      });
+      section.appendChild(grid);
+
+      return section;
+    }
+
+    function criarTicketFilme(filme, ano) {
+      const meta = [];
+      if (filme.dataSessao) meta.push(`<li><strong>Data:</strong> ${filme.dataSessao}</li>`);
+      if (filme.local) meta.push(`<li><strong>Local:</strong> ${filme.local}</li>`);
+
+      const article = document.createElement("article");
+      article.className = "movie-ticket";
+      article.innerHTML = `
+        <div class="ticket-media">
+          <img src="${filme.capa}" alt="Cartaz do filme ${filme.nome}" loading="lazy">
+          <div class="ticket-rating">
+            <span class="ticket-rating-label">Nota geral</span>
+            <span class="ticket-rating-value">${filme.nota}</span>
+          </div>
+        </div>
+        <div class="ticket-details">
+          <span class="ticket-year-tag">${ano.anoLabel}</span>
+          <h4>${filme.nome}</h4>
+          ${meta.length ? `<ul class="ticket-meta">${meta.join("")}</ul>` : ""}
+          <p class="ticket-comment">${filme.comentario}</p>
+          ${filme.destaque ? `<p class="ticket-highlight">${filme.destaque}</p>` : ""}
+        </div>
+      `;
+
+      return article;
+    }
+
+    function criarCategoriaFilmes(ano) {
+      const section = document.createElement("section");
+      section.className = "category-section";
+
+      const heading = document.createElement("h3");
+      heading.className = "category-title";
+      heading.textContent = "Filmes favoritos";
+      section.appendChild(heading);
+
+      if (!ano.filmes || ano.filmes.length === 0) {
+        const empty = document.createElement("p");
+        empty.className = "category-empty";
+        empty.textContent = "Ainda não colamos os ingressos deste ano.";
+        section.appendChild(empty);
+        return section;
+      }
+
+      const lista = document.createElement("div");
+      lista.className = "movie-list";
+      ano.filmes.forEach(filme => {
+        lista.appendChild(criarTicketFilme(filme, ano));
+      });
+      section.appendChild(lista);
+
+      return section;
+    }
+
+    function criarPastaAno(ano) {
+      const section = document.createElement("section");
+      section.className = "year-folder";
+      section.id = `ano-${ano.anoNumero}`;
+
+      const header = document.createElement("header");
+      header.className = "year-folder-header";
+
+      const badge = document.createElement("span");
+      badge.className = "year-badge";
+      badge.textContent = ano.anoLabel;
+      header.appendChild(badge);
+
+      const textWrapper = document.createElement("div");
+      textWrapper.className = "year-header-text";
+
+      const title = document.createElement("h3");
+      title.className = "year-title";
+      title.textContent = ano.tema;
+      textWrapper.appendChild(title);
+
+      if (ano.resumo) {
+        const summary = document.createElement("p");
+        summary.className = "year-summary";
+        summary.textContent = ano.resumo;
+        textWrapper.appendChild(summary);
+      }
+
+      header.appendChild(textWrapper);
+      section.appendChild(header);
+
+      const body = document.createElement("div");
+      body.className = "year-folder-body";
+      body.appendChild(criarCategoriaGenerica("Badges", ano.badges ?? [], ano));
+      body.appendChild(criarCategoriaGenerica("Cartas especiais", ano.cartas ?? [], ano));
+      body.appendChild(criarCategoriaFilmes(ano));
+
+      section.appendChild(body);
+
+      return section;
+    }
+
+    function renderizarColecao() {
+      if (!yearsCollection) {
         return;
       }
 
-      itensFiltrados.forEach(item => {
-        cardsGrid.appendChild(criarCard(item));
-      });
+      yearsCollection.innerHTML = "";
+      colecaoAnual
+        .slice()
+        .sort((a, b) => a.anoNumero - b.anoNumero)
+        .forEach(ano => {
+          yearsCollection.appendChild(criarPastaAno(ano));
+        });
     }
 
-    function abrirModal(item) {
-      modalTitle.textContent = `${item.titulo} — ${item.anoLabel}`;
+    function abrirModal(item, anoLabel) {
+      modalTitle.textContent = `${item.titulo} — ${anoLabel}`;
       modalImage.src = item.imagem;
       modalImage.alt = item.titulo;
       modalDescription.textContent = item.descricao;
@@ -674,8 +1066,8 @@
       }
     });
 
-    renderizarFiltros();
-    renderizarCards();
+    criarNavegacaoAnos();
+    renderizarColecao();
   </script>
 </body>
 </html>
