@@ -1,44 +1,42 @@
-# ArchAtlas
+# Anual de Namoro
 
-Aplicação web progressiva para exploração de mapas arquitetônicos com suporte a estilos personalizados. Esta versão traz melhorias na experiência de busca, localização e exportação.
+Um álbum digital comemorativo para celebrar cada ano do relacionamento com badges, cartas e memórias especiais. O projeto é uma single page application estática que pode ser publicada facilmente no GitHub Pages, Vercel ou em qualquer serviço de hospedagem de arquivos estáticos.
 
-## Recursos
+## Visão geral
 
-- Alternância entre estilos "Mapa Base" e "Cheios e Vazios" usando Map IDs do Google Maps.
-- Busca com `gmp-place-autocomplete` exibindo marcador e resumo do local selecionado.
-- Botão "Minha localização" com feedback visual para centralizar o mapa na posição do usuário.
-- Exportação para PNG via Static Maps API preservando a visão atual.
-- Exportação DWG (DXF) com dados vetoriais da Overpass API para a área visível.
-- Exportação rápida do canvas para PNG (quando disponível).
-- Painel de status com coordenadas do centro do mapa e indicação do local ativo.
-- Toasts para informar mudanças de estado e erros.
-- PWA com cache offline básico dos principais arquivos.
+- Interface responsiva em português, com tipografia Poppins e tema escuro romântico.
+- Cards interativos de badges e cartas organizados por ano, com filtro dinâmico.
+- Modal com detalhes de cada item, incluindo momentos marcantes configuráveis.
+- Estrutura preparada para funcionar como Progressive Web App (PWA) com cache offline básico.
 
-## Desenvolvimento
+## Personalização
 
-1. Instale as dependências:
+1. **Atualize o conteúdo dos anos** em `index.html`, na constante `colecaoAnual`. Substitua títulos, descrições, momentos e URLs das imagens pelos seus próprios.
+2. **Defina a dedicatória** no novo bloco de dedicatória da página, editando o texto padrão ou adicionando mensagens personalizadas.
+3. **Links pessoais** podem ser configurados no rodapé para direcionar para redes sociais ou outras páginas.
 
-   ```bash
-   npm install
-   ```
+## Executando localmente
 
-2. Inicie o servidor local (Express) que já configura os cabeçalhos PWA:
+O site é estático, mas o repositório inclui um pequeno servidor Express para facilitar o desenvolvimento local e lidar com cabeçalhos PWA.
 
-   ```bash
-   npm start
-   ```
+```bash
+npm install
+npm start
+```
 
-3. Abra `http://localhost:3000` no navegador. Para testar o service worker, sirva o projeto via HTTPS ou utilize `localhost`.
+Após iniciar, acesse `http://localhost:3000` no navegador. Para testar o service worker é recomendado utilizar `localhost` ou um ambiente HTTPS.
 
-## Estrutura
+## Estrutura do projeto
 
-- `index.html` contém a interface principal e toda a lógica de interação com o mapa.
-- `service-worker.js` implementa cache offline incremental.
-- `server.js` fornece um servidor Node/Express simples para desenvolvimento e deploy.
+- `index.html` — contém a estrutura da página, estilos e scripts responsáveis pelos cards e modal.
+- `service-worker.js` — implementa o cache offline simples dos principais recursos.
+- `manifest.json` — metadados da PWA (ícones, nome e cores do tema).
+- `server.js` — servidor Express opcional para desenvolvimento.
 
-## Notas
+## Deploy
 
-- Substitua a `API_KEY` do Google Maps por uma credencial própria com as bibliotecas `places` e `marker` habilitadas.
-- Configure a variável de ambiente `GOOGLE_MAPS_API_KEY` (ou ajuste a constante em `index.html`) para habilitar as exportações.
-- A exportação para DWG permanece como placeholder.
-- Recursos de geolocalização requerem consentimento do usuário e podem falhar em ambientes inseguros (HTTP).
+Envie os arquivos estáticos (`index.html`, `manifest.json`, `service-worker.js`, `icon.png`) para qualquer serviço de hospedagem. Caso use GitHub Pages, habilite o GitHub Actions ou configure a publicação da branch `main` nas configurações do repositório.
+
+## Licença
+
+Distribuído sob a licença MIT, conforme arquivo `LICENSE`.
