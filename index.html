@@ -83,8 +83,38 @@
     .filters {
       margin-top: 20px;
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 143, 171, 0.3) transparent;
+      scroll-snap-type: x proximity;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .filters::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .filters::-webkit-scrollbar-thumb {
+      background: rgba(255, 143, 171, 0.3);
+      border-radius: 999px;
+    }
+
+    .filters::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .filters::after {
+      content: "";
+      position: sticky;
+      right: -18px;
+      width: 30px;
+      height: 100%;
+      pointer-events: none;
+      background: linear-gradient(90deg, rgba(14, 17, 24, 0) 0%, rgba(14, 17, 24, 0.8) 100%);
+      border-radius: 0 999px 999px 0;
     }
 
     .filter-button {
@@ -98,6 +128,8 @@
       color: var(--text-secondary);
       transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
       box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+      white-space: nowrap;
+      scroll-snap-align: start;
     }
 
     .filter-button:hover,
@@ -105,6 +137,7 @@
       transform: translateY(-2px);
       border-color: rgba(255, 255, 255, 0.16);
       outline: none;
+      box-shadow: 0 14px 28px rgba(255, 143, 171, 0.2);
     }
 
     .filter-button.active {
@@ -112,6 +145,27 @@
       color: #2a0f1a;
       border-color: var(--chip-border);
       box-shadow: 0 16px 32px rgba(255, 143, 171, 0.25);
+    }
+
+    .filter-button[aria-pressed="true"] {
+      outline: none;
+    }
+
+    @media (min-width: 900px) {
+      .filters {
+        flex-wrap: wrap;
+        overflow-x: visible;
+        padding-bottom: 0;
+        scroll-snap-type: none;
+      }
+
+      .filters::after {
+        display: none;
+      }
+
+      .filter-button {
+        scroll-snap-align: unset;
+      }
     }
 
     main {
@@ -1207,30 +1261,66 @@
     return estadoExpansao.get(anoNumero);
   }
 
+  function sincronizarEstadoAno(anoNumero) {
+    const card = document.getElementById(`ano-${anoNumero}`);
+    if (!card) {
+      return;
+    }
+
+    const expanded = Boolean(estadoExpansao.get(anoNumero));
+    const body = card.querySelector(".year-card-body");
+    const toggle = card.querySelector(".year-card-toggle");
+
+    card.classList.toggle("expanded", expanded);
+    if (body) {
+      body.hidden = !expanded;
+    }
+    if (toggle) {
+      toggle.setAttribute("aria-expanded", expanded ? "true" : "false");
+    }
+  }
+
   function atualizarFiltrosAtivos() {
     filterButtons.forEach((button, anoNumero) => {
-      const ativo = estadoExpansao.get(anoNumero);
-      button.classList.toggle("active", Boolean(ativo));
+      const ativo = Boolean(estadoExpansao.get(anoNumero));
+      button.classList.toggle("active", ativo);
+      button.setAttribute("aria-pressed", ativo ? "true" : "false");
     });
   }
 
-  function abrirAno(anoNumero, focar = false) {
+  function abrirAno(anoNumero, { focar = false, exclusivo = false } = {}) {
+    if (exclusivo) {
+      colecaoAnual.forEach(ano => {
+        if (ano.anoNumero !== anoNumero) {
+          estadoExpansao.set(ano.anoNumero, false);
+          sincronizarEstadoAno(ano.anoNumero);
+        }
+      });
+    }
+
     estadoExpansao.set(anoNumero, true);
-    const card = document.getElementById(`ano-${anoNumero}`);
-    if (card) {
-      card.classList.add("expanded");
-      const body = card.querySelector(".year-card-body");
-      const toggle = card.querySelector(".year-card-toggle");
-      if (body) {
-        body.hidden = false;
-      }
-      if (toggle) {
-        toggle.setAttribute("aria-expanded", "true");
-      }
-      if (focar) {
+    sincronizarEstadoAno(anoNumero);
+    atualizarFiltrosAtivos();
+
+    if (focar) {
+      const card = document.getElementById(`ano-${anoNumero}`);
+      if (card) {
         card.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (typeof card.focus === "function") {
+          try {
+            card.focus({ preventScroll: true });
+          } catch (error) {
+            card.focus();
+          }
+        }
       }
     }
+  }
+
+  function alternarAno(anoNumero) {
+    const novoEstado = !Boolean(estadoExpansao.get(anoNumero));
+    estadoExpansao.set(anoNumero, novoEstado);
+    sincronizarEstadoAno(anoNumero);
     atualizarFiltrosAtivos();
   }
 
@@ -1618,6 +1708,7 @@
     const card = document.createElement("article");
     card.className = "year-card";
     card.id = `ano-${ano.anoNumero}`;
+    card.tabIndex = -1;
 
     const expanded = obterEstadoExpansao(ano.anoNumero, anoIndex === 0);
 
@@ -1674,12 +1765,7 @@
     toggleButton.appendChild(icon);
 
     toggleButton.addEventListener("click", () => {
-      const novoEstado = !card.classList.contains("expanded");
-      estadoExpansao.set(ano.anoNumero, novoEstado);
-      card.classList.toggle("expanded", novoEstado);
-      body.hidden = !novoEstado;
-      toggleButton.setAttribute("aria-expanded", novoEstado ? "true" : "false");
-      atualizarFiltrosAtivos();
+      alternarAno(ano.anoNumero);
     });
 
     header.appendChild(toggleButton);
@@ -1692,6 +1778,7 @@
     inlineEditButton.className = "inline-edit-button";
     inlineEditButton.innerHTML = '<span aria-hidden="true">✏️</span> Editar este ano';
     inlineEditButton.addEventListener("click", () => {
+      abrirAno(ano.anoNumero, { focar: true });
       definirModoEdicao(true);
       requestAnimationFrame(() => {
         card.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -1728,6 +1815,7 @@
     yearsCollection.innerHTML = "";
     colecaoAnual.forEach((ano, index) => {
       yearsCollection.appendChild(criarCardAno(ano, index));
+      sincronizarEstadoAno(ano.anoNumero);
     });
 
     configurarCamposEditaveis();
@@ -1748,8 +1836,11 @@
       button.type = "button";
       button.className = "filter-button";
       button.textContent = ano.anoLabel;
+      button.dataset.yearNumero = String(ano.anoNumero);
+      button.setAttribute("aria-controls", `ano-${ano.anoNumero}`);
+      button.setAttribute("aria-pressed", "false");
       button.addEventListener("click", () => {
-        abrirAno(ano.anoNumero, true);
+        abrirAno(ano.anoNumero, { focar: true, exclusivo: true });
       });
       filtersContainer.appendChild(button);
       filterButtons.set(ano.anoNumero, button);
