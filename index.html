@@ -1,25 +1,30 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ArchAtlas</title>
-
-  <!-- Manifesto PWA e ícones -->
-  <link rel="icon" href="icon.png" type="image/png">
-  <link rel="apple-touch-icon" href="icon.png">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#111111">
-
+  <title>Anual de Namoro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       color-scheme: dark;
-      --panel-bg: rgba(12, 12, 12, 0.82);
-      --panel-border: rgba(255, 255, 255, 0.08);
-      --accent: #0aa9ff;
-      --accent-strong: #2cc1ff;
-      --text-muted: #9aa0a6;
-      --error: #ff6464;
+      --bg-gradient: radial-gradient(circle at 20% 20%, #1b1f2a 0%, #0e1118 55%, #070910 100%);
+      --card-bg: rgba(21, 24, 33, 0.85);
+      --card-border: rgba(255, 255, 255, 0.06);
+      --card-shadow: rgba(4, 7, 16, 0.45);
+      --accent: #ff8fab;
+      --accent-strong: #ffc6d9;
+      --accent-muted: rgba(255, 143, 171, 0.2);
+      --text-primary: #f9fafc;
+      --text-secondary: #d5d9e6;
+      --chip-bg: rgba(255, 143, 171, 0.14);
+      --chip-border: rgba(255, 199, 219, 0.4);
+      --chip-text: #ffd6e5;
+      --modal-overlay: rgba(5, 7, 12, 0.78);
+      --modal-bg: #141823;
+      --modal-shadow: 0 30px 60px rgba(3, 4, 8, 0.6);
     }
 
     * {
@@ -28,602 +33,575 @@
 
     body {
       margin: 0;
-      font-family: "Segoe UI", "Inter", Arial, sans-serif;
-      background: radial-gradient(circle at 20% 20%, rgba(25, 25, 25, 0.95), #060606);
-      color: #fff;
-      overflow: hidden;
-    }
-
-    #map {
-      width: 100vw;
-      height: 100vh;
-      position: relative;
-      z-index: 1;
-    }
-
-    .toolbar {
-      position: absolute;
-      top: 16px;
-      left: 16px;
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-primary);
+      min-height: 100vh;
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      background: var(--panel-bg);
-      border: 1px solid var(--panel-border);
-      border-radius: 16px;
-      padding: 14px;
-      max-width: min(420px, calc(100vw - 32px));
-      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
-      backdrop-filter: blur(10px);
-      z-index: 9999;
-      pointer-events: auto;
+      flex-direction: column;
     }
 
-    .toolbar h1 {
-      margin: 0 0 4px;
-      font-size: 18px;
+    header.top-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(10, 13, 19, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 24px clamp(18px, 5vw, 48px) 16px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .header-content {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .header-content h1 {
+      margin: 0;
+      font-size: clamp(2.1rem, 4vw, 3rem);
       font-weight: 600;
-      flex-basis: 100%;
-      color: #fff;
       letter-spacing: 0.06em;
       text-transform: uppercase;
     }
 
-    .toolbar small {
-      flex-basis: 100%;
-      margin: -2px 0 6px;
-      color: var(--text-muted);
-      font-size: 12px;
-      letter-spacing: 0.03em;
+    .header-content h2 {
+      margin: 10px 0 6px;
+      font-weight: 400;
+      font-size: clamp(1.1rem, 2.8vw, 1.4rem);
+      color: var(--text-secondary);
     }
 
-    .btn {
-      padding: 9px 14px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 14px;
-      background: rgba(25, 25, 25, 0.85);
-      color: #f0f4ff;
-      transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease,
-        box-shadow 0.18s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      min-height: 40px;
+    .header-content p {
+      margin: 0;
+      max-width: 560px;
+      font-size: 0.95rem;
+      color: rgba(213, 217, 230, 0.8);
+      line-height: 1.5;
     }
 
-    .btn svg {
-      width: 16px;
-      height: 16px;
-      fill: currentColor;
+    .filters {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
     }
 
-    .btn:hover,
-    .btn:focus-visible {
-      background: rgba(40, 40, 40, 0.92);
-      border-color: rgba(255, 255, 255, 0.18);
-      transform: translateY(-1px);
-      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.35);
-      outline: none;
-    }
-
-    .btn.active {
-      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-      border-color: rgba(255, 255, 255, 0.24);
-      color: #021b2a;
-      font-weight: 600;
-    }
-
-    gmp-place-autocomplete {
-      flex: 1;
-      min-width: 220px;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      font-size: 14px;
-      background: rgba(20, 20, 20, 0.85);
-      color: #fff;
-      pointer-events: auto;
-      outline: none;
-    }
-
-    gmp-place-autocomplete::part(input) {
-      color: inherit;
-    }
-
-    gmp-place-autocomplete::part(input)::placeholder {
-      color: var(--text-muted);
-    }
-
-    .status-panel {
-      position: absolute;
-      right: 16px;
-      bottom: 16px;
-      max-width: 280px;
-      background: var(--panel-bg);
-      border: 1px solid var(--panel-border);
-      border-radius: 14px;
-      padding: 14px 18px;
-      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(10px);
-      font-size: 13px;
-      line-height: 1.6;
-      pointer-events: none;
-    }
-
-    .status-panel strong {
-      display: block;
-      font-size: 14px;
-      margin-bottom: 6px;
-      color: #fff;
-      letter-spacing: 0.04em;
-    }
-
-    .status-panel span {
-      display: block;
-      color: var(--text-muted);
-    }
-
-    .status-panel .highlight {
-      color: var(--accent-strong);
-      font-weight: 600;
-    }
-
-    .toast {
-      position: absolute;
-      left: 50%;
-      bottom: 32px;
-      transform: translateX(-50%) translateY(20px);
+    .filter-button {
       padding: 10px 18px;
-      border-radius: 24px;
-      background: rgba(30, 30, 30, 0.92);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      color: #fff;
-      font-size: 14px;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
-      pointer-events: none;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      background: rgba(26, 30, 40, 0.9);
+      color: var(--text-secondary);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+    }
+
+    .filter-button:hover,
+    .filter-button:focus-visible {
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.16);
+      outline: none;
+    }
+
+    .filter-button.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #2a0f1a;
+      border-color: var(--chip-border);
+      box-shadow: 0 16px 32px rgba(255, 143, 171, 0.25);
+    }
+
+    main {
+      flex: 1;
+      width: 100%;
+      padding: 24px clamp(18px, 5vw, 48px) 64px;
+    }
+
+    .grid-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      margin-top: 32px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      cursor: pointer;
+      box-shadow: 0 18px 40px var(--card-shadow);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .card:hover,
+    .card:focus-visible {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 45px rgba(3, 5, 12, 0.55);
+      border-color: rgba(255, 143, 171, 0.35);
+      outline: none;
+    }
+
+    .card-image {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 4 / 3;
+      background: rgba(255, 255, 255, 0.04);
+      display: grid;
+      place-items: center;
+    }
+
+    .card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover .card-image img {
+      transform: scale(1.06);
+    }
+
+    .card-year {
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--chip-text);
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      padding: 6px 12px;
+      border-radius: 999px;
+      width: fit-content;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .card-type {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: rgba(255, 198, 217, 0.75);
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 32px clamp(18px, 5vw, 48px) 48px;
+      text-align: center;
+      color: rgba(255, 231, 239, 0.72);
+      font-size: 0.9rem;
+      background: rgba(10, 13, 19, 0.85);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    footer a {
+      color: var(--accent-strong);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(255, 198, 217, 0.5);
+    }
+
+    footer a:hover,
+    footer a:focus-visible {
+      color: #ffe0ec;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--modal-overlay);
       display: flex;
       align-items: center;
-      gap: 8px;
-      z-index: 10000;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+      padding: 24px;
+      z-index: 30;
     }
 
-    .toast.visible {
+    .modal-overlay.open {
       opacity: 1;
       visibility: visible;
-      transform: translateX(-50%) translateY(0);
     }
 
-    .toast.error {
-      background: rgba(110, 16, 16, 0.92);
-      border-color: rgba(255, 120, 120, 0.4);
+    .modal {
+      background: var(--modal-bg);
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: var(--modal-shadow);
+      max-width: min(760px, 90vw);
+      width: 100%;
+      padding: clamp(20px, 4vw, 36px);
+      display: grid;
+      gap: 22px;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
     }
 
-    @media (max-width: 1024px) {
-      .toolbar {
-        max-width: min(480px, calc(100vw - 32px));
-      }
+    .modal-overlay.open .modal {
+      transform: translateY(0);
     }
 
-    @media (max-width: 720px) {
-      body {
-        overflow: auto;
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+    }
+
+    .close-button {
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.7);
+      cursor: pointer;
+      font-size: 1.6rem;
+      line-height: 1;
+      padding: 4px;
+    }
+
+    .close-button:hover,
+    .close-button:focus-visible {
+      color: #fff;
+      transform: scale(1.1);
+      outline: none;
+    }
+
+    .modal-content {
+      display: grid;
+      gap: 18px;
+    }
+
+    .modal-image {
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.05);
+      aspect-ratio: 16 / 9;
+    }
+
+    .modal-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .moments-title {
+      margin: 0;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: rgba(255, 198, 217, 0.75);
+    }
+
+    .moments-list {
+      margin: 8px 0 0 0;
+      padding-left: 20px;
+      color: rgba(233, 237, 250, 0.85);
+    }
+
+    .moments-list li {
+      margin-bottom: 6px;
+    }
+
+    @media (max-width: 680px) {
+      header.top-header {
+        padding: 20px clamp(16px, 6vw, 32px) 14px;
       }
 
-      #map {
-        height: 100dvh;
+      main {
+        padding-bottom: 80px;
       }
 
-      .toolbar {
-        position: fixed;
-        inset: auto 16px 16px 16px;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 12px;
+      .card {
         padding: 16px;
       }
 
-      .toolbar h1,
-      .toolbar small {
-        text-align: center;
-      }
-
-      .btn,
-      gmp-place-autocomplete {
-        width: 100%;
-        justify-content: center;
-      }
-
-      .status-panel {
-        position: static;
-        max-width: none;
-        margin: 16px;
-      }
-
-      .toast {
-        bottom: 120px;
+      .modal {
+        padding: 24px;
       }
     }
   </style>
 </head>
-
 <body>
-  <div id="map" aria-label="Mapa do ArchAtlas"></div>
+  <header class="top-header">
+    <div class="header-content">
+      <h1>Anual de Namoro</h1>
+      <h2>Coleção de badges e cartas dos nossos anos juntos</h2>
+      <p>Clique nas badges para ver as cartas e detalhes de cada ano. Use os filtros para navegar pela nossa história.</p>
+      <nav class="filters" aria-label="Filtrar por ano">
+        <!-- Botões de filtro são gerados dinamicamente via JavaScript -->
+      </nav>
+    </div>
+  </header>
 
-  <div class="toolbar" role="group" aria-label="Ferramentas do ArchAtlas">
-    <h1>ArchAtlas</h1>
-    <small>Explore, busque lugares e exporte camadas urbanas</small>
-    <gmp-place-autocomplete
-      id="autocomplete"
-      placeholder="Buscar endereço ou lugar..."
-      aria-label="Pesquisar endereço ou lugar">
-    </gmp-place-autocomplete>
+  <main>
+    <div class="grid-wrapper">
+      <section class="cards-grid" aria-live="polite">
+        <!-- Cards são gerados dinamicamente via JavaScript -->
+      </section>
+    </div>
+  </main>
 
-    <button class="btn active" data-map="f06444fc1b6b5f66ec5f8299">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 3 6v12l9 4 9-4V6zm7 5.97-6 2.66v8.34l6-2.67zm-8 11-6-2.67V8.63l6 2.66z"/></svg>
-      Mapa Base
-    </button>
-    <button class="btn" data-map="f06444fc1b6b5f669fa1e951">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v2H3zm0 6h12v2H3zm0 6h18v2H3z"/></svg>
-      Cheios e Vazios
-    </button>
-    <button class="btn" id="locateMe">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 4 9-4 11-4-11zm0 5.3L10.74 9h2.52z"/></svg>
-      Minha localização
-    </button>
-    <button class="btn" id="exportPNG">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14a2 2 0 0 1 2 2v9h-2V5H5v14h7v2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm11 10 4 4-4 4v-3h-5v-2h5z"/></svg>
-      Exportar PNG
-    </button>
-    <button class="btn" id="exportDWG">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v2H4zm0 4h16v2H4zm0 4h10v2H4zm0 4h6v2H4z"/></svg>
-      Exportar DWG Real
-    </button>
+  <div class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <article class="modal">
+      <header class="modal-header">
+        <h3 id="modal-title"></h3>
+        <button class="close-button" type="button" aria-label="Fechar">&times;</button>
+      </header>
+      <div class="modal-content">
+        <div class="modal-image">
+          <img id="modal-image" src="" alt="" loading="lazy">
+        </div>
+        <p id="modal-description"></p>
+        <div class="modal-moments" hidden>
+          <h4 class="moments-title">Momentos marcantes</h4>
+          <ul class="moments-list"></ul>
+        </div>
+      </div>
+    </article>
   </div>
 
-  <aside class="status-panel" aria-live="polite">
-    <strong>Status do mapa</strong>
-    <span id="statusMapStyle">Estilo: <span class="highlight">Mapa Base</span></span>
-    <span id="statusCoordinates">Centro: lat -22.370800, lng -41.786900</span>
-    <span id="statusSelection">Nenhum lugar selecionado</span>
-  </aside>
-
-  <div class="toast" id="toast" role="alert" aria-live="assertive"></div>
+  <footer>
+    Feito com amor para registrar cada ano da nossa história ❤️<br>
+    <span>Adicione aqui o link do <a href="#">GitHub ou Instagram</a>.</span>
+  </footer>
 
   <script>
-    const MAP_STYLES = {
-      "f06444fc1b6b5f66ec5f8299": "Mapa Base",
-      "f06444fc1b6b5f669fa1e951": "Cheios e Vazios"
-    };
+    // Adicione, remova ou reorganize os objetos abaixo para atualizar sua coleção.
+    // Para trocar as imagens, substitua os caminhos em "imagem" pelas URLs corretas.
+    // Exemplo: "img/ano1-badge.png" pode virar "https://seuservidor.com/imagens/ano1.png".
+    const colecaoAnual = [
+      {
+        anoNumero: 1,
+        anoLabel: "Ano 1 (2023)",
+        titulo: "Ano do Tênis da Nike",
+        tipo: "Badge",
+        imagem: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80", // troque esta URL pela imagem da badge do Ano 1
+        descricao: "Esse ano foi marcado pelo tênis da Nike, nosso símbolo de aventuras compartilhadas e trilhas de risadas.",
+        momentos: [
+          "Primeiro filme juntos",
+          "Nossa viagem para X",
+          "O presente do tênis da Nike"
+        ]
+      },
+      {
+        anoNumero: 1,
+        anoLabel: "Ano 1 (2023)",
+        titulo: "Carta Ano 1",
+        tipo: "Carta",
+        imagem: "https://images.unsplash.com/photo-1483794344563-d27a8d18014e?auto=format&fit=crop&w=800&q=80", // troque esta URL pela imagem da carta do Ano 1
+        descricao: "Resumo da carta do Ano 1: memórias escritas à mão com promessas de novos capítulos juntos.",
+        momentos: []
+      },
+      {
+        anoNumero: 2,
+        anoLabel: "Ano 2 (2024)",
+        titulo: "Ano das Constelações",
+        tipo: "Badge",
+        imagem: "https://images.unsplash.com/photo-1527176930608-09cb256ab504?auto=format&fit=crop&w=800&q=80", // troque esta URL pela imagem da badge do Ano 2
+        descricao: "Colecionamos estrelas e sonhos, com noites observando constelações e planos para o futuro.",
+        momentos: [
+          "Piquenique sob as estrelas",
+          "Nosso show favorito",
+          "Descobrimos a música que virou trilha sonora"
+        ]
+      },
+      {
+        anoNumero: 2,
+        anoLabel: "Ano 2 (2024)",
+        titulo: "Carta Ano 2",
+        tipo: "Carta",
+        imagem: "https://images.unsplash.com/photo-1447069387593-a5de0862481e?auto=format&fit=crop&w=800&q=80", // troque esta URL pela imagem da carta do Ano 2
+        descricao: "Carta cheia de constelações desenhadas à mão e desejos para todos os próximos aniversários de namoro.",
+        momentos: [
+          "Compramos plantas para a sala",
+          "Aprendemos uma receita nova juntos"
+        ]
+      },
+      {
+        anoNumero: 3,
+        anoLabel: "Ano 3 (2025)",
+        titulo: "Ano do Lar Doce Lar",
+        tipo: "Badge",
+        imagem: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=80", // troque esta URL pela imagem da badge do Ano 3
+        descricao: "Celebramos a casa que construímos juntos, com cada cantinho contando uma lembrança.",
+        momentos: [
+          "Primeira noite no novo lar",
+          "Pintamos a parede da sala",
+          "Nossos jantares de domingo"
+        ]
+      }
+      // Para adicionar um novo item, replique o objeto acima, ajuste anoNumero/anoLabel e personalize os campos.
+    ];
 
-    const DEFAULT_VIEW = {
-      center: { lat: -22.3708, lng: -41.7869 },
-      zoom: 17,
-      heading: 0,
-      tilt: 0
-    };
+    const filtersContainer = document.querySelector(".filters");
+    const cardsGrid = document.querySelector(".cards-grid");
+    const modalOverlay = document.querySelector(".modal-overlay");
+    const modalTitle = document.getElementById("modal-title");
+    const modalImage = document.getElementById("modal-image");
+    const modalDescription = document.getElementById("modal-description");
+    const modalMomentsWrapper = document.querySelector(".modal-moments");
+    const modalMomentsList = document.querySelector(".moments-list");
+    const closeButton = document.querySelector(".close-button");
 
-    let map;
-    let placeMarker = null;
-    let currentMapId = "f06444fc1b6b5f66ec5f8299";
-    let lastSelectionMarkup = "Nenhum lugar selecionado";
+    let activeYear = null;
 
-    const statusMapStyle = document.getElementById("statusMapStyle");
-    const statusCoordinates = document.getElementById("statusCoordinates");
-    const statusSelection = document.getElementById("statusSelection");
-    const toastElement = document.getElementById("toast");
+    function obterAnosUnicos() {
+      const anos = new Set(colecaoAnual.map(item => item.anoNumero));
+      return Array.from(anos).sort((a, b) => a - b);
+    }
 
-    function updateStatusPanel(selectionMarkup) {
-      if (!map) {
+    function criarBotaoFiltro(label, valorAno) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "filter-button";
+      button.textContent = label;
+      button.dataset.year = valorAno ?? "todos";
+      button.addEventListener("click", () => {
+        activeYear = valorAno ?? null;
+        atualizarEstadoFiltros();
+        renderizarCards();
+      });
+      return button;
+    }
+
+    function atualizarEstadoFiltros() {
+      const botoes = filtersContainer.querySelectorAll(".filter-button");
+      botoes.forEach(botao => {
+        const ano = botao.dataset.year === "todos" ? null : Number(botao.dataset.year);
+        if (ano === activeYear) {
+          botao.classList.add("active");
+        } else if (botao.dataset.year === "todos" && activeYear === null) {
+          botao.classList.add("active");
+        } else {
+          botao.classList.remove("active");
+        }
+      });
+    }
+
+    function renderizarFiltros() {
+      filtersContainer.innerHTML = "";
+      const botaoTodos = criarBotaoFiltro("Todos os anos", null);
+      filtersContainer.appendChild(botaoTodos);
+
+      obterAnosUnicos().forEach(anoNumero => {
+        const anoLabel = colecaoAnual.find(item => item.anoNumero === anoNumero)?.anoLabel ?? `Ano ${anoNumero}`;
+        filtersContainer.appendChild(criarBotaoFiltro(anoLabel, anoNumero));
+      });
+
+      activeYear = null;
+      atualizarEstadoFiltros();
+    }
+
+    function criarCard(item) {
+      const card = document.createElement("article");
+      card.className = "card";
+      card.tabIndex = 0;
+      card.dataset.index = colecaoAnual.indexOf(item);
+
+      card.innerHTML = `
+        <span class="card-year">${item.anoLabel}</span>
+        <div class="card-image">
+          <img src="${item.imagem}" alt="${item.titulo}" loading="lazy">
+        </div>
+        <h3>${item.titulo}</h3>
+        <span class="card-type">${item.tipo}</span>
+      `;
+
+      card.addEventListener("click", () => abrirModal(item));
+      card.addEventListener("keypress", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          abrirModal(item);
+        }
+      });
+
+      return card;
+    }
+
+    function renderizarCards() {
+      cardsGrid.innerHTML = "";
+      const itensFiltrados = activeYear === null
+        ? colecaoAnual
+        : colecaoAnual.filter(item => item.anoNumero === activeYear);
+
+      if (itensFiltrados.length === 0) {
+        const mensagem = document.createElement("p");
+        mensagem.textContent = "Nenhum item encontrado para este ano (ainda).";
+        mensagem.style.color = "rgba(255, 231, 239, 0.8)";
+        cardsGrid.appendChild(mensagem);
         return;
       }
 
-      if (selectionMarkup) {
-        lastSelectionMarkup = selectionMarkup;
-      }
-
-      const center = map.getCenter();
-      const lat = center?.lat?.() ?? DEFAULT_VIEW.center.lat;
-      const lng = center?.lng?.() ?? DEFAULT_VIEW.center.lng;
-
-      statusMapStyle.innerHTML = `Estilo: <span class="highlight">${
-        MAP_STYLES[currentMapId] ?? "Mapa personalizado"
-      }</span>`;
-      statusCoordinates.textContent = `Centro: lat ${lat.toFixed(6)}, lng ${lng.toFixed(6)}`;
-      statusSelection.innerHTML = lastSelectionMarkup;
+      itensFiltrados.forEach(item => {
+        cardsGrid.appendChild(criarCard(item));
+      });
     }
 
-    function showToast(message, type = "info") {
-      toastElement.textContent = message;
-      toastElement.classList.toggle("error", type === "error");
-      toastElement.classList.add("visible");
+    function abrirModal(item) {
+      modalTitle.textContent = `${item.titulo} — ${item.anoLabel}`;
+      modalImage.src = item.imagem;
+      modalImage.alt = item.titulo;
+      modalDescription.textContent = item.descricao;
 
-      window.clearTimeout(showToast.timeoutId);
-      showToast.timeoutId = window.setTimeout(() => {
-        toastElement.classList.remove("visible");
-        toastElement.classList.remove("error");
-      }, 3200);
-    }
-
-    function triggerDownload(url, filename) {
-      const link = document.createElement("a");
-      link.href = url;
-      link.rel = "noopener";
-      if (filename) {
-        link.download = filename;
-      }
-
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-
-    function resolvePlaceDescription(placeLike) {
-      if (!placeLike) return "Local selecionado";
-      const displayName = placeLike.displayName;
-      if (typeof displayName === "string") {
-        return displayName;
-      }
-      if (displayName?.text) {
-        return displayName.text;
-      }
-      return (
-        placeLike.formattedAddress ||
-        placeLike.formatted_address ||
-        placeLike.name ||
-        placeLike.description ||
-        "Local selecionado"
-      );
-    }
-
-    function handlePlaceSelection({ location, description }) {
-      if (!map || !location) {
-        showToast("Não foi possível obter a localização do lugar selecionado.", "error");
-        return;
-      }
-
-      const latLng =
-        location instanceof google.maps.LatLng
-          ? location
-          : new google.maps.LatLng(location);
-
-      if (!placeMarker) {
-        placeMarker = new google.maps.marker.AdvancedMarkerElement({
-          position: latLng,
-          map,
-          title: description
+      if (item.momentos && item.momentos.length > 0) {
+        modalMomentsWrapper.hidden = false;
+        modalMomentsList.innerHTML = "";
+        item.momentos.forEach(momento => {
+          const li = document.createElement("li");
+          li.textContent = momento;
+          modalMomentsList.appendChild(li);
         });
       } else {
-        placeMarker.position = latLng;
-        placeMarker.title = description;
+        modalMomentsWrapper.hidden = true;
+        modalMomentsList.innerHTML = "";
       }
 
-      if (typeof map.panTo === "function") {
-        map.panTo(latLng);
+      modalOverlay.classList.add("open");
+      modalOverlay.setAttribute("aria-hidden", "false");
+      closeButton.focus();
+    }
+
+    function fecharModal() {
+      modalOverlay.classList.remove("open");
+      modalOverlay.setAttribute("aria-hidden", "true");
+    }
+
+    modalOverlay.addEventListener("click", event => {
+      if (event.target === modalOverlay) {
+        fecharModal();
       }
+    });
 
-      const currentZoom = typeof map.getZoom === "function" ? map.getZoom() : DEFAULT_VIEW.zoom;
-      if (typeof map.setZoom === "function") {
-        map.setZoom(Math.max(currentZoom ?? DEFAULT_VIEW.zoom, 17));
+    closeButton.addEventListener("click", fecharModal);
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && modalOverlay.classList.contains("open")) {
+        fecharModal();
       }
+    });
 
-      updateStatusPanel(`<span class="highlight">${description}</span>`);
-    }
-
-    function setActiveMapButton(mapId) {
-      document.querySelectorAll(".btn[data-map]").forEach((btn) => {
-        btn.classList.toggle("active", btn.dataset.map === mapId);
-      });
-    }
-
-    function switchMapStyle(mapId) {
-      if (!map || mapId === currentMapId) {
-        return;
-      }
-
-      currentMapId = mapId;
-      map.setOptions({ mapId });
-      setActiveMapButton(mapId);
-      updateStatusPanel();
-      showToast(`Estilo alterado para ${MAP_STYLES[mapId] ?? "mapa personalizado"}.`);
-    }
-
-    function initMap() {
-      const mapElement = document.getElementById("map");
-
-      map = new google.maps.Map(mapElement, {
-        ...DEFAULT_VIEW,
-        mapId: currentMapId,
-        disableDefaultUI: false,
-        gestureHandling: "greedy"
-      });
-
-      map.addListener("idle", () => updateStatusPanel());
-      updateStatusPanel();
-      setActiveMapButton(currentMapId);
-
-      document.querySelectorAll(".btn[data-map]").forEach((btn) => {
-        btn.addEventListener("click", () => switchMapStyle(btn.dataset.map));
-      });
-
-      const autocomplete = document.getElementById("autocomplete");
-      autocomplete.addEventListener("gmp-placeselect", async (event) => {
-        const detail = event.detail ?? {};
-        const place = detail.place || detail.placeResult;
-
-        if (!place) {
-          showToast("Não foi possível completar a busca.", "error");
-          return;
-        }
-
-        try {
-          if (typeof place.fetchFields === "function") {
-            await place.fetchFields({
-              fields: ["displayName", "formattedAddress", "geometry", "location", "name"]
-            });
-          }
-
-          const location =
-            place.geometry?.location || detail.location || place.location || null;
-
-          handlePlaceSelection({
-            location,
-            description: resolvePlaceDescription(place)
-          });
-        } catch (error) {
-          console.error(error);
-          showToast("Não foi possível obter detalhes do lugar selecionado.", "error");
-        }
-      });
-
-      document.getElementById("locateMe").addEventListener("click", () => {
-        if (!navigator.geolocation) {
-          showToast("Geolocalização não suportada neste dispositivo.", "error");
-          return;
-        }
-
-        showToast("Localizando você no mapa...");
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            const location = { lat: latitude, lng: longitude };
-
-            handlePlaceSelection({
-              location,
-              description: "Minha localização"
-            });
-          },
-          () => {
-            showToast("Não foi possível acessar sua localização.", "error");
-          },
-          { enableHighAccuracy: true, timeout: 8000, maximumAge: 1000 }
-        );
-      });
-
-      document.getElementById("exportPNG").addEventListener("click", async () => {
-        if (!map) {
-          showToast("Mapa ainda não foi carregado.", "error");
-          return;
-        }
-
-        const center = map.getCenter();
-        if (!center) {
-          showToast("Não foi possível calcular o centro do mapa.", "error");
-          return;
-        }
-
-        const zoom = Math.round(map.getZoom?.() ?? DEFAULT_VIEW.zoom);
-        const scale = window.devicePixelRatio > 1 ? 2 : 1;
-        const mapElementSize = document.getElementById("map");
-        const width = Math.max(
-          200,
-          Math.min(640, Math.round(mapElementSize.offsetWidth || 640))
-        );
-        const height = Math.max(
-          200,
-          Math.min(640, Math.round(mapElementSize.offsetHeight || 360))
-        );
-
-        showToast("Gerando exportação PNG...");
-
-        const params = new URLSearchParams({
-          center: `${center.lat()},${center.lng()}`,
-          zoom: String(zoom),
-          scale: String(scale),
-          width: String(width),
-          height: String(height)
-        });
-
-        if (currentMapId) {
-          params.append("mapId", currentMapId);
-        }
-
-        const downloadUrl = `/export-png?${params.toString()}`;
-        const filename = `archatlas_${Date.now()}.png`;
-
-        try {
-          const response = await fetch(downloadUrl);
-          if (!response.ok) {
-            throw new Error("Falha ao gerar imagem");
-          }
-
-          const blob = await response.blob();
-          const blobUrl = URL.createObjectURL(blob);
-          triggerDownload(blobUrl, filename);
-          window.setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
-
-          showToast("Exportação em PNG concluída.");
-        } catch (error) {
-          console.error(error);
-          triggerDownload(downloadUrl, filename);
-          showToast(
-            "Não foi possível gerar o PNG automaticamente. Abrimos o mapa em nova guia.",
-            "info"
-          );
-        }
-      });
-
-      document.getElementById("exportDWG").addEventListener("click", async () => {
-        if (!map) {
-          showToast("Mapa ainda não foi carregado.", "error");
-          return;
-        }
-
-        const bounds = map.getBounds?.();
-        if (!bounds) {
-          showToast("Não foi possível determinar a área do mapa.", "error");
-          return;
-        }
-
-        const ne = bounds.getNorthEast();
-        const sw = bounds.getSouthWest();
-        const params = new URLSearchParams({
-          north: String(ne.lat()),
-          east: String(ne.lng()),
-          south: String(sw.lat()),
-          west: String(sw.lng())
-        });
-
-        showToast("Gerando exportação DWG...");
-
-        try {
-          const response = await fetch(`/export-dwg?${params.toString()}`);
-          if (!response.ok) {
-            throw new Error("Falha ao gerar DWG");
-          }
-
-          const blob = await response.blob();
-          const blobUrl = URL.createObjectURL(blob);
-          triggerDownload(blobUrl, `archatlas_${Date.now()}.dxf`);
-          window.setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
-
-          showToast("Exportação DWG concluída.");
-        } catch (error) {
-          console.error(error);
-          showToast("Não foi possível exportar o mapa em DWG.", "error");
-        }
-      });
-    }
-
-    window.initMap = initMap;
-
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/service-worker.js").catch(() => {
-          console.warn("Não foi possível registrar o service worker.");
-        });
-      });
-    }
+    renderizarFiltros();
+    renderizarCards();
   </script>
-
-  <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOJb2_2hPShr2KC7AJaFFUZvKrKdvAZmI&libraries=places,marker&callback=initMap&v=weekly"
-    async
-    defer>
-  </script>
-
 </body>
 </html>
