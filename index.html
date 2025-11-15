@@ -10,21 +10,21 @@
   <style>
     :root {
       color-scheme: dark;
-      --bg-gradient: radial-gradient(circle at 20% 20%, #1b1f2a 0%, #0e1118 55%, #070910 100%);
-      --card-bg: rgba(21, 24, 33, 0.85);
-      --card-border: rgba(255, 255, 255, 0.06);
-      --card-shadow: rgba(4, 7, 16, 0.45);
-      --accent: #ff8fab;
-      --accent-strong: #ffc6d9;
-      --accent-muted: rgba(255, 143, 171, 0.2);
-      --text-primary: #f9fafc;
-      --text-secondary: #d5d9e6;
-      --chip-bg: rgba(255, 143, 171, 0.14);
-      --chip-border: rgba(255, 199, 219, 0.4);
-      --chip-text: #ffd6e5;
-      --modal-overlay: rgba(5, 7, 12, 0.78);
-      --modal-bg: #141823;
-      --modal-shadow: 0 30px 60px rgba(3, 4, 8, 0.6);
+      --bg-gradient: radial-gradient(circle at 20% 20%, #14294b 0%, #0c1b33 55%, #050e20 100%);
+      --card-bg: rgba(10, 22, 41, 0.88);
+      --card-border: rgba(148, 197, 255, 0.08);
+      --card-shadow: rgba(5, 12, 28, 0.55);
+      --accent: #3b82f6;
+      --accent-strong: #93c5fd;
+      --accent-muted: rgba(59, 130, 246, 0.22);
+      --text-primary: #f0f6ff;
+      --text-secondary: #c8d9ff;
+      --chip-bg: rgba(59, 130, 246, 0.18);
+      --chip-border: rgba(147, 197, 253, 0.45);
+      --chip-text: #e0f0ff;
+      --modal-overlay: rgba(4, 10, 22, 0.78);
+      --modal-bg: #0d203b;
+      --modal-shadow: 0 30px 60px rgba(3, 10, 24, 0.6);
     }
 
     * {
@@ -43,11 +43,11 @@
 
     header.top-header {
       position: static;
-      background: rgba(10, 13, 19, 0.85);
+      background: rgba(7, 20, 42, 0.85);
       backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(59, 130, 246, 0.15);
       padding: 24px clamp(18px, 5vw, 48px) 16px;
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 18px 40px rgba(5, 12, 28, 0.4);
     }
 
     .header-content {
@@ -82,13 +82,12 @@
       display: inline-flex;
       flex-wrap: wrap;
       align-items: center;
-      align-items: baseline;
       gap: 6px;
       margin-top: 12px;
       padding: 10px 16px;
       border-radius: 999px;
-      background: rgba(26, 30, 40, 0.7);
-      border: 1px solid rgba(255, 143, 171, 0.22);
+      background: rgba(10, 28, 52, 0.7);
+      border: 1px solid rgba(59, 130, 246, 0.22);
       color: var(--text-secondary);
       font-size: 0.95rem;
       box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
@@ -103,15 +102,13 @@
 
     .days-counter-value,
     .time-counter-value {
-    .days-counter-value {
       font-size: 1.2rem;
       font-weight: 600;
       color: var(--accent-strong);
-      text-shadow: 0 0 12px rgba(255, 143, 171, 0.45);
+      text-shadow: 0 0 12px rgba(59, 130, 246, 0.45);
     }
 
     .days-counter-unit {
-    .days-counter-suffix {
       color: rgba(213, 217, 230, 0.65);
     }
 
@@ -123,7 +120,7 @@
       overflow-x: auto;
       padding-bottom: 6px;
       scrollbar-width: thin;
-      scrollbar-color: rgba(255, 143, 171, 0.3) transparent;
+      scrollbar-color: rgba(59, 130, 246, 0.3) transparent;
       scroll-snap-type: x proximity;
       -webkit-overflow-scrolling: touch;
     }
@@ -133,7 +130,7 @@
     }
 
     .filters::-webkit-scrollbar-thumb {
-      background: rgba(255, 143, 171, 0.3);
+      background: rgba(59, 130, 246, 0.3);
       border-radius: 999px;
     }
 
@@ -148,7 +145,7 @@
       width: 30px;
       height: 100%;
       pointer-events: none;
-      background: linear-gradient(90deg, rgba(14, 17, 24, 0) 0%, rgba(14, 17, 24, 0.8) 100%);
+      background: linear-gradient(90deg, rgba(10, 18, 34, 0) 0%, rgba(10, 24, 44, 0.85) 100%);
       border-radius: 0 999px 999px 0;
     }
 
@@ -159,7 +156,7 @@
       cursor: pointer;
       font-size: 0.9rem;
       font-weight: 500;
-      background: rgba(26, 30, 40, 0.9);
+      background: rgba(12, 30, 56, 0.9);
       color: var(--text-secondary);
       transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
       box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
@@ -170,16 +167,16 @@
     .filter-button:hover,
     .filter-button:focus-visible {
       transform: translateY(-2px);
-      border-color: rgba(255, 255, 255, 0.16);
+      border-color: rgba(147, 197, 253, 0.35);
       outline: none;
-      box-shadow: 0 14px 28px rgba(255, 143, 171, 0.2);
+      box-shadow: 0 14px 28px rgba(59, 130, 246, 0.2);
     }
 
     .filter-button.active {
       background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-      color: #2a0f1a;
+      color: #031c3b;
       border-color: var(--chip-border);
-      box-shadow: 0 16px 32px rgba(255, 143, 171, 0.25);
+      box-shadow: 0 16px 32px rgba(59, 130, 246, 0.25);
     }
 
     .filter-button[aria-pressed="true"] {
@@ -235,7 +232,7 @@
 
     .dedication-subtitle {
       margin: 6px 0 0;
-      color: rgba(255, 231, 239, 0.75);
+      color: rgba(219, 234, 254, 0.75);
       font-size: 0.95rem;
       line-height: 1.5;
     }
@@ -244,8 +241,8 @@
       min-height: 140px;
       padding: 18px;
       border-radius: 16px;
-      border: 1px dashed rgba(255, 198, 217, 0.45);
-      background: rgba(255, 143, 171, 0.08);
+      border: 1px dashed rgba(147, 197, 253, 0.45);
+      background: rgba(59, 130, 246, 0.08);
       color: var(--text-primary);
       font-size: 1rem;
       line-height: 1.6;
@@ -254,8 +251,8 @@
 
     .dedication-content:focus-visible {
       outline: none;
-      border-color: rgba(255, 198, 217, 0.9);
-      box-shadow: 0 0 0 3px rgba(255, 143, 171, 0.25);
+      border-color: rgba(147, 197, 253, 0.9);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
     }
 
     .dedication-hint {
@@ -271,11 +268,11 @@
     }
 
     .year-card {
-      background: linear-gradient(135deg, rgba(21, 24, 33, 0.92), rgba(14, 17, 26, 0.92));
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: linear-gradient(135deg, rgba(13, 28, 48, 0.94), rgba(8, 20, 38, 0.94));
+      border: 1px solid rgba(147, 197, 253, 0.12);
       border-radius: 28px;
       padding: clamp(18px, 3.5vw, 28px);
-      box-shadow: 0 28px 60px rgba(5, 7, 16, 0.55);
+      box-shadow: 0 28px 60px rgba(5, 15, 32, 0.55);
       position: relative;
       overflow: hidden;
       transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
@@ -286,12 +283,12 @@
       position: absolute;
       inset: 0;
       border-radius: 28px;
-      border: 1px solid rgba(255, 198, 217, 0.08);
+      border: 1px solid rgba(147, 197, 253, 0.08);
       pointer-events: none;
     }
 
     .year-card.expanded {
-      border-color: rgba(255, 143, 171, 0.25);
+      border-color: rgba(59, 130, 246, 0.25);
       transform: translateY(-4px);
       box-shadow: 0 32px 72px rgba(6, 8, 18, 0.65);
     }
@@ -321,7 +318,7 @@
 
     .year-card-toggle:focus-visible .year-badge,
     .year-card-toggle:focus-visible .year-title {
-      box-shadow: 0 0 0 3px rgba(255, 143, 171, 0.35);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
     }
 
     .year-header-text {
@@ -335,17 +332,17 @@
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(147, 197, 253, 0.28);
       display: grid;
       place-items: center;
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(147, 197, 253, 0.1);
       transition: transform 0.25s ease, background 0.25s ease;
     }
 
     .year-card.expanded .year-toggle-icon {
       transform: rotate(180deg);
-      background: rgba(255, 143, 171, 0.14);
-      border-color: rgba(255, 143, 171, 0.35);
+      background: rgba(59, 130, 246, 0.14);
+      border-color: rgba(59, 130, 246, 0.35);
     }
 
     .year-badge {
@@ -355,7 +352,7 @@
       padding: 10px 18px;
       border-radius: 999px;
       border: 1px solid var(--chip-border);
-      background: linear-gradient(135deg, rgba(255, 143, 171, 0.2), rgba(255, 198, 217, 0.1));
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 197, 253, 0.1));
       text-transform: uppercase;
       letter-spacing: 0.12em;
       font-size: 0.85rem;
@@ -396,8 +393,8 @@
     .edit-toggle {
       padding: 10px 18px;
       border-radius: 999px;
-      border: 1px solid rgba(255, 143, 171, 0.35);
-      background: rgba(255, 143, 171, 0.16);
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      background: rgba(59, 130, 246, 0.16);
       color: var(--chip-text);
       font-weight: 500;
       font-size: 0.85rem;
@@ -414,8 +411,8 @@
     .edit-toggle:focus-visible {
       outline: none;
       transform: translateY(-2px);
-      box-shadow: 0 16px 32px rgba(255, 143, 171, 0.25);
-      background: linear-gradient(135deg, rgba(255, 143, 171, 0.2), rgba(255, 198, 217, 0.3));
+      box-shadow: 0 16px 32px rgba(59, 130, 246, 0.25);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 197, 253, 0.3));
     }
 
     .edit-toggle {
@@ -423,15 +420,15 @@
     }
 
     .edit-toggle.active {
-      background: linear-gradient(135deg, rgba(255, 143, 171, 0.35), rgba(255, 198, 217, 0.5));
-      color: #2a0f1a;
-      border-color: rgba(255, 143, 171, 0.55);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.35), rgba(147, 197, 253, 0.5));
+      color: #031c3b;
+      border-color: rgba(59, 130, 246, 0.55);
     }
 
     .edit-hint {
       display: none;
       font-size: 0.8rem;
-      color: rgba(255, 231, 239, 0.7);
+      color: rgba(219, 234, 254, 0.7);
     }
 
     body.edit-mode .inline-edit-button {
@@ -451,20 +448,25 @@
 
     body.edit-mode [data-editable] {
       border-radius: 12px;
-      box-shadow: inset 0 0 0 1px rgba(255, 198, 217, 0.25);
-      background: rgba(255, 143, 171, 0.08);
+      box-shadow: inset 0 0 0 1px rgba(147, 197, 253, 0.25);
+      background: rgba(59, 130, 246, 0.08);
       padding: 6px 8px;
     }
 
     body.edit-mode [data-editable]:focus-visible {
       outline: none;
-      box-shadow: inset 0 0 0 2px rgba(255, 198, 217, 0.9);
-      background: rgba(255, 143, 171, 0.12);
+      box-shadow: inset 0 0 0 2px rgba(147, 197, 253, 0.9);
+      background: rgba(59, 130, 246, 0.12);
     }
 
     body.edit-mode [data-editable][data-placeholder]:empty::before {
       content: attr(data-placeholder);
-      color: rgba(255, 231, 239, 0.65);
+      color: rgba(219, 234, 254, 0.65);
+    }
+
+    body.edit-mode .image-edit-button,
+    body.edit-mode .rating-edit-button {
+      display: inline-flex;
     }
 
     body.edit-mode .image-edit-button,
@@ -482,7 +484,7 @@
       font-size: 1rem;
       text-transform: uppercase;
       letter-spacing: 0.18em;
-      color: rgba(255, 198, 217, 0.8);
+      color: rgba(147, 197, 253, 0.8);
     }
 
     .category-grid {
@@ -514,7 +516,7 @@
     }
 
     .carousel-track::-webkit-scrollbar-thumb {
-      background: rgba(255, 143, 171, 0.3);
+      background: rgba(59, 130, 246, 0.3);
       border-radius: 999px;
     }
 
@@ -534,8 +536,8 @@
       width: 38px;
       height: 38px;
       border-radius: 50%;
-      border: 1px solid rgba(255, 198, 217, 0.35);
-      background: rgba(12, 15, 24, 0.9);
+      border: 1px solid rgba(147, 197, 253, 0.35);
+      background: rgba(8, 20, 38, 0.9);
       color: var(--accent-strong);
       font-size: 1rem;
       cursor: pointer;
@@ -544,9 +546,9 @@
 
     .carousel-button:hover,
     .carousel-button:focus-visible {
-      background: rgba(18, 22, 32, 0.95);
-      border-color: rgba(255, 198, 217, 0.7);
-      color: #ffe0ec;
+      background: rgba(10, 28, 52, 0.95);
+      border-color: rgba(147, 197, 253, 0.7);
+      color: #e0f2ff;
       transform: translateY(-1px);
       outline: none;
     }
@@ -584,8 +586,8 @@
     .card:hover,
     .card:focus-visible {
       transform: translateY(-6px);
-      box-shadow: 0 24px 45px rgba(3, 5, 12, 0.55);
-      border-color: rgba(255, 143, 171, 0.35);
+      box-shadow: 0 24px 45px rgba(3, 12, 28, 0.55);
+      border-color: rgba(59, 130, 246, 0.35);
       outline: none;
     }
 
@@ -606,7 +608,7 @@
       border-radius: 16px;
       overflow: hidden;
       aspect-ratio: 4 / 3;
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(147, 197, 253, 0.08);
       display: grid;
       place-items: center;
     }
@@ -642,9 +644,9 @@
       gap: 22px;
       padding: 20px;
       border-radius: 24px;
-      background: rgba(21, 24, 33, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 24px 45px rgba(3, 5, 12, 0.55);
+      background: rgba(12, 26, 48, 0.9);
+      border: 1px solid rgba(147, 197, 253, 0.16);
+      box-shadow: 0 24px 45px rgba(3, 12, 28, 0.55);
       overflow: hidden;
     }
 
@@ -656,10 +658,10 @@
       width: 16px;
       height: 16px;
       background: var(--bg-gradient);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(147, 197, 253, 0.2);
       border-radius: 50%;
       transform: translateY(-50%);
-      box-shadow: inset 0 0 0 2px rgba(21, 24, 33, 0.9);
+      box-shadow: inset 0 0 0 2px rgba(12, 26, 48, 0.9);
     }
 
     .movie-ticket::before {
@@ -674,7 +676,7 @@
       position: relative;
       border-radius: 18px;
       overflow: hidden;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(147, 197, 253, 0.12);
       display: grid;
     }
 
@@ -688,8 +690,8 @@
       position: absolute;
       inset: auto 14px 14px 14px;
       padding: 10px 14px;
-      background: rgba(7, 9, 16, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(4, 16, 34, 0.8);
+      border: 1px solid rgba(147, 197, 253, 0.2);
       border-radius: 14px;
       display: grid;
       gap: 6px;
@@ -700,7 +702,7 @@
       font-size: 0.7rem;
       text-transform: uppercase;
       letter-spacing: 0.16em;
-      color: rgba(255, 231, 239, 0.65);
+      color: rgba(219, 234, 254, 0.65);
     }
 
     .ticket-rating-value {
@@ -719,7 +721,7 @@
       font-size: 0.75rem;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: rgba(255, 231, 239, 0.7);
+      color: rgba(219, 234, 254, 0.7);
     }
 
     .ticket-details h4 {
@@ -739,7 +741,7 @@
     }
 
     .ticket-meta strong {
-      color: rgba(255, 231, 239, 0.85);
+      color: rgba(219, 234, 254, 0.85);
       font-weight: 600;
     }
 
@@ -760,7 +762,7 @@
     .modal-highlight {
       margin: 0;
       font-size: 0.9rem;
-      color: rgba(255, 198, 217, 0.85);
+      color: rgba(147, 197, 253, 0.85);
       font-style: italic;
     }
 
@@ -770,9 +772,9 @@
       gap: 18px;
       padding: 18px;
       border-radius: 22px;
-      background: rgba(21, 24, 33, 0.92);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 22px 45px rgba(3, 5, 12, 0.55);
+      background: rgba(12, 26, 48, 0.92);
+      border: 1px solid rgba(147, 197, 253, 0.16);
+      box-shadow: 0 22px 45px rgba(3, 12, 28, 0.55);
       cursor: pointer;
       transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     }
@@ -781,14 +783,14 @@
     .food-card:focus-visible {
       outline: none;
       transform: translateY(-4px);
-      border-color: rgba(255, 143, 171, 0.35);
-      box-shadow: 0 28px 60px rgba(3, 5, 12, 0.6);
+      border-color: rgba(59, 130, 246, 0.35);
+      box-shadow: 0 28px 60px rgba(3, 12, 28, 0.6);
     }
 
     .food-media {
       border-radius: 18px;
       overflow: hidden;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(147, 197, 253, 0.12);
       position: relative;
     }
 
@@ -801,9 +803,9 @@
     .image-edit-button {
       position: absolute;
       inset: 12px 12px auto auto;
-      border: 1px solid rgba(255, 198, 217, 0.5);
+      border: 1px solid rgba(147, 197, 253, 0.5);
       border-radius: 999px;
-      background: rgba(7, 9, 16, 0.8);
+      background: rgba(4, 16, 34, 0.8);
       color: var(--accent-strong);
       font-size: 0.75rem;
       font-weight: 500;
@@ -821,8 +823,8 @@
 
     .image-edit-button:hover,
     .image-edit-button:focus-visible {
-      background: rgba(12, 16, 26, 0.95);
-      border-color: rgba(255, 198, 217, 0.8);
+      background: rgba(8, 24, 44, 0.95);
+      border-color: rgba(147, 197, 253, 0.8);
       transform: translateY(-1px);
       outline: none;
     }
@@ -832,14 +834,14 @@
       inset: auto 12px 12px 12px;
       padding: 10px 14px;
       border-radius: 12px;
-      background: rgba(7, 9, 16, 0.82);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(4, 16, 34, 0.82);
+      border: 1px solid rgba(147, 197, 253, 0.18);
       font-size: 0.85rem;
       display: inline-flex;
       gap: 6px;
       align-items: center;
       flex-wrap: wrap;
-      color: rgba(255, 231, 239, 0.75);
+      color: rgba(219, 234, 254, 0.75);
     }
 
     .food-rating strong {
@@ -860,7 +862,7 @@
     }
 
     .star-rating-display .star-rating-base {
-      color: rgba(255, 255, 255, 0.18);
+      color: rgba(147, 197, 253, 0.25);
       display: block;
     }
 
@@ -874,8 +876,8 @@
     }
 
     .rating-edit-button {
-      border: 1px solid rgba(255, 198, 217, 0.4);
-      background: rgba(12, 15, 24, 0.9);
+      border: 1px solid rgba(147, 197, 253, 0.4);
+      background: rgba(8, 20, 38, 0.9);
       color: var(--accent-strong);
       border-radius: 999px;
       font-size: 0.7rem;
@@ -888,8 +890,8 @@
 
     .rating-edit-button:hover,
     .rating-edit-button:focus-visible {
-      background: rgba(18, 21, 32, 0.95);
-      border-color: rgba(255, 198, 217, 0.8);
+      background: rgba(10, 28, 52, 0.95);
+      border-color: rgba(147, 197, 253, 0.8);
       transform: translateY(-1px);
       outline: none;
     }
@@ -916,33 +918,45 @@
     }
 
     .food-highlight {
-      color: rgba(255, 198, 217, 0.88);
+      color: rgba(147, 197, 253, 0.88);
       font-style: italic;
     }
 
     .food-location strong {
-      color: rgba(255, 231, 239, 0.85);
+      color: rgba(219, 234, 254, 0.85);
     }
 
     footer {
       margin-top: auto;
       padding: 32px clamp(18px, 5vw, 48px) 48px;
       text-align: center;
-      color: rgba(255, 231, 239, 0.72);
+      color: rgba(219, 234, 254, 0.72);
       font-size: 0.9rem;
-      background: rgba(10, 13, 19, 0.85);
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(7, 20, 42, 0.85);
+      border-top: 1px solid rgba(59, 130, 246, 0.12);
     }
 
     footer a {
       color: var(--accent-strong);
       text-decoration: none;
-      border-bottom: 1px dashed rgba(255, 198, 217, 0.5);
+      border-bottom: 1px dashed rgba(147, 197, 253, 0.5);
     }
 
     footer a:hover,
     footer a:focus-visible {
-      color: #ffe0ec;
+      color: #e0f2ff;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
 
     .sr-only {
@@ -979,7 +993,7 @@
     .modal {
       background: var(--modal-bg);
       border-radius: 22px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(147, 197, 253, 0.14);
       box-shadow: var(--modal-shadow);
       max-width: min(760px, 90vw);
       width: 100%;
@@ -1009,7 +1023,7 @@
     .close-button {
       background: transparent;
       border: none;
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(147, 197, 253, 0.8);
       cursor: pointer;
       font-size: 1.6rem;
       line-height: 1;
@@ -1018,7 +1032,7 @@
 
     .close-button:hover,
     .close-button:focus-visible {
-      color: #fff;
+      color: var(--accent-strong);
       transform: scale(1.1);
       outline: none;
     }
@@ -1031,7 +1045,7 @@
     .modal-image {
       border-radius: 18px;
       overflow: hidden;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(147, 197, 253, 0.12);
       aspect-ratio: 16 / 9;
     }
 
@@ -1046,7 +1060,7 @@
       font-size: 0.95rem;
       text-transform: uppercase;
       letter-spacing: 0.18em;
-      color: rgba(255, 198, 217, 0.75);
+      color: rgba(147, 197, 253, 0.75);
     }
 
     .moments-list {
@@ -1145,8 +1159,6 @@
           <span class="days-counter-unit">segundos</span>
         </span>
         <span class="days-counter-unit">desde 15 de setembro de 2023</span>
-        <span class="days-counter-value" id="days-since-start">0</span>
-        <span class="days-counter-suffix">dias desde 15 de setembro de 2023</span>
       </p>
       <nav class="filters" aria-label="Navegar por ano">
         <!-- Botões de navegação são gerados dinamicamente via JavaScript -->
@@ -1392,14 +1404,6 @@
   }
 
   function atualizarContadorRelacionamento() {
-  const referenciaDias = new Date(Date.UTC(2023, 8, 15));
-
-  function calcularDiasDesde(dataReferencia) {
-    const agora = Date.now();
-    return Math.floor((agora - dataReferencia.getTime()) / (1000 * 60 * 60 * 24));
-  }
-
-  function atualizarContadorDias() {
     if (!daysSinceStartValue) {
       return;
     }
@@ -1418,8 +1422,6 @@
     if (secondsSinceStartValue) {
       secondsSinceStartValue.textContent = formatarComDoisDigitos(segundos);
     }
-    const dias = Math.max(0, calcularDiasDesde(referenciaDias));
-    daysSinceStartValue.textContent = dias.toLocaleString("pt-BR");
   }
 
   function salvarDados() {
@@ -1510,13 +1512,6 @@
     }
 
     const item = lista[itemIndex];
-  function atualizarImagemComida(anoIndex, comidaIndex, novaUrl, imagemElemento) {
-    const ano = colecaoAnual[anoIndex];
-    if (!ano || !Array.isArray(ano.comidas)) {
-      return;
-    }
-
-    const item = ano.comidas[comidaIndex];
     if (!item) {
       return;
     }
@@ -1527,7 +1522,6 @@
     }
 
     item[campoImagem] = urlTratada;
-    item.imagem = urlTratada;
     if (imagemElemento) {
       imagemElemento.src = urlTratada;
     }
@@ -1558,7 +1552,10 @@
     return notaNormalizada;
   }
 
-  function registrarCampoEditavel(element, { yearIndex, category = "ano", itemIndex, field, allowBreaks = false, placeholder = "" }) {
+  function registrarCampoEditavel(
+    element,
+    { yearIndex, category = "ano", itemIndex, field, allowBreaks = false, placeholder = "" } = {}
+  ) {
     element.dataset.editable = "true";
     element.dataset.yearIndex = String(yearIndex);
     element.dataset.field = field;
@@ -2115,7 +2112,6 @@
       }
 
       atualizarImagemItem(anoIndex, "comidas", comidaIndex, url, img);
-      atualizarImagemComida(anoIndex, comidaIndex, url, img);
     });
     media.appendChild(imageEditButton);
 
@@ -2491,8 +2487,6 @@
 
   atualizarContadorRelacionamento();
   window.setInterval(atualizarContadorRelacionamento, 1000);
-  atualizarContadorDias();
-  window.setInterval(atualizarContadorDias, 60 * 1000);
 
   criarNavegacaoAnos();
   renderizarColecao();
