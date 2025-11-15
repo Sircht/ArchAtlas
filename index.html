@@ -432,6 +432,11 @@
       color: rgba(255, 231, 239, 0.65);
     }
 
+    body.edit-mode .image-edit-button,
+    body.edit-mode .rating-edit-button {
+      display: inline-flex;
+    }
+
     .category-section {
       display: grid;
       gap: 18px;
@@ -692,6 +697,35 @@
       object-fit: cover;
     }
 
+    .image-edit-button {
+      position: absolute;
+      inset: 12px 12px auto auto;
+      border: 1px solid rgba(255, 198, 217, 0.5);
+      border-radius: 999px;
+      background: rgba(7, 9, 16, 0.8);
+      color: var(--accent-strong);
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 6px 12px;
+      display: none;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .image-edit-button span[aria-hidden="true"] {
+      font-size: 1rem;
+    }
+
+    .image-edit-button:hover,
+    .image-edit-button:focus-visible {
+      background: rgba(12, 16, 26, 0.95);
+      border-color: rgba(255, 198, 217, 0.8);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
     .food-rating {
       position: absolute;
       inset: auto 12px 12px 12px;
@@ -703,12 +737,60 @@
       display: inline-flex;
       gap: 6px;
       align-items: center;
+      flex-wrap: wrap;
       color: rgba(255, 231, 239, 0.75);
     }
 
     .food-rating strong {
       color: var(--accent-strong);
       font-weight: 600;
+    }
+
+    .food-rating-score {
+      font-size: 0.95rem;
+    }
+
+    .star-rating-display {
+      position: relative;
+      display: inline-block;
+      font-size: 1rem;
+      line-height: 1;
+      letter-spacing: 2px;
+    }
+
+    .star-rating-display .star-rating-base {
+      color: rgba(255, 255, 255, 0.18);
+      display: block;
+    }
+
+    .star-rating-display .star-rating-fill {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      color: var(--accent-strong);
+      display: block;
+      white-space: nowrap;
+    }
+
+    .rating-edit-button {
+      border: 1px solid rgba(255, 198, 217, 0.4);
+      background: rgba(12, 15, 24, 0.9);
+      color: var(--accent-strong);
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      padding: 4px 10px;
+      display: none;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .rating-edit-button:hover,
+    .rating-edit-button:focus-visible {
+      background: rgba(18, 21, 32, 0.95);
+      border-color: rgba(255, 198, 217, 0.8);
+      transform: translateY(-1px);
+      outline: none;
     }
 
     .food-content {
@@ -760,6 +842,18 @@
     footer a:hover,
     footer a:focus-visible {
       color: #ffe0ec;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
 
     .modal-overlay {
@@ -1026,7 +1120,7 @@
           titulo: "Jantar no Burger Garage",
           tipo: "Review gastronômica",
           imagem: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?auto=format&fit=crop&w=800&q=80",
-          nota: "9/10",
+          nota: 4.5,
           local: "Burger Garage — Barra da Tijuca",
           descricao: "Descobrimos o burger suculento e dividimos batatas com cheddar até não aguentar mais.",
           destaque: "Voltamos duas vezes no mesmo mês porque não conseguimos superar a batatinha.",
@@ -1077,7 +1171,7 @@
           titulo: "Brunch de domingo",
           tipo: "Review gastronômica",
           imagem: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=800&q=80",
-          nota: "9.5/10",
+          nota: 4.8,
           local: "Café da Praça — Botafogo",
           descricao: "Virou ritual começar o domingo com panquecas, café coado e nossas conversas infinitas.",
           destaque: "Você roubou metade do meu maple syrup e mesmo assim eu achei fofo.",
@@ -1147,6 +1241,121 @@
     } catch (error) {
       console.warn("Não foi possível salvar as alterações:", error);
     }
+  }
+
+  function limitarValor(valor, minimo, maximo) {
+    return Math.min(Math.max(valor, minimo), maximo);
+  }
+
+  function normalizarNotaEstrelas(valor) {
+    if (typeof valor === "number" && Number.isFinite(valor)) {
+      return limitarValor(valor, 0, 5);
+    }
+
+    if (typeof valor === "string") {
+      const texto = valor.trim();
+      if (!texto) {
+        return 0;
+      }
+
+      const partes = texto.split("/");
+      if (partes.length === 2) {
+        const numerador = parseFloat(partes[0].replace(",", "."));
+        const denominador = parseFloat(partes[1].replace(",", "."));
+        if (Number.isFinite(numerador) && Number.isFinite(denominador) && denominador !== 0) {
+          return limitarValor((numerador / denominador) * 5, 0, 5);
+        }
+      }
+
+      const numero = parseFloat(texto.replace(",", "."));
+      if (Number.isFinite(numero)) {
+        return limitarValor(numero, 0, 5);
+      }
+    }
+
+    return 0;
+  }
+
+  function formatarNotaEstrelas(valor) {
+    return Number.isInteger(valor) ? String(valor) : valor.toFixed(1);
+  }
+
+  function atualizarDisplayEstrelas(container, valor) {
+    const preenchimento = container?.querySelector?.(".star-rating-fill");
+    if (preenchimento) {
+      const percentual = limitarValor(valor, 0, 5) / 5;
+      preenchimento.style.width = `${(percentual * 100).toFixed(2)}%`;
+    }
+    if (container) {
+      container.dataset.ratingValue = String(limitarValor(valor, 0, 5));
+    }
+  }
+
+  function criarDisplayEstrelas(valor) {
+    const element = document.createElement("span");
+    element.className = "star-rating-display";
+    element.dataset.ratingValue = String(valor);
+
+    const base = document.createElement("span");
+    base.className = "star-rating-base";
+    base.textContent = "★★★★★";
+    element.appendChild(base);
+
+    const preenchimento = document.createElement("span");
+    preenchimento.className = "star-rating-fill";
+    preenchimento.textContent = "★★★★★";
+    element.appendChild(preenchimento);
+
+    atualizarDisplayEstrelas(element, valor);
+
+    return element;
+  }
+
+  function atualizarImagemComida(anoIndex, comidaIndex, novaUrl, imagemElemento) {
+    const ano = colecaoAnual[anoIndex];
+    if (!ano || !Array.isArray(ano.comidas)) {
+      return;
+    }
+
+    const item = ano.comidas[comidaIndex];
+    if (!item) {
+      return;
+    }
+
+    const urlTratada = typeof novaUrl === "string" ? novaUrl.trim() : "";
+    if (!urlTratada) {
+      return;
+    }
+
+    item.imagem = urlTratada;
+    if (imagemElemento) {
+      imagemElemento.src = urlTratada;
+    }
+
+    if (!editMode) {
+      salvarDados();
+    }
+  }
+
+  function atualizarNotaComida(anoIndex, comidaIndex, novoValor) {
+    const ano = colecaoAnual[anoIndex];
+    if (!ano || !Array.isArray(ano.comidas)) {
+      return 0;
+    }
+
+    const item = ano.comidas[comidaIndex];
+    if (!item) {
+      return 0;
+    }
+
+    const notaNormalizada = normalizarNotaEstrelas(novoValor);
+    item.nota = notaNormalizada;
+
+    if (!editMode) {
+      salvarDados();
+    }
+
+    return notaNormalizada;
   }
 
   function registrarCampoEditavel(element, { yearIndex, category = "ano", itemIndex, field, allowBreaks = false, placeholder = "" }) {
@@ -1573,25 +1782,93 @@
     media.className = "food-media";
     const img = document.createElement("img");
     img.src = comida.imagem;
-    img.alt = comida.titulo;
+    img.alt = comida.titulo || "Foto do review gastronômico";
     img.loading = "lazy";
     media.appendChild(img);
+
+    const imageEditButton = document.createElement("button");
+    imageEditButton.type = "button";
+    imageEditButton.className = "image-edit-button";
+    imageEditButton.innerHTML = '<span aria-hidden="true">🖼️</span><span>Trocar foto</span>';
+    imageEditButton.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (!editMode) {
+        return;
+      }
+
+      const sugestao = prompt("Cole a URL da nova foto do review:", comida.imagem ?? "");
+      if (sugestao === null) {
+        return;
+      }
+
+      const url = sugestao.trim();
+      if (!url) {
+        return;
+      }
+
+      atualizarImagemComida(anoIndex, comidaIndex, url, img);
+    });
+    media.appendChild(imageEditButton);
+
+    let notaAtual = normalizarNotaEstrelas(comida.nota);
+    if (notaAtual !== comida.nota) {
+      comida.nota = notaAtual;
+      if (!editMode) {
+        salvarDados();
+      }
+    }
 
     const rating = document.createElement("div");
     rating.className = "food-rating";
     const ratingLabel = document.createElement("span");
     ratingLabel.textContent = "Nota";
     rating.appendChild(ratingLabel);
-    const ratingValue = document.createElement("strong");
-    ratingValue.textContent = comida.nota ?? "";
-    registrarCampoEditavel(ratingValue, {
-      yearIndex: anoIndex,
-      category: "comidas",
-      itemIndex: comidaIndex,
-      field: "nota",
-      placeholder: "0/10"
+
+    const ratingScore = document.createElement("strong");
+    ratingScore.className = "food-rating-score";
+    ratingScore.textContent = formatarNotaEstrelas(notaAtual);
+    ratingScore.setAttribute("aria-hidden", "true");
+    rating.appendChild(ratingScore);
+
+    const ratingStars = criarDisplayEstrelas(notaAtual);
+    ratingStars.setAttribute("aria-hidden", "true");
+    rating.appendChild(ratingStars);
+
+    const ratingAssistiveText = document.createElement("span");
+    ratingAssistiveText.className = "sr-only";
+    ratingAssistiveText.textContent = `${formatarNotaEstrelas(notaAtual)} de 5 estrelas`;
+    rating.appendChild(ratingAssistiveText);
+
+    const ratingEditButton = document.createElement("button");
+    ratingEditButton.type = "button";
+    ratingEditButton.className = "rating-edit-button";
+    ratingEditButton.textContent = "Editar nota";
+    ratingEditButton.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (!editMode) {
+        return;
+      }
+
+      const resposta = prompt("Qual a nova nota (0 a 5)?", formatarNotaEstrelas(notaAtual).replace(".", ","));
+      if (resposta === null) {
+        return;
+      }
+
+      const valorNumerico = parseFloat(resposta.replace(",", "."));
+      if (!Number.isFinite(valorNumerico)) {
+        return;
+      }
+
+      const notaAtualizada = atualizarNotaComida(anoIndex, comidaIndex, valorNumerico);
+      notaAtual = notaAtualizada;
+      ratingScore.textContent = formatarNotaEstrelas(notaAtualizada);
+      ratingAssistiveText.textContent = `${formatarNotaEstrelas(notaAtualizada)} de 5 estrelas`;
+      atualizarDisplayEstrelas(ratingStars, notaAtualizada);
     });
-    rating.appendChild(ratingValue);
+    rating.appendChild(ratingEditButton);
+
     media.appendChild(rating);
 
     article.appendChild(media);
@@ -1613,6 +1890,10 @@
       itemIndex: comidaIndex,
       field: "titulo",
       placeholder: "Nome do prato ou rolê"
+    });
+    title.addEventListener("input", () => {
+      const texto = title.textContent?.trim() ?? "";
+      img.alt = texto || "Foto do review gastronômico";
     });
     content.appendChild(title);
 
