@@ -22,6 +22,8 @@ const dataFilePath = dataFileOverride
   : path.join(defaultDataDir, "collection.json");
 const dataDir = path.dirname(dataFilePath);
 
+const sseClients = new Set();
+
 async function ensureDataFile() {
   try {
     await fs.access(dataFilePath);
@@ -58,6 +60,35 @@ async function writeCollection(data) {
   await fs.writeFile(dataFilePath, JSON.stringify(data, null, 2), "utf8");
 }
 
+async function broadcastCollectionUpdate(dataOverride) {
+  let payload = dataOverride;
+
+  try {
+    if (typeof payload === "undefined") {
+      payload = await readCollection();
+    }
+
+    const serialized = JSON.stringify(payload);
+    const desconectados = [];
+
+    for (const client of sseClients) {
+      try {
+        client.res.write(`event: collection\ndata: ${serialized}\n\n`);
+      } catch (error) {
+        console.warn("Não foi possível enviar atualização em tempo real para um cliente:", error);
+        desconectados.push(client);
+      }
+    }
+
+    for (const client of desconectados) {
+      clearInterval(client.heartbeat);
+      sseClients.delete(client);
+    }
+  } catch (error) {
+    console.warn("Falha ao transmitir atualização em tempo real:", error);
+  }
+}
+
 app.get("/api/collection", async (req, res) => {
   try {
     const data = await readCollection();
@@ -77,10 +108,43 @@ app.post("/api/collection", async (req, res) => {
 
   try {
     await writeCollection(body);
+    await broadcastCollectionUpdate(body);
     res.status(204).end();
   } catch (error) {
     console.error("Erro ao salvar coleção:", error);
     res.status(500).json({ message: "Não foi possível salvar a coleção." });
+  }
+});
+
+app.get("/api/collection/stream", async (req, res) => {
+  res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
+  res.setHeader("Cache-Control", "no-cache, no-transform");
+  res.setHeader("Connection", "keep-alive");
+  res.flushHeaders?.();
+
+  const client = {
+    res,
+    heartbeat: setInterval(() => {
+      if (!res.writableEnded) {
+        res.write(":\n\n");
+      }
+    }, 25000)
+  };
+
+  sseClients.add(client);
+
+  req.on("close", () => {
+    clearInterval(client.heartbeat);
+    sseClients.delete(client);
+  });
+
+  try {
+    const data = await readCollection();
+    const serialized = JSON.stringify(data);
+    res.write(`event: collection\ndata: ${serialized}\n\n`);
+  } catch (error) {
+    console.error("Erro ao enviar a coleção inicial pelo stream:", error);
+    res.write("event: error\ndata: \"Não foi possível carregar a coleção inicial.\"\n\n");
   }
 });
 
