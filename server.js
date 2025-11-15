@@ -3,15 +3,78 @@ import fetch from "node-fetch";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from "fs/promises";
 
 const app = express();
 app.use(cors());
+app.use(express.json({ limit: "2mb" }));
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const publicDir = __dirname;
 
 const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY || "AIzaSyDOJb2_2hPShr2KC7AJaFFUZvKrKdvAZmI";
+
+const dataDir = path.join(__dirname, "data");
+const dataFilePath = path.join(dataDir, "collection.json");
+
+async function ensureDataFile() {
+  try {
+    await fs.access(dataFilePath);
+  } catch (error) {
+    if (error.code !== "ENOENT") {
+      throw error;
+    }
+
+    await fs.mkdir(dataDir, { recursive: true });
+    await fs.writeFile(dataFilePath, "[]", "utf8");
+  }
+}
+
+async function readCollection() {
+  await ensureDataFile();
+
+  const raw = await fs.readFile(dataFilePath, "utf8");
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    console.warn("Arquivo de coleção inválido, recriando com lista vazia.");
+    await fs.writeFile(dataFilePath, "[]", "utf8");
+    return [];
+  }
+}
+
+async function writeCollection(data) {
+  await fs.mkdir(dataDir, { recursive: true });
+  await fs.writeFile(dataFilePath, JSON.stringify(data, null, 2), "utf8");
+}
+
+app.get("/api/collection", async (req, res) => {
+  try {
+    const data = await readCollection();
+    res.json(data);
+  } catch (error) {
+    console.error("Erro ao carregar coleção:", error);
+    res.status(500).json({ message: "Não foi possível carregar a coleção." });
+  }
+});
+
+app.post("/api/collection", async (req, res) => {
+  const body = req.body;
+
+  if (!Array.isArray(body)) {
+    return res.status(400).json({ message: "Formato inválido. A coleção deve ser uma lista." });
+  }
+
+  try {
+    await writeCollection(body);
+    res.status(204).end();
+  } catch (error) {
+    console.error("Erro ao salvar coleção:", error);
+    res.status(500).json({ message: "Não foi possível salvar a coleção." });
+  }
+});
 
 app.use(express.static(publicDir));
 

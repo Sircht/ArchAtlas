@@ -1257,6 +1257,7 @@
   
 <script>
   const STORAGE_KEY = "anuario-namoro-v2";
+  const API_COLLECTION_URL = "/api/collection";
 
   const colecaoPadrao = [
     {
@@ -1508,7 +1509,7 @@
     }));
   }
 
-  function carregarDados() {
+  function carregarDadosLocais() {
     try {
       const salvo = window.localStorage?.getItem(STORAGE_KEY);
       if (salvo) {
@@ -1524,8 +1525,36 @@
     return normalizarColecao(colecaoPadrao);
   }
 
-  let colecaoAnual = carregarDados();
+  let colecaoAnual = carregarDadosLocais();
   colecaoAnual.sort((a, b) => a.anoNumero - b.anoNumero);
+
+  async function sincronizarColecaoServidor() {
+    try {
+      const response = await fetch(API_COLLECTION_URL, { cache: "no-store" });
+      if (!response.ok) {
+        throw new Error(`Status ${response.status}`);
+      }
+
+      const dados = await response.json();
+      if (!Array.isArray(dados)) {
+        throw new Error("Formato de coleção inválido");
+      }
+
+      colecaoAnual = normalizarColecao(dados);
+      colecaoAnual.sort((a, b) => a.anoNumero - b.anoNumero);
+
+      try {
+        window.localStorage?.setItem(STORAGE_KEY, JSON.stringify(colecaoAnual));
+      } catch (error) {
+        console.warn("Não foi possível atualizar o cache local:", error);
+      }
+
+      criarNavegacaoAnos();
+      renderizarColecao();
+    } catch (error) {
+      console.warn("Não foi possível sincronizar com o servidor:", error);
+    }
+  }
 
   const estadoExpansao = new Map();
   const filtersContainer = document.querySelector(".filters");
@@ -1657,11 +1686,25 @@
     }
   }
 
-  function salvarDados() {
+  async function salvarDados() {
     try {
       window.localStorage?.setItem(STORAGE_KEY, JSON.stringify(colecaoAnual));
     } catch (error) {
-      console.warn("Não foi possível salvar as alterações:", error);
+      console.warn("Não foi possível salvar as alterações localmente:", error);
+    }
+
+    try {
+      const response = await fetch(API_COLLECTION_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(colecaoAnual)
+      });
+
+      if (!response.ok) {
+        throw new Error(`Status ${response.status}`);
+      }
+    } catch (error) {
+      console.warn("Não foi possível salvar as alterações no servidor:", error);
     }
   }
 
@@ -2851,6 +2894,7 @@
 
   criarNavegacaoAnos();
   renderizarColecao();
+  sincronizarColecaoServidor();
 </script>
 
 </body>
