@@ -41,7 +41,11 @@ async function readCollection() {
   const raw = await fs.readFile(dataFilePath, "utf8");
   try {
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
+    if (Array.isArray(parsed) || (parsed && typeof parsed === "object")) {
+      return parsed;
+    }
+
+    return [];
   } catch (error) {
     console.warn("Arquivo de coleção inválido, recriando com lista vazia.");
     await fs.writeFile(dataFilePath, "[]", "utf8");
@@ -67,8 +71,8 @@ app.get("/api/collection", async (req, res) => {
 app.post("/api/collection", async (req, res) => {
   const body = req.body;
 
-  if (!Array.isArray(body)) {
-    return res.status(400).json({ message: "Formato inválido. A coleção deve ser uma lista." });
+  if (!Array.isArray(body) && (typeof body !== "object" || body === null)) {
+    return res.status(400).json({ message: "Formato inválido. A coleção deve ser uma lista ou um objeto." });
   }
 
   try {

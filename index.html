@@ -267,6 +267,230 @@
       margin-top: 32px;
     }
 
+    .gastronomy-collection {
+      margin-top: 32px;
+      display: grid;
+      gap: 28px;
+    }
+
+    .gastronomy-collection[hidden] {
+      display: none;
+    }
+
+    .gastronomy-intro {
+      margin: 0;
+      font-size: 1rem;
+      color: rgba(226, 235, 255, 0.82);
+      line-height: 1.6;
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(147, 197, 253, 0.18);
+      border-radius: 22px;
+      padding: clamp(18px, 3vw, 28px);
+      box-shadow: 0 18px 42px rgba(5, 15, 32, 0.45);
+    }
+
+    .gastronomy-heading {
+      margin: 0;
+      font-size: clamp(1.6rem, 3.6vw, 2rem);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .gastronomy-category {
+      position: relative;
+      background: linear-gradient(135deg, rgba(14, 32, 58, 0.94), rgba(6, 18, 34, 0.94));
+      border: 1px solid rgba(147, 197, 253, 0.14);
+      border-radius: 26px;
+      padding: clamp(20px, 3vw, 32px);
+      box-shadow: 0 26px 58px rgba(5, 14, 30, 0.55);
+      display: grid;
+      gap: 22px;
+    }
+
+    .gastronomy-category::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 26px;
+      border: 1px solid rgba(147, 197, 253, 0.08);
+      pointer-events: none;
+    }
+
+    .gastronomy-category-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .gastronomy-category-title {
+      margin: 0;
+      font-size: clamp(1.4rem, 3.2vw, 1.8rem);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .gastronomy-search-wrapper {
+      margin: 24px 0 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .gastronomy-search {
+      flex: 1;
+      min-width: min(260px, 100%);
+      border-radius: 18px;
+      padding: 12px 18px;
+      border: 1px solid rgba(147, 197, 253, 0.25);
+      background: rgba(7, 20, 38, 0.85);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.95rem;
+      box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.12);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .gastronomy-search:focus {
+      outline: none;
+      border-color: rgba(147, 197, 253, 0.55);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    }
+
+    .gastronomy-carousel {
+      margin-top: 8px;
+    }
+
+    .gastronomy-carousel .carousel-track {
+      padding: 12px 6px;
+      gap: 20px;
+    }
+
+    .gastronomy-carousel .carousel-track > * {
+      flex: 0 0 clamp(250px, 70vw, 360px);
+    }
+
+    .gastronomy-category-feedback {
+      margin: 12px 0 0;
+    }
+
+    .gastronomy-search-feedback {
+      margin: 0 0 12px;
+    }
+
+    .gastronomy-card {
+      background: rgba(8, 21, 39, 0.92);
+      border: 1px solid rgba(147, 197, 253, 0.12);
+      border-radius: 20px;
+      padding: 20px;
+      display: grid;
+      gap: 16px;
+      box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.08);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .gastronomy-card:hover,
+    .gastronomy-card:focus-within {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 36px rgba(5, 12, 26, 0.45);
+    }
+
+    .gastronomy-card-header {
+      display: grid;
+      gap: 6px;
+    }
+
+    .gastronomy-place {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.75rem;
+      color: rgba(147, 197, 253, 0.75);
+    }
+
+    .gastronomy-product {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .gastronomy-ratings {
+      display: grid;
+      gap: 8px;
+    }
+
+    .gastronomy-rating {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 0.92rem;
+      color: rgba(224, 235, 255, 0.82);
+    }
+
+    .gastronomy-rating-label {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.72rem;
+      color: rgba(147, 197, 253, 0.68);
+    }
+
+    .gastronomy-rating-value {
+      font-weight: 600;
+    }
+
+    .gastronomy-overall {
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(59, 130, 246, 0.14);
+      border: 1px solid rgba(147, 197, 253, 0.2);
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      justify-self: flex-start;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .gastronomy-overall-value {
+      color: var(--accent-strong);
+      min-width: 2ch;
+    }
+
+    .gastronomy-overall[data-missing="true"] {
+      background: rgba(147, 197, 253, 0.12);
+      border-style: dashed;
+      color: rgba(226, 235, 255, 0.75);
+    }
+
+    .gastronomy-overall[data-missing="true"] .gastronomy-overall-value {
+      color: rgba(219, 234, 254, 0.9);
+    }
+
+    .gastronomy-overall-hint {
+      font-size: 0.85rem;
+      color: rgba(214, 226, 255, 0.7);
+      font-weight: 400;
+    }
+
+    .gastronomy-card.recently-added {
+      outline: 2px solid rgba(147, 197, 253, 0.7);
+      outline-offset: 2px;
+      animation: gastronomy-card-flash 1.6s ease-in-out 2;
+    }
+
+    @keyframes gastronomy-card-flash {
+      0%, 100% {
+        box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.08);
+      }
+      50% {
+        box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.45);
+      }
+    }
+
     .year-card {
       background: linear-gradient(135deg, rgba(13, 28, 48, 0.94), rgba(8, 20, 38, 0.94));
       border: 1px solid rgba(147, 197, 253, 0.12);
@@ -1312,6 +1536,9 @@
       <section class="years-collection" aria-live="polite">
         <!-- Pastas anuais são geradas dinamicamente via JavaScript -->
       </section>
+      <section class="gastronomy-collection" aria-labelledby="gastronomy-title" hidden>
+        <!-- Reviews gastronômicas são preenchidas via JavaScript -->
+      </section>
     </div>
   </main>
 
@@ -1345,245 +1572,362 @@
   const STORAGE_KEY = "anuario-namoro-v2";
   const API_COLLECTION_URL = "/api/collection";
 
-  const colecaoPadrao = [
-    {
-      anoNumero: 1,
-      anoLabel: "Ano 1 (2023)",
-      tema: "Ano do Tênis da Nike",
-      resumo: "O começo de tudo, com descobertas e o símbolo do nosso tênis inseparável.",
-      badges: [
+  const colecaoPadrao = {
+    anos: [
+      {
+        anoNumero: 1,
+        anoLabel: "Ano 1 (2023)",
+        tema: "Ano do Tênis da Nike",
+        resumo: "O começo de tudo, com descobertas e o símbolo do nosso tênis inseparável.",
+        badges: [
+          {
+            titulo: "Ano do Tênis da Nike",
+            tipo: "Badge",
+            imagem: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80",
+            descricao: "Esse ano foi marcado pelo tênis da Nike, nosso símbolo de aventuras compartilhadas e trilhas de risadas.",
+            momentos: [
+              "Primeiro filme juntos",
+              "Nossa viagem para X",
+              "O presente do tênis da Nike"
+            ]
+          }
+        ],
+        cartas: [
+          {
+            titulo: "Carta Ano 1",
+            tipo: "Carta",
+            imagem: "https://images.unsplash.com/photo-1483794344563-d27a8d18014e?auto=format&fit=crop&w=800&q=80",
+            descricao: "Resumo da carta do Ano 1: memórias escritas à mão com promessas de novos capítulos juntos.",
+            momentos: []
+          }
+        ],
+        filmes: [
+          {
+            nome: "Jogos Vorazes: A Cantiga dos Pássaros e das Serpentes",
+            nota: "10/10",
+            capa: "https://images.unsplash.com/photo-1517602302552-471fe67acf66?auto=format&fit=crop&w=800&q=80",
+            dataSessao: "18 de novembro de 2023",
+            local: "Cinemark Botafogo",
+            comentario: "Nossa primeira maratona de volta a Panem rendeu conversa até em casa.",
+            destaque: "Registro na galeria com o pôster dourado da Rosa cantando ao fundo."
+          },
+          {
+            nome: "Wonka",
+            nota: "9/10",
+            capa: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80",
+            dataSessao: "8 de dezembro de 2023",
+            local: "Cinépolis Lagoon",
+            comentario: "O chocolate tem gosto especial quando a sessão é cheia de músicas novas.",
+            destaque: "Saímos com vontade de testar cada receita maluca do Willy."
+          },
+          {
+            nome: "Aquaman 2: O Reino Perdido",
+            nota: "8/10",
+            capa: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80",
+            dataSessao: "27 de dezembro de 2023",
+            local: "UCI New York City Center",
+            comentario: "Os efeitos subaquáticos foram desculpa perfeita para encerrar o ano juntinhos.",
+            destaque: "Foto com o tridente gigante do saguão antes de entrar na sala."
+          }
+        ],
+        comidas: []
+      },
+      {
+        anoNumero: 2,
+        anoLabel: "Ano 2 (2024)",
+        tema: "Ano das Constelações",
+        resumo: "Transformamos o céu em mapa para os nossos planos e sonhos compartilhados.",
+        badges: [
+          {
+            titulo: "Ano das Constelações",
+            tipo: "Badge",
+            imagem: "https://images.unsplash.com/photo-1527176930608-09cb256ab504?auto=format&fit=crop&w=800&q=80",
+            descricao: "Colecionamos estrelas e sonhos, com noites observando constelações e planos para o futuro.",
+            momentos: [
+              "Piquenique sob as estrelas",
+              "Nosso show favorito",
+              "Descobrimos a música que virou trilha sonora"
+            ]
+          }
+        ],
+        cartas: [
+          {
+            titulo: "Carta Ano 2",
+            tipo: "Carta",
+            imagem: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80",
+            descricao: "Uma carta cheia de planos, agradecendo por cada constelação que desenhamos juntos.",
+            momentos: []
+          }
+        ],
+        filmes: [
+          {
+            nome: "Madame Teia",
+            nota: "7/10",
+            capa: "https://images.unsplash.com/photo-1526312474565-813bdcfd802c?auto=format&fit=crop&w=800&q=80",
+            dataSessao: "16 de fevereiro de 2024",
+            local: "Cinemark Downtown",
+            comentario: "A teoria multiversal rendeu risadas e debates no pós-créditos.",
+            destaque: "Primeira foto do ano com os ingressos segurando mãozinhas."
+          },
+          {
+            nome: "Garfield – Fora de Casa",
+            nota: "8/10",
+            capa: "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=800&q=80",
+            dataSessao: "1 de junho de 2024",
+            local: "Kinoplex RioSul",
+            comentario: "Rimos tanto com as trapalhadas do Garfield que até esquecemos da dieta.",
+            destaque: "Pipoca com extra de queijo para combinar com o gato mais preguiçoso."
+          },
+          {
+            nome: "Divertida Mente 2",
+            nota: "10/10",
+            capa: "https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=800&q=80",
+            dataSessao: "27 de junho de 2024",
+            local: "UCI ParkJacarepaguá",
+            comentario: "Cada emoção nova virou abraço e piada interna na saída.",
+            destaque: "Escolhemos juntas qual emoção liderou o dia."
+          },
+          {
+            nome: "Operação Natal",
+            nota: "8/10",
+            capa: "https://images.unsplash.com/photo-1543589077-47d81606c1bf?auto=format&fit=crop&w=800&q=80",
+            dataSessao: "23 de novembro de 2024",
+            local: "Cinépolis Lagoon",
+            comentario: "Começamos a temporada natalina com direito a casaco combinando.",
+            destaque: "Foto com as luzes vermelhas e verdes do hall todo iluminado."
+          },
+          {
+            nome: "Venom: A Última Rodada",
+            nota: "8.5/10",
+            capa: "https://images.unsplash.com/photo-1525182008055-f88b95ff7980?auto=format&fit=crop&w=800&q=80",
+            dataSessao: "24 de novembro de 2024",
+            local: "Cinemark Botafogo",
+            comentario: "A sessão lotada virou festa com cada piada do simbionte.",
+            destaque: "Ganhamos cartaz miniatura e já foi direto pro mural."
+          }
+        ],
+        comidas: []
+      },
+      {
+        anoNumero: 3,
+        anoLabel: "Ano 3 (2025)",
+        tema: "Ano das Estreias Inesquecíveis",
+        resumo: "Planejamos cada lançamento como se fosse uma viagem, com listas, trailers e expectativas compartilhadas.",
+        badges: [],
+        cartas: [],
+        filmes: [
+          {
+            nome: "Capitão América: Admirável Mundo Novo",
+            nota: "Em breve",
+            capa: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80",
+            dataSessao: "13 de fevereiro de 2025",
+            local: "Pré-estreia na sala XD",
+            comentario: "Contagem regressiva com maratona dos Vingadores agendada.",
+            destaque: "Separar o escudo para a foto temática antes da sessão."
+          },
+          {
+            nome: "Thunderbolts",
+            nota: "Em breve",
+            capa: "https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=800&q=80",
+            dataSessao: "30 de abril de 2025",
+            local: "Semana geek no cinema",
+            comentario: "Planejando a roupa combinando com o time de anti-heróis.",
+            destaque: "Menu de lanches temáticos para cada integrante."
+          },
+          {
+            nome: "Lilo & Stitch",
+            nota: "Em breve",
+            capa: "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&w=800&q=80",
+            dataSessao: "24 de maio de 2025",
+            local: "Sessão especial com pelúcia",
+            comentario: "Ohana já separada para cantar junto no cinema.",
+            destaque: "Foto abraçadas com o Stitch antes de entrar."
+          },
+          {
+            nome: "Como Treinar o Seu Dragão (2025)",
+            nota: "Em breve",
+            capa: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=800&q=80",
+            dataSessao: "18 de junho de 2025",
+            local: "Sessão IMAX planejada",
+            comentario: "Lenços prontos para reencontrar Banguela na telona.",
+            destaque: "Desenho especial pós-filme para registrar o momento."
+          },
+          {
+            nome: "Quarteto Fantástico: Primeiros Passos",
+            nota: "Em breve",
+            capa: "https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=800&q=80",
+            dataSessao: "3 de agosto de 2025",
+            local: "Passeio geek com amigos",
+            comentario: "Organizando a turminha para assistir a nova formação juntos.",
+            destaque: "Playlist anos 60 na estrada para entrar no clima."
+          }
+        ],
+        comidas: []
+      }
+    ],
+    gastronomia: {
+      introducao: "Nossas notas honestas para cada mordida especial que dividimos — reunidas em um só lugar para facilitar as próximas escolhas.",
+      categorias: [
         {
-          titulo: "Ano do Tênis da Nike",
-          tipo: "Badge",
-          imagem: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80",
-          descricao: "Esse ano foi marcado pelo tênis da Nike, nosso símbolo de aventuras compartilhadas e trilhas de risadas.",
-          momentos: [
-            "Primeiro filme juntos",
-            "Nossa viagem para X",
-            "O presente do tênis da Nike"
+          slug: "cookies",
+          titulo: "Cookies",
+          icone: "🍪",
+          avaliacoes: [
+            {
+              local: "KarameLo",
+              produto: "Cookie Triplo chocolate",
+              notas: [
+                { criterio: "Sabor", valor: 10 },
+                { criterio: "Tamanho", valor: 6 },
+                { criterio: "Recheio", valor: 4 }
+              ],
+              notaGeral: 6.6
+            },
+            {
+              local: "Big Brookie",
+              produto: "Chocowhite",
+              notas: [
+                { criterio: "Sabor", valor: 10 },
+                { criterio: "Tamanho", valor: 8 },
+                { criterio: "Recheio", valor: 8 }
+              ],
+              notaGeral: 8.6
+            },
+            {
+              local: "Big Brookie",
+              produto: "Oreo",
+              notas: [
+                { criterio: "Sabor", valor: 8 },
+                { criterio: "Tamanho", valor: 8 },
+                { criterio: "Recheio", valor: 6.5 }
+              ],
+              notaGeral: 7.5
+            },
+            {
+              local: "Big Brookie",
+              produto: "Farinha Láctea",
+              notas: [
+                { criterio: "Sabor", valor: 7 },
+                { criterio: "Tamanho", valor: 8 },
+                { criterio: "Recheio", valor: 7 }
+              ],
+              notaGeral: 7.33
+            }
+          ]
+        },
+        {
+          slug: "pizza",
+          titulo: "Pizza",
+          icone: "🍕",
+          avaliacoes: [
+            {
+              local: "Vicoli",
+              produto: "Margherita Sbagliata",
+              notas: [
+                { criterio: "Sabor", valor: 10 },
+                { criterio: "Tamanho", valor: 7 },
+                { criterio: "Recheio", valor: 8 }
+              ],
+              notaGeral: 8.3
+            },
+            {
+              local: "Elite",
+              produto: "Marguerita",
+              notas: [
+                { criterio: "Sabor", valor: 9 },
+                { criterio: "Tamanho", valor: 10 },
+                { criterio: "Recheio", valor: 10 }
+              ],
+              notaGeral: 9.6
+            },
+            {
+              local: "Forneria Original",
+              produto: "Chocolate",
+              notas: [
+                { criterio: "Sabor", valor: 10 },
+                { criterio: "Tamanho", valor: 7 },
+                { criterio: "Recheio", valor: 10 }
+              ],
+              notaGeral: null
+            },
+            {
+              local: "Forneria Original",
+              produto: "Marguerita Especial",
+              notas: [
+                { criterio: "Sabor", valor: 9 },
+                { criterio: "Tamanho", valor: 7.5 },
+                { criterio: "Recheio", valor: 6 }
+              ],
+              notaGeral: null
+            },
+            {
+              local: "Brasa e Vino",
+              produto: "Rodízio",
+              notas: [
+                { criterio: "Sabor", valor: 9.5 },
+                { criterio: "Tamanho", valor: 10 },
+                { criterio: "Recheio", valor: 10 }
+              ],
+              notaGeral: null
+            },
+            {
+              local: "Domino's",
+              produto: "Frango com catupiry",
+              notas: [
+                { criterio: "Sabor", valor: 10 },
+                { criterio: "Tamanho", valor: 10 },
+                { criterio: "Recheio", valor: 10 }
+              ],
+              notaGeral: 10
+            },
+            {
+              local: "Domino's",
+              produto: "Marguerita",
+              notas: [
+                { criterio: "Sabor", valor: 10 },
+                { criterio: "Tamanho", valor: 10 },
+                { criterio: "Recheio", valor: 10 }
+              ],
+              notaGeral: 10
+            }
           ]
         }
-      ],
-      cartas: [
-        {
-          titulo: "Carta Ano 1",
-          tipo: "Carta",
-          imagem: "https://images.unsplash.com/photo-1483794344563-d27a8d18014e?auto=format&fit=crop&w=800&q=80",
-          descricao: "Resumo da carta do Ano 1: memórias escritas à mão com promessas de novos capítulos juntos.",
-          momentos: []
-        }
-      ],
-      filmes: [
-        {
-          nome: "La La Land",
-          nota: "9.5/10",
-          capa: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=800&q=80",
-          dataSessao: "26 de setembro de 2023",
-          local: "Cinemark Downtown",
-          comentario: "Nosso primeiro filme como casal, com direito a mãos dadas do começo ao fim.",
-          destaque: "Saímos cantando 'City of Stars' até chegar no carro."
-        },
-        {
-          nome: "Jogos Vorazes: A Cantiga dos Pássaros e das Serpentes",
-          nota: "Em breve",
-          capa: "https://images.unsplash.com/photo-1517602302552-471fe67acf66?auto=format&fit=crop&w=800&q=80",
-          dataSessao: "18 de novembro de 2023",
-          local: "Pré-estreia combinada",
-          comentario: "Já estamos planejando a maratona da saga antes de ver o novo capítulo.",
-          destaque: "Vai ser noite de pipoca gigante e comentários sobre Snow o caminho inteiro."
-        },
-        {
-          nome: "Wonka",
-          nota: "Em breve",
-          capa: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80",
-          dataSessao: "8 de dezembro de 2023",
-          local: "Cinema com chocolate obrigatório",
-          comentario: "Promessa feita: cada cena com doce vira desculpa para a nossa própria degustação.",
-          destaque: "Vamos sair procurando receitas malucas para testar em casa."
-        },
-        {
-          nome: "Aquaman 2: O Reino Perdido",
-          nota: "Em breve",
-          capa: "https://images.unsplash.com/photo-1505764706515-aa95265c5abc?auto=format&fit=crop&w=800&q=80",
-          dataSessao: "27 de dezembro de 2023",
-          local: "Sessão pós-Natal",
-          comentario: "Fecharemos o ano com aventura submarina e discussão sobre qual reino moraríamos.",
-          destaque: "Foto temática com nossas camisetas geek garantida antes de entrar na sala."
-        }
-      ],
-      comidas: [
-        {
-          titulo: "Jantar no Burger Garage",
-          tipo: "Review gastronômica",
-          imagem: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?auto=format&fit=crop&w=800&q=80",
-          nota: 4.5,
-          local: "Burger Garage — Barra da Tijuca",
-          descricao: "Descobrimos o burger suculento e dividimos batatas com cheddar até não aguentar mais.",
-          destaque: "Voltamos duas vezes no mesmo mês porque não conseguimos superar a batatinha.",
-          momentos: []
-        }
       ]
-    },
-    {
-      anoNumero: 2,
-      anoLabel: "Ano 2 (2024)",
-      tema: "Ano das Constelações",
-      resumo: "Transformamos o céu em mapa para os nossos planos e sonhos compartilhados.",
-      badges: [
-        {
-          titulo: "Ano das Constelações",
-          tipo: "Badge",
-          imagem: "https://images.unsplash.com/photo-1527176930608-09cb256ab504?auto=format&fit=crop&w=800&q=80",
-          descricao: "Colecionamos estrelas e sonhos, com noites observando constelações e planos para o futuro.",
-          momentos: [
-            "Piquenique sob as estrelas",
-            "Nosso show favorito",
-            "Descobrimos a música que virou trilha sonora"
-          ]
-        }
-      ],
-      cartas: [
-        {
-          titulo: "Carta Ano 2",
-          tipo: "Carta",
-          imagem: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80",
-          descricao: "Uma carta cheia de planos, agradecendo por cada constelação que desenhamos juntos.",
-          momentos: []
-        }
-      ],
-      filmes: [
-        {
-          nome: "Interestelar",
-          nota: "10/10",
-          capa: "https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=800&q=80",
-          dataSessao: "12 de maio de 2024",
-          local: "Sessão pipoca em casa",
-          comentario: "Virou tradição: cobertor, chocolate quente e olhos marejados com o final.",
-          destaque: "Prometemos assistir novamente quando viajarmos para a nossa próxima constelação."
-        },
-        {
-          nome: "Madame Teia",
-          nota: "Em breve",
-          capa: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=800&q=80",
-          dataSessao: "16 de fevereiro de 2024",
-          local: "Noite Marvel combinada",
-          comentario: "Vamos de combo duplo e discutir cada detalhe do multiverso na volta pra casa.",
-          destaque: "Lembrar de levar o casaco porque cinema de super-herói é sempre gelado."
-        },
-        {
-          nome: "Garfield – Fora de Casa",
-          nota: "Em breve",
-          capa: "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=800&q=80",
-          dataSessao: "1º de junho de 2024",
-          local: "Sessão de sábado com brunch antes",
-          comentario: "Filme perfeito pra rir junto e sair planejando receitas com lasanha.",
-          destaque: "Fotos com nossas meias combinando de gato antes de entrar no cinema."
-        },
-        {
-          nome: "Divertida Mente 2",
-          nota: "Em breve",
-          capa: "https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=800&q=80",
-          dataSessao: "27 de junho de 2024",
-          local: "Pré-estreia com caixa de lenços",
-          comentario: "Já prevendo lágrimas e abraços apertados em cada nova emoção que aparecer.",
-          destaque: "Depois da sessão vamos escolher qual emoção virou nossa favorita do dia."
-        },
-        {
-          nome: "Operação Natal",
-          nota: "Em breve",
-          capa: "https://images.unsplash.com/photo-1482517967863-00e15c9b44be?auto=format&fit=crop&w=800&q=80",
-          dataSessao: "23 de novembro de 2024",
-          local: "Maratona natalina",
-          comentario: "Inicio oficial da nossa temporada de filmes de Natal com chocolate quente.",
-          destaque: "Decorar a sala com luzinhas antes da sessão pra entrar no clima."
-        },
-        {
-          nome: "Venom: A Última Rodada",
-          nota: "Em breve",
-          capa: "https://images.unsplash.com/photo-1497091071254-cc9b2ba7c48a?auto=format&fit=crop&w=800&q=80",
-          dataSessao: "24 de novembro de 2024",
-          local: "Fim de semana geek",
-          comentario: "Um dia depois da maratona natalina, vamos alternar com um pouco de caos simbionte.",
-          destaque: "Prometido: sem spoiler até todo mundo terminar a pipoca."
-        }
-      ],
-      comidas: [
-        {
-          titulo: "Brunch de domingo",
-          tipo: "Review gastronômica",
-          imagem: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=800&q=80",
-          nota: 4.8,
-          local: "Café da Praça — Botafogo",
-          descricao: "Virou ritual começar o domingo com panquecas, café coado e nossas conversas infinitas.",
-          destaque: "Você roubou metade do meu maple syrup e mesmo assim eu achei fofo.",
-          momentos: []
-        }
-      ]
-    },
-    {
-      anoNumero: 3,
-      anoLabel: "Ano 3 (2025)",
-      tema: "Ano das Estreias Inesquecíveis",
-      resumo: "Planejamos cada lançamento como se fosse uma viagem, com listas, trailers e expectativas compartilhadas.",
-      badges: [],
-      cartas: [],
-      filmes: [
-        {
-          nome: "Capitão América: Admirável Mundo Novo",
-          nota: "Em breve",
-          capa: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80",
-          dataSessao: "13 de fevereiro de 2025",
-          local: "Estreia com direito a cosplay",
-          comentario: "Vamos reviver a saga dos Vingadores antes e comentar cada referência pós-créditos.",
-          destaque: "Reservar os melhores lugares na sala XD assim que abrirem as vendas."
-        },
-        {
-          nome: "Thunderbolts",
-          nota: "Em breve",
-          capa: "https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=800&q=80",
-          dataSessao: "30 de abril de 2025",
-          local: "Semana geek no cinema",
-          comentario: "Maratona estratégica para lembrar de cada anti-herói antes do time improvável se formar.",
-          destaque: "Combinar lanches temáticos para cada integrante da equipe."
-        },
-        {
-          nome: "Lilo & Stitch",
-          nota: "Em breve",
-          capa: "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&w=800&q=80",
-          dataSessao: "24 de maio de 2025",
-          local: "Sessão especial com pelúcia na mão",
-          comentario: "Garantir que o Ohana esteja completo com direito a reprise do clássico animado na véspera.",
-          destaque: "Foto abraçados com nossas camisetas do Stitch antes de entrar."
-        },
-        {
-          nome: "Como Treinar o Seu Dragão (2025)",
-          nota: "Em breve",
-          capa: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=800&q=80",
-          dataSessao: "18 de junho de 2025",
-          local: "Sessão IMAX planejada",
-          comentario: "Vamos voltar a Berk de coração aberto e com lenços prontos para reencontrar Banguela.",
-          destaque: "Depois da sessão rola desenho temático para registrar o momento."
-        },
-        {
-          nome: "Quarteto Fantástico: Primeiros Passos",
-          nota: "Em breve",
-          capa: "https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=800&q=80",
-          dataSessao: "3 de agosto de 2025",
-          local: "Passeio geek com amigos",
-          comentario: "Combinado: levar nossa equipe favorita para assistir juntos a nova formação do Quarteto.",
-          destaque: "Montar playlist anos 60 para ouvir no caminho e entrar no clima."
-        }
-      ],
-      comidas: []
     }
-  ];
+  };
 
   function clonar(obj) {
     return JSON.parse(JSON.stringify(obj));
   }
 
-  function normalizarColecao(dados) {
-    return clonar(dados).map(ano => ({
+  function normalizarNumero(valor) {
+    if (typeof valor === "number" && Number.isFinite(valor)) {
+      return valor;
+    }
+
+    if (typeof valor === "string") {
+      const numero = Number.parseFloat(valor.replace(",", "."));
+      if (Number.isFinite(numero)) {
+        return numero;
+      }
+    }
+
+    return null;
+  }
+
+  function normalizarTextoBusca(texto) {
+    if (typeof texto !== "string") {
+      return "";
+    }
+
+    return texto
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+  }
+
+  function normalizarAnos(lista) {
+    return clonar(lista).map(ano => ({
       anoNumero: ano.anoNumero,
       anoLabel: ano.anoLabel ?? `Ano ${ano.anoNumero}`,
       tema: ano.tema ?? "",
@@ -1595,23 +1939,77 @@
     }));
   }
 
+  function normalizarCategoriaGastronomia(categoria) {
+    const avaliacoes = Array.isArray(categoria?.avaliacoes) ? categoria.avaliacoes : [];
+    return {
+      slug: categoria?.slug ?? (categoria?.titulo ? categoria.titulo.toLowerCase().replace(/\s+/g, "-") : "categoria"),
+      titulo: categoria?.titulo ?? "Categoria",
+      icone: categoria?.icone ?? "🍽️",
+      avaliacoes: avaliacoes.map(avaliacao => ({
+        local: avaliacao?.local ?? "",
+        produto: avaliacao?.produto ?? "",
+        notas: Array.isArray(avaliacao?.notas)
+          ? avaliacao.notas
+              .map(nota => ({
+                criterio: nota?.criterio ?? "",
+                valor: normalizarNumero(nota?.valor),
+              }))
+              .filter(nota => nota.criterio)
+          : [],
+        notaGeral: normalizarNumero(avaliacao?.notaGeral),
+      })),
+    };
+  }
+
+  function normalizarGastronomia(dados) {
+    const padrao = colecaoPadrao.gastronomia;
+    const categoriasOrigem = Array.isArray(dados?.categorias) && dados.categorias.length > 0
+      ? dados.categorias
+      : padrao.categorias;
+
+    return {
+      introducao: typeof dados?.introducao === "string" && dados.introducao.trim()
+        ? dados.introducao.trim()
+        : padrao.introducao,
+      categorias: categoriasOrigem.map(normalizarCategoriaGastronomia),
+    };
+  }
+
+  function normalizarColecaoCompleta(dados) {
+    if (Array.isArray(dados)) {
+      return {
+        anos: normalizarAnos(dados),
+        gastronomia: clonar(colecaoPadrao.gastronomia),
+      };
+    }
+
+    if (dados && typeof dados === "object") {
+      return {
+        anos: normalizarAnos(dados.anos ?? []),
+        gastronomia: normalizarGastronomia(dados.gastronomia ?? {}),
+      };
+    }
+
+    return normalizarColecaoCompleta(colecaoPadrao);
+  }
+
   function carregarDadosLocais() {
     try {
       const salvo = window.localStorage?.getItem(STORAGE_KEY);
       if (salvo) {
         const dados = JSON.parse(salvo);
-        if (Array.isArray(dados)) {
-          return normalizarColecao(dados);
-        }
+        return normalizarColecaoCompleta(dados);
       }
     } catch (error) {
       console.warn("Não foi possível carregar dados salvos:", error);
     }
 
-    return normalizarColecao(colecaoPadrao);
+    return normalizarColecaoCompleta(colecaoPadrao);
   }
 
-  let colecaoAnual = carregarDadosLocais();
+  let colecaoDados = carregarDadosLocais();
+  let colecaoAnual = colecaoDados.anos;
+  let colecaoGastronomia = colecaoDados.gastronomia;
   colecaoAnual.sort((a, b) => a.anoNumero - b.anoNumero);
 
   async function sincronizarColecaoServidor() {
@@ -1622,21 +2020,23 @@
       }
 
       const dados = await response.json();
-      if (!Array.isArray(dados)) {
-        throw new Error("Formato de coleção inválido");
-      }
-
-      colecaoAnual = normalizarColecao(dados);
+      const normalizado = normalizarColecaoCompleta(dados);
+      colecaoDados = normalizado;
+      colecaoAnual = colecaoDados.anos;
+      colecaoGastronomia = colecaoDados.gastronomia;
       colecaoAnual.sort((a, b) => a.anoNumero - b.anoNumero);
 
       try {
-        window.localStorage?.setItem(STORAGE_KEY, JSON.stringify(colecaoAnual));
+        const payload = { anos: colecaoAnual, gastronomia: colecaoGastronomia };
+        window.localStorage?.setItem(STORAGE_KEY, JSON.stringify(payload));
       } catch (error) {
         console.warn("Não foi possível atualizar o cache local:", error);
       }
 
       criarNavegacaoAnos();
       renderizarColecao();
+      renderizarGastronomia();
+      aplicarVisaoAtual();
     } catch (error) {
       console.warn("Não foi possível sincronizar com o servidor:", error);
     }
@@ -1645,6 +2045,7 @@
   const estadoExpansao = new Map();
   const filtersContainer = document.querySelector(".filters");
   const yearsCollection = document.querySelector(".years-collection");
+  const gastronomyCollection = document.querySelector(".gastronomy-collection");
   const editToggleButton = document.querySelector(".edit-toggle");
   const daysSinceStartValue = document.getElementById("days-since-start");
   const hoursSinceStartValue = document.getElementById("hours-since-start");
@@ -1662,7 +2063,10 @@
 
   const editablesRegistrados = new WeakSet();
   const filterButtons = new Map();
+  let gastronomiaFilterButton = null;
+  let visaoAtual = "anos";
   let editMode = false;
+  let termoBuscaGastronomia = "";
 
   const CONFIG_ADICAO = {
     badges: { icone: "✚", rotulo: "Adicionar badge" },
@@ -1751,6 +2155,18 @@
     });
   }
 
+  function formatarNotaDecimal(valor) {
+    if (!Number.isFinite(valor)) {
+      return "--";
+    }
+
+    const temDecimal = Math.abs(valor % 1) > Number.EPSILON;
+    return valor.toLocaleString("pt-BR", {
+      minimumFractionDigits: temDecimal ? 1 : 0,
+      maximumFractionDigits: 2
+    });
+  }
+
   function atualizarContadorRelacionamento() {
     if (!daysSinceStartValue) {
       return;
@@ -1773,8 +2189,10 @@
   }
 
   async function salvarDados() {
+    const payload = { anos: colecaoAnual, gastronomia: colecaoGastronomia };
+
     try {
-      window.localStorage?.setItem(STORAGE_KEY, JSON.stringify(colecaoAnual));
+      window.localStorage?.setItem(STORAGE_KEY, JSON.stringify(payload));
     } catch (error) {
       console.warn("Não foi possível salvar as alterações localmente:", error);
     }
@@ -1783,7 +2201,7 @@
       const response = await fetch(API_COLLECTION_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(colecaoAnual)
+        body: JSON.stringify(payload)
       });
 
       if (!response.ok) {
@@ -2051,16 +2469,136 @@
     return botao;
   }
 
+  function criarReviewGastronomiaPadrao() {
+    return {
+      local: "",
+      produto: "",
+      notas: [
+        { criterio: "Sabor", valor: null },
+        { criterio: "Tamanho", valor: null },
+        { criterio: "Recheio", valor: null }
+      ],
+      notaGeral: null
+    };
+  }
+
+  function destacarNovaReviewGastronomia(slug) {
+    if (!slug) {
+      return;
+    }
+
+    window.requestAnimationFrame(() => {
+      const section = document.getElementById(`gastronomia-${slug}`);
+      if (!section) {
+        return;
+      }
+
+      const card =
+        section.querySelector(".carousel-track .gastronomy-card:last-of-type") ||
+        section.querySelector(".gastronomy-card:last-of-type");
+
+      if (!card) {
+        return;
+      }
+
+      if (!card.hasAttribute("tabindex")) {
+        card.tabIndex = -1;
+      }
+
+      card.classList.add("recently-added");
+
+      if (typeof card.scrollIntoView === "function") {
+        card.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+      }
+
+      if (typeof card.focus === "function") {
+        try {
+          card.focus({ preventScroll: true });
+        } catch (error) {
+          card.focus();
+        }
+      }
+
+      window.setTimeout(() => {
+        card.classList.remove("recently-added");
+      }, 2400);
+    });
+  }
+
+  function adicionarReviewGastronomico(categoriaIndex) {
+    if (!colecaoGastronomia || !Array.isArray(colecaoGastronomia.categorias)) {
+      return;
+    }
+
+    const categoria = colecaoGastronomia.categorias[categoriaIndex];
+    if (!categoria) {
+      return;
+    }
+
+    if (!Array.isArray(categoria.avaliacoes)) {
+      categoria.avaliacoes = [];
+    }
+
+    categoria.avaliacoes.push(criarReviewGastronomiaPadrao());
+    agendarPersistencia();
+
+    termoBuscaGastronomia = "";
+    renderizarGastronomia();
+    destacarNovaReviewGastronomia(categoria.slug ?? `categoria-${categoriaIndex}`);
+  }
+
+  function criarBotaoAdicionarReviewGastronomia(categoria, categoriaIndex) {
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.className = "add-item-button";
+    const icone = categoria?.icone ?? "🍽️";
+    botao.innerHTML = `<span aria-hidden="true">${icone}</span><span>Adicionar review gastronômico</span>`;
+    botao.addEventListener("click", () => {
+      if (!editMode) {
+        definirModoEdicao(true);
+      }
+      adicionarReviewGastronomico(categoriaIndex);
+    });
+    return botao;
+  }
+
   function registrarCampoEditavel(
     element,
-    { yearIndex, category = "ano", itemIndex, field, allowBreaks = false, placeholder = "" } = {}
+    {
+      yearIndex,
+      category = "ano",
+      itemIndex,
+      field,
+      allowBreaks = false,
+      placeholder = "",
+      collection = "anos",
+      gastronomyCategoryIndex,
+      gastronomyReviewIndex,
+      gastronomyRatingIndex
+    } = {}
   ) {
     element.dataset.editable = "true";
-    element.dataset.yearIndex = String(yearIndex);
     element.dataset.field = field;
-    element.dataset.category = category;
-    if (typeof itemIndex === "number") {
-      element.dataset.itemIndex = String(itemIndex);
+    element.dataset.collection = collection;
+
+    if (collection === "gastronomia") {
+      if (typeof gastronomyCategoryIndex === "number") {
+        element.dataset.gastronomyCategoryIndex = String(gastronomyCategoryIndex);
+      }
+      if (typeof gastronomyReviewIndex === "number") {
+        element.dataset.gastronomyReviewIndex = String(gastronomyReviewIndex);
+      }
+      if (typeof gastronomyRatingIndex === "number") {
+        element.dataset.gastronomyRatingIndex = String(gastronomyRatingIndex);
+      }
+    } else {
+      if (typeof yearIndex === "number") {
+        element.dataset.yearIndex = String(yearIndex);
+      }
+      element.dataset.category = category;
+      if (typeof itemIndex === "number") {
+        element.dataset.itemIndex = String(itemIndex);
+      }
     }
     if (allowBreaks) {
       element.dataset.allowBreaks = "true";
@@ -2123,6 +2661,71 @@
     });
   }
 
+  function atualizarDadoGastronomia(element, campo, valor) {
+    if (!campo || !colecaoGastronomia) {
+      return;
+    }
+
+    if (campo === "introducao") {
+      colecaoGastronomia.introducao = valor;
+      agendarPersistencia();
+      return;
+    }
+
+    if (!Array.isArray(colecaoGastronomia.categorias)) {
+      return;
+    }
+
+    const categoriaIndex = Number(element.dataset.gastronomyCategoryIndex);
+    if (!Number.isFinite(categoriaIndex)) {
+      return;
+    }
+
+    const categoria = colecaoGastronomia.categorias[categoriaIndex];
+    if (!categoria) {
+      return;
+    }
+
+    if (!Array.isArray(categoria.avaliacoes)) {
+      categoria.avaliacoes = [];
+    }
+
+    const reviewIndex = Number(element.dataset.gastronomyReviewIndex);
+    if (!Number.isFinite(reviewIndex) || !categoria.avaliacoes[reviewIndex]) {
+      return;
+    }
+
+    const avaliacao = categoria.avaliacoes[reviewIndex];
+    const ratingIndex = element.dataset.gastronomyRatingIndex !== undefined
+      ? Number(element.dataset.gastronomyRatingIndex)
+      : NaN;
+
+    if (Number.isFinite(ratingIndex)) {
+      if (!Array.isArray(avaliacao.notas)) {
+        avaliacao.notas = [];
+      }
+
+      const notaAtual = avaliacao.notas[ratingIndex] ?? { criterio: "", valor: null };
+      if (campo === "criterio") {
+        notaAtual.criterio = valor;
+      } else {
+        const numero = normalizarNumero(valor);
+        notaAtual.valor = Number.isFinite(numero) ? numero : null;
+      }
+      avaliacao.notas[ratingIndex] = notaAtual;
+    } else if (campo === "notaGeral") {
+      const numero = normalizarNumero(valor);
+      avaliacao.notaGeral = Number.isFinite(numero) ? numero : null;
+    } else if (campo === "local" || campo === "produto") {
+      avaliacao[campo] = valor;
+    } else {
+      avaliacao[campo] = valor;
+    }
+
+    agendarPersistencia();
+    renderizarGastronomia();
+  }
+
   function obterValorEditado(element) {
     const texto = element.innerText.replace(/ /g, " ");
     if (element.dataset.allowBreaks === "true") {
@@ -2132,9 +2735,18 @@
   }
 
   function atualizarDado(element) {
+    const campo = element.dataset.field;
+    const collection = element.dataset.collection ?? "anos";
+
+    const valor = obterValorEditado(element);
+
+    if (collection === "gastronomia") {
+      atualizarDadoGastronomia(element, campo, valor);
+      return;
+    }
+
     const yearIndex = Number(element.dataset.yearIndex);
     const categoria = element.dataset.category || "ano";
-    const campo = element.dataset.field;
     const itemIndex = element.dataset.itemIndex ? Number(element.dataset.itemIndex) : undefined;
 
     if (!Number.isFinite(yearIndex) || !campo) {
@@ -2145,8 +2757,6 @@
     if (!ano) {
       return;
     }
-
-    const valor = obterValorEditado(element);
 
     if (categoria === "ano") {
       ano[campo] = valor;
@@ -2185,13 +2795,21 @@
 
   function atualizarFiltrosAtivos() {
     filterButtons.forEach((button, anoNumero) => {
-      const ativo = Boolean(estadoExpansao.get(anoNumero));
+      const ativo = visaoAtual === "anos" && Boolean(estadoExpansao.get(anoNumero));
       button.classList.toggle("active", ativo);
       button.setAttribute("aria-pressed", ativo ? "true" : "false");
     });
+
+    if (gastronomiaFilterButton) {
+      const ativo = visaoAtual === "gastronomia";
+      gastronomiaFilterButton.classList.toggle("active", ativo);
+      gastronomiaFilterButton.setAttribute("aria-pressed", ativo ? "true" : "false");
+    }
   }
 
   function abrirAno(anoNumero, { focar = false, exclusivo = false } = {}) {
+    mostrarVisao("anos");
+
     if (exclusivo) {
       colecaoAnual.forEach(ano => {
         if (ano.anoNumero !== anoNumero) {
@@ -2221,6 +2839,7 @@
   }
 
   function alternarAno(anoNumero) {
+    mostrarVisao("anos");
     const novoEstado = !Boolean(estadoExpansao.get(anoNumero));
     estadoExpansao.set(anoNumero, novoEstado);
     sincronizarEstadoAno(anoNumero);
@@ -2983,7 +3602,6 @@
     body.appendChild(criarCategoriaGenerica("Badges", ano.badges, ano, anoIndex, "badges"));
     body.appendChild(criarCategoriaGenerica("Cartas especiais", ano.cartas, ano, anoIndex, "cartas"));
     body.appendChild(criarCategoriaFilmes(ano, anoIndex));
-    body.appendChild(criarCategoriaComidas(ano, anoIndex));
 
     card.appendChild(body);
 
@@ -3008,6 +3626,363 @@
     atualizarFiltrosAtivos();
   }
 
+  function calcularMediaNotas(avaliacao) {
+    if (!avaliacao || !Array.isArray(avaliacao.notas)) {
+      return null;
+    }
+
+    const valores = avaliacao.notas
+      .map(nota => (Number.isFinite(nota?.valor) ? nota.valor : normalizarNumero(nota?.valor)))
+      .filter(valor => typeof valor === "number" && Number.isFinite(valor));
+
+    if (valores.length === 0) {
+      return null;
+    }
+
+    const soma = valores.reduce((total, valor) => total + valor, 0);
+    return soma / valores.length;
+  }
+
+  function criarCartaoGastronomia(avaliacao, categoriaIndex, avaliacaoIndex) {
+    const card = document.createElement("article");
+    card.className = "gastronomy-card";
+    card.tabIndex = -1;
+
+    const cardHeader = document.createElement("div");
+    cardHeader.className = "gastronomy-card-header";
+
+    const place = document.createElement("span");
+    place.className = "gastronomy-place";
+    place.textContent = avaliacao?.local ?? "";
+    registrarCampoEditavel(place, {
+      collection: "gastronomia",
+      field: "local",
+      gastronomyCategoryIndex: categoriaIndex,
+      gastronomyReviewIndex: avaliacaoIndex,
+      placeholder: "Nome do lugar"
+    });
+    cardHeader.appendChild(place);
+
+    const product = document.createElement("p");
+    product.className = "gastronomy-product";
+    product.textContent = avaliacao?.produto ?? "";
+    registrarCampoEditavel(product, {
+      collection: "gastronomia",
+      field: "produto",
+      gastronomyCategoryIndex: categoriaIndex,
+      gastronomyReviewIndex: avaliacaoIndex,
+      placeholder: "Qual foi a delícia?"
+    });
+    cardHeader.appendChild(product);
+
+    card.appendChild(cardHeader);
+
+    const ratings = document.createElement("div");
+    ratings.className = "gastronomy-ratings";
+
+    (avaliacao?.notas ?? []).forEach((nota, notaIndex) => {
+      const linha = document.createElement("div");
+      linha.className = "gastronomy-rating";
+
+      const criterio = document.createElement("span");
+      criterio.className = "gastronomy-rating-label";
+      criterio.textContent = nota?.criterio ?? "";
+      registrarCampoEditavel(criterio, {
+        collection: "gastronomia",
+        field: "criterio",
+        gastronomyCategoryIndex: categoriaIndex,
+        gastronomyReviewIndex: avaliacaoIndex,
+        gastronomyRatingIndex: notaIndex,
+        placeholder: "Critério"
+      });
+      linha.appendChild(criterio);
+
+      const valor = document.createElement("span");
+      valor.className = "gastronomy-rating-value";
+      const notaNormalizada = normalizarNumero(nota?.valor);
+      valor.textContent = formatarNotaDecimal(Number.isFinite(notaNormalizada) ? notaNormalizada : NaN);
+      registrarCampoEditavel(valor, {
+        collection: "gastronomia",
+        field: "valor",
+        gastronomyCategoryIndex: categoriaIndex,
+        gastronomyReviewIndex: avaliacaoIndex,
+        gastronomyRatingIndex: notaIndex,
+        placeholder: "0-10"
+      });
+      linha.appendChild(valor);
+
+      ratings.appendChild(linha);
+    });
+
+    card.appendChild(ratings);
+
+    const overall = document.createElement("span");
+    overall.className = "gastronomy-overall";
+    const overallLabel = document.createElement("span");
+    overallLabel.textContent = "Nota geral:";
+    overall.appendChild(overallLabel);
+
+    const overallValue = document.createElement("span");
+    overallValue.className = "gastronomy-overall-value";
+
+    const notaFinal = normalizarNumero(avaliacao?.notaGeral);
+    const media = Number.isFinite(notaFinal) ? notaFinal : calcularMediaNotas(avaliacao);
+
+    let hintText = "";
+
+    if (Number.isFinite(notaFinal)) {
+      overallValue.textContent = formatarNotaDecimal(notaFinal);
+    } else if (Number.isFinite(media)) {
+      overall.dataset.missing = "true";
+      overallValue.textContent = formatarNotaDecimal(media);
+      hintText = "(média estimada)";
+    } else {
+      overall.dataset.missing = "true";
+      overallValue.textContent = "--";
+      hintText = "(em breve)";
+    }
+
+    registrarCampoEditavel(overallValue, {
+      collection: "gastronomia",
+      field: "notaGeral",
+      gastronomyCategoryIndex: categoriaIndex,
+      gastronomyReviewIndex: avaliacaoIndex,
+      placeholder: "0-10"
+    });
+
+    overall.appendChild(overallValue);
+
+    if (hintText) {
+      const hint = document.createElement("span");
+      hint.className = "gastronomy-overall-hint";
+      hint.textContent = hintText;
+      overall.appendChild(hint);
+    }
+
+    card.appendChild(overall);
+
+    return card;
+  }
+
+  function renderizarGastronomia() {
+    if (!gastronomyCollection) {
+      return;
+    }
+
+    gastronomyCollection.innerHTML = "";
+
+    const titulo = document.createElement("h2");
+    titulo.id = "gastronomy-title";
+    titulo.className = "gastronomy-heading";
+    titulo.textContent = "Reviews gastronômicas";
+    gastronomyCollection.appendChild(titulo);
+
+    const intro = document.createElement("p");
+    intro.className = "gastronomy-intro";
+    intro.textContent = colecaoGastronomia?.introducao ?? "";
+    registrarCampoEditavel(intro, {
+      collection: "gastronomia",
+      field: "introducao",
+      allowBreaks: true,
+      placeholder: "Conte um pouco sobre as aventuras gastronômicas de vocês"
+    });
+    gastronomyCollection.appendChild(intro);
+
+    if (!Array.isArray(colecaoGastronomia?.categorias) || colecaoGastronomia.categorias.length === 0) {
+      const vazio = document.createElement("p");
+      vazio.className = "category-empty";
+      vazio.textContent = "Ainda não registramos nenhum review gastronômico.";
+      gastronomyCollection.appendChild(vazio);
+      return;
+    }
+
+    const searchWrapper = document.createElement("div");
+    searchWrapper.className = "gastronomy-search-wrapper";
+
+    const searchId = "gastronomy-search";
+    const searchLabel = document.createElement("label");
+    searchLabel.className = "sr-only";
+    searchLabel.setAttribute("for", searchId);
+    searchLabel.textContent = "Buscar review gastronômico";
+    searchWrapper.appendChild(searchLabel);
+
+    const searchInput = document.createElement("input");
+    searchInput.type = "search";
+    searchInput.id = searchId;
+    searchInput.className = "gastronomy-search";
+    searchInput.placeholder = "Buscar por comida ou lugar";
+    searchInput.setAttribute("aria-label", "Buscar por comida ou lugar");
+    searchInput.value = termoBuscaGastronomia;
+    searchWrapper.appendChild(searchInput);
+
+    gastronomyCollection.appendChild(searchWrapper);
+
+    const searchFeedback = document.createElement("p");
+    searchFeedback.className = "category-empty gastronomy-search-feedback";
+    searchFeedback.textContent = "Nenhum review encontrado com esse termo.";
+    searchFeedback.hidden = true;
+    gastronomyCollection.appendChild(searchFeedback);
+
+    const secoes = [];
+
+    colecaoGastronomia.categorias.forEach((categoria, categoriaIndex) => {
+      const section = document.createElement("section");
+      section.className = "gastronomy-category";
+      section.id = `gastronomia-${categoria.slug}`;
+
+      const header = document.createElement("div");
+      header.className = "gastronomy-category-header";
+
+      const heading = document.createElement("h4");
+      heading.className = "gastronomy-category-title";
+
+      const icon = document.createElement("span");
+      icon.setAttribute("aria-hidden", "true");
+      icon.textContent = categoria.icone ?? "🍽️";
+      heading.appendChild(icon);
+
+      const label = document.createElement("span");
+      label.textContent = categoria.titulo ?? "Categoria";
+      heading.appendChild(label);
+
+      header.appendChild(heading);
+      section.appendChild(header);
+
+      const avaliacoes = Array.isArray(categoria.avaliacoes) ? categoria.avaliacoes : [];
+
+      if (avaliacoes.length === 0) {
+        const vazio = document.createElement("p");
+        vazio.className = "category-empty";
+        vazio.textContent = "Ainda não registramos nenhuma avaliação por aqui.";
+        section.appendChild(vazio);
+      } else {
+        const entries = avaliacoes.map((avaliacao, avaliacaoIndex) => ({
+          avaliacao,
+          element: criarCartaoGastronomia(avaliacao, categoriaIndex, avaliacaoIndex),
+          tokens: [
+            normalizarTextoBusca(avaliacao?.local ?? ""),
+            normalizarTextoBusca(avaliacao?.produto ?? "")
+          ]
+        }));
+
+        const carousel = document.createElement("div");
+        carousel.className = "carousel gastronomy-carousel";
+
+        const anterior = document.createElement("button");
+        anterior.type = "button";
+        anterior.className = "carousel-button carousel-button-prev";
+        anterior.setAttribute("aria-label", `Ver avaliação anterior em ${label.textContent}`);
+        anterior.innerHTML = "&#10094;";
+
+        const proximo = document.createElement("button");
+        proximo.type = "button";
+        proximo.className = "carousel-button carousel-button-next";
+        proximo.setAttribute("aria-label", `Ver próxima avaliação em ${label.textContent}`);
+        proximo.innerHTML = "&#10095;";
+
+        const trilho = document.createElement("div");
+        trilho.className = "carousel-track";
+
+        carousel.appendChild(anterior);
+        carousel.appendChild(trilho);
+        carousel.appendChild(proximo);
+
+        section.appendChild(carousel);
+
+        const categoriaFeedback = document.createElement("p");
+        categoriaFeedback.className = "category-empty gastronomy-category-feedback";
+        categoriaFeedback.textContent = "Nenhum review desta categoria combina com sua busca.";
+        categoriaFeedback.hidden = true;
+        section.appendChild(categoriaFeedback);
+
+        const atualizarBotoes = () => {
+          const alcance = trilho.scrollWidth - trilho.clientWidth;
+          const semOverflow = alcance <= 2;
+          anterior.disabled = semOverflow || trilho.scrollLeft <= 2;
+          proximo.disabled = semOverflow || trilho.scrollLeft >= alcance - 2;
+        };
+
+        const deslocar = direcao => {
+          const passo = Math.max(trilho.clientWidth * 0.85, 240);
+          trilho.scrollBy({ left: passo * direcao, behavior: "smooth" });
+        };
+
+        anterior.addEventListener("click", () => deslocar(-1));
+        proximo.addEventListener("click", () => deslocar(1));
+        trilho.addEventListener("scroll", () => {
+          window.requestAnimationFrame(atualizarBotoes);
+        });
+        window.addEventListener("resize", atualizarBotoes, { passive: true });
+
+        const aplicarFiltro = termo => {
+          const filtradas = termo
+            ? entries.filter(entry => entry.tokens.some(token => token.includes(termo)))
+            : entries;
+
+          trilho.innerHTML = "";
+          filtradas.forEach(entry => {
+            trilho.appendChild(entry.element);
+          });
+
+          const temResultados = filtradas.length > 0;
+          carousel.hidden = !temResultados;
+          categoriaFeedback.hidden = temResultados;
+
+          if (temResultados) {
+            trilho.scrollLeft = 0;
+            window.requestAnimationFrame(atualizarBotoes);
+          }
+
+          return filtradas.length;
+        };
+
+        secoes.push({ aplicarFiltro });
+      }
+
+      section.appendChild(criarBotaoAdicionarReviewGastronomia(categoria, categoriaIndex));
+      gastronomyCollection.appendChild(section);
+    });
+
+    const atualizarResultados = () => {
+      const termoBruto = searchInput.value;
+      termoBuscaGastronomia = termoBruto;
+      const termo = normalizarTextoBusca(termoBruto.trim());
+      const total = secoes.reduce((acc, secao) => acc + secao.aplicarFiltro(termo), 0);
+      const temConteudo = secoes.length > 0;
+      searchFeedback.hidden = !temConteudo || total > 0;
+    };
+
+    atualizarResultados();
+    searchInput.addEventListener("input", atualizarResultados);
+
+    configurarCamposEditaveis();
+    aplicarModoEdicao();
+  }
+
+  function aplicarVisaoAtual() {
+    const mostrarAnos = visaoAtual === "anos";
+
+    if (yearsCollection) {
+      yearsCollection.hidden = !mostrarAnos;
+    }
+
+    if (gastronomyCollection) {
+      gastronomyCollection.hidden = mostrarAnos;
+    }
+
+    atualizarFiltrosAtivos();
+  }
+
+  function mostrarVisao(visao, { focar = false } = {}) {
+    visaoAtual = visao;
+    aplicarVisaoAtual();
+
+    if (focar) {
+      const destino = visao === "gastronomia" ? gastronomyCollection : yearsCollection;
+      destino?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
   function criarNavegacaoAnos() {
     if (!filtersContainer) {
       return;
@@ -3015,6 +3990,7 @@
 
     filtersContainer.innerHTML = "";
     filterButtons.clear();
+    gastronomiaFilterButton = null;
 
     colecaoAnual.forEach(ano => {
       const button = document.createElement("button");
@@ -3030,6 +4006,18 @@
       filtersContainer.appendChild(button);
       filterButtons.set(ano.anoNumero, button);
     });
+
+    const gastronomiaButton = document.createElement("button");
+    gastronomiaButton.type = "button";
+    gastronomiaButton.className = "filter-button";
+    gastronomiaButton.textContent = "Reviews gastronômicas";
+    gastronomiaButton.dataset.view = "gastronomia";
+    gastronomiaButton.setAttribute("aria-pressed", "false");
+    gastronomiaButton.addEventListener("click", () => {
+      mostrarVisao("gastronomia", { focar: true });
+    });
+    filtersContainer.appendChild(gastronomiaButton);
+    gastronomiaFilterButton = gastronomiaButton;
 
     atualizarFiltrosAtivos();
   }
@@ -3090,6 +4078,8 @@
 
   criarNavegacaoAnos();
   renderizarColecao();
+  renderizarGastronomia();
+  aplicarVisaoAtual();
   sincronizarColecaoServidor();
 </script>
 
