@@ -1570,6 +1570,7 @@
   
 <script>
   const API_COLLECTION_URL = "/api/collection";
+  const API_COLLECTION_STREAM_URL = `${API_COLLECTION_URL}/stream`;
 
   const colecaoPadrao = {
     anos: [
@@ -2001,6 +2002,19 @@
   let colecaoGastronomia = colecaoDados.gastronomia;
   colecaoAnual.sort((a, b) => a.anoNumero - b.anoNumero);
 
+  function aplicarColecaoSincronizada(dados) {
+    const normalizado = normalizarColecaoCompleta(dados);
+    colecaoDados = normalizado;
+    colecaoAnual = colecaoDados.anos;
+    colecaoGastronomia = colecaoDados.gastronomia;
+    colecaoAnual.sort((a, b) => a.anoNumero - b.anoNumero);
+
+    criarNavegacaoAnos();
+    renderizarColecao();
+    renderizarGastronomia();
+    aplicarVisaoAtual();
+  }
+
   async function sincronizarColecaoServidor() {
     try {
       const response = await fetch(API_COLLECTION_URL, { cache: "no-store" });
@@ -2009,16 +2023,7 @@
       }
 
       const dados = await response.json();
-      const normalizado = normalizarColecaoCompleta(dados);
-      colecaoDados = normalizado;
-      colecaoAnual = colecaoDados.anos;
-      colecaoGastronomia = colecaoDados.gastronomia;
-      colecaoAnual.sort((a, b) => a.anoNumero - b.anoNumero);
-
-      criarNavegacaoAnos();
-      renderizarColecao();
-      renderizarGastronomia();
-      aplicarVisaoAtual();
+      aplicarColecaoSincronizada(dados);
     } catch (error) {
       console.warn("Não foi possível sincronizar com o servidor:", error);
     }
@@ -2190,6 +2195,49 @@
 
   const SALVAR_DEBOUNCE_MS = 1000;
   let salvarTimeoutId = null;
+
+  let streamAtualizacaoColecao = null;
+
+  function iniciarStreamAtualizacoes() {
+    if (!("EventSource" in window)) {
+      console.warn("O navegador não suporta atualizações em tempo real via EventSource.");
+      return;
+    }
+
+    if (streamAtualizacaoColecao) {
+      return;
+    }
+
+    try {
+      streamAtualizacaoColecao = new EventSource(API_COLLECTION_STREAM_URL);
+    } catch (error) {
+      console.warn("Não foi possível iniciar o stream de atualizações da coleção:", error);
+      streamAtualizacaoColecao = null;
+      return;
+    }
+
+    streamAtualizacaoColecao.addEventListener("collection", event => {
+      if (!event?.data) {
+        return;
+      }
+
+      try {
+        const dadosAtualizados = JSON.parse(event.data);
+        aplicarColecaoSincronizada(dadosAtualizados);
+      } catch (error) {
+        console.warn("Não foi possível interpretar a atualização em tempo real recebida:", error);
+      }
+    });
+
+    streamAtualizacaoColecao.addEventListener("error", () => {
+      console.warn("Conexão com as atualizações em tempo real interrompida. O navegador tentará reconectar automaticamente.");
+    });
+  }
+
+  window.addEventListener("beforeunload", () => {
+    streamAtualizacaoColecao?.close();
+    streamAtualizacaoColecao = null;
+  });
 
   function agendarPersistencia(imediato = false) {
     if (salvarTimeoutId) {
@@ -4057,6 +4105,7 @@
   renderizarGastronomia();
   aplicarVisaoAtual();
   sincronizarColecaoServidor();
+  iniciarStreamAtualizacoes();
 </script>
 
 </body>
