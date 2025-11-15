@@ -10,21 +10,21 @@
   <style>
     :root {
       color-scheme: dark;
-      --bg-gradient: radial-gradient(circle at 20% 20%, #1b1f2a 0%, #0e1118 55%, #070910 100%);
-      --card-bg: rgba(21, 24, 33, 0.85);
-      --card-border: rgba(255, 255, 255, 0.06);
-      --card-shadow: rgba(4, 7, 16, 0.45);
-      --accent: #ff8fab;
-      --accent-strong: #ffc6d9;
-      --accent-muted: rgba(255, 143, 171, 0.2);
-      --text-primary: #f9fafc;
-      --text-secondary: #d5d9e6;
-      --chip-bg: rgba(255, 143, 171, 0.14);
-      --chip-border: rgba(255, 199, 219, 0.4);
-      --chip-text: #ffd6e5;
-      --modal-overlay: rgba(5, 7, 12, 0.78);
-      --modal-bg: #141823;
-      --modal-shadow: 0 30px 60px rgba(3, 4, 8, 0.6);
+      --bg-gradient: radial-gradient(circle at 20% 20%, #14294b 0%, #0c1b33 55%, #050e20 100%);
+      --card-bg: rgba(10, 22, 41, 0.88);
+      --card-border: rgba(148, 197, 255, 0.08);
+      --card-shadow: rgba(5, 12, 28, 0.55);
+      --accent: #3b82f6;
+      --accent-strong: #93c5fd;
+      --accent-muted: rgba(59, 130, 246, 0.22);
+      --text-primary: #f0f6ff;
+      --text-secondary: #c8d9ff;
+      --chip-bg: rgba(59, 130, 246, 0.18);
+      --chip-border: rgba(147, 197, 253, 0.45);
+      --chip-text: #e0f0ff;
+      --modal-overlay: rgba(4, 10, 22, 0.78);
+      --modal-bg: #0d203b;
+      --modal-shadow: 0 30px 60px rgba(3, 10, 24, 0.6);
     }
 
     * {
@@ -42,14 +42,12 @@
     }
 
     header.top-header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: rgba(10, 13, 19, 0.85);
+      position: static;
+      background: rgba(7, 20, 42, 0.85);
       backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(59, 130, 246, 0.15);
       padding: 24px clamp(18px, 5vw, 48px) 16px;
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 18px 40px rgba(5, 12, 28, 0.4);
     }
 
     .header-content {
@@ -80,6 +78,40 @@
       line-height: 1.5;
     }
 
+    .days-counter {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(10, 28, 52, 0.7);
+      border: 1px solid rgba(59, 130, 246, 0.22);
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+    }
+
+    .days-counter-values {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .days-counter-value,
+    .time-counter-value {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--accent-strong);
+      text-shadow: 0 0 12px rgba(59, 130, 246, 0.45);
+    }
+
+    .days-counter-unit {
+      color: rgba(213, 217, 230, 0.65);
+    }
+
     .filters {
       margin-top: 20px;
       display: flex;
@@ -88,7 +120,7 @@
       overflow-x: auto;
       padding-bottom: 6px;
       scrollbar-width: thin;
-      scrollbar-color: rgba(255, 143, 171, 0.3) transparent;
+      scrollbar-color: rgba(59, 130, 246, 0.3) transparent;
       scroll-snap-type: x proximity;
       -webkit-overflow-scrolling: touch;
     }
@@ -98,7 +130,7 @@
     }
 
     .filters::-webkit-scrollbar-thumb {
-      background: rgba(255, 143, 171, 0.3);
+      background: rgba(59, 130, 246, 0.3);
       border-radius: 999px;
     }
 
@@ -113,7 +145,7 @@
       width: 30px;
       height: 100%;
       pointer-events: none;
-      background: linear-gradient(90deg, rgba(14, 17, 24, 0) 0%, rgba(14, 17, 24, 0.8) 100%);
+      background: linear-gradient(90deg, rgba(10, 18, 34, 0) 0%, rgba(10, 24, 44, 0.85) 100%);
       border-radius: 0 999px 999px 0;
     }
 
@@ -124,7 +156,7 @@
       cursor: pointer;
       font-size: 0.9rem;
       font-weight: 500;
-      background: rgba(26, 30, 40, 0.9);
+      background: rgba(12, 30, 56, 0.9);
       color: var(--text-secondary);
       transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
       box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
@@ -135,16 +167,16 @@
     .filter-button:hover,
     .filter-button:focus-visible {
       transform: translateY(-2px);
-      border-color: rgba(255, 255, 255, 0.16);
+      border-color: rgba(147, 197, 253, 0.35);
       outline: none;
-      box-shadow: 0 14px 28px rgba(255, 143, 171, 0.2);
+      box-shadow: 0 14px 28px rgba(59, 130, 246, 0.2);
     }
 
     .filter-button.active {
       background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-      color: #2a0f1a;
+      color: #031c3b;
       border-color: var(--chip-border);
-      box-shadow: 0 16px 32px rgba(255, 143, 171, 0.25);
+      box-shadow: 0 16px 32px rgba(59, 130, 246, 0.25);
     }
 
     .filter-button[aria-pressed="true"] {
@@ -200,7 +232,7 @@
 
     .dedication-subtitle {
       margin: 6px 0 0;
-      color: rgba(255, 231, 239, 0.75);
+      color: rgba(219, 234, 254, 0.75);
       font-size: 0.95rem;
       line-height: 1.5;
     }
@@ -209,8 +241,8 @@
       min-height: 140px;
       padding: 18px;
       border-radius: 16px;
-      border: 1px dashed rgba(255, 198, 217, 0.45);
-      background: rgba(255, 143, 171, 0.08);
+      border: 1px dashed rgba(147, 197, 253, 0.45);
+      background: rgba(59, 130, 246, 0.08);
       color: var(--text-primary);
       font-size: 1rem;
       line-height: 1.6;
@@ -219,8 +251,8 @@
 
     .dedication-content:focus-visible {
       outline: none;
-      border-color: rgba(255, 198, 217, 0.9);
-      box-shadow: 0 0 0 3px rgba(255, 143, 171, 0.25);
+      border-color: rgba(147, 197, 253, 0.9);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
     }
 
     .dedication-hint {
@@ -236,11 +268,11 @@
     }
 
     .year-card {
-      background: linear-gradient(135deg, rgba(21, 24, 33, 0.92), rgba(14, 17, 26, 0.92));
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: linear-gradient(135deg, rgba(13, 28, 48, 0.94), rgba(8, 20, 38, 0.94));
+      border: 1px solid rgba(147, 197, 253, 0.12);
       border-radius: 28px;
       padding: clamp(18px, 3.5vw, 28px);
-      box-shadow: 0 28px 60px rgba(5, 7, 16, 0.55);
+      box-shadow: 0 28px 60px rgba(5, 15, 32, 0.55);
       position: relative;
       overflow: hidden;
       transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
@@ -251,12 +283,12 @@
       position: absolute;
       inset: 0;
       border-radius: 28px;
-      border: 1px solid rgba(255, 198, 217, 0.08);
+      border: 1px solid rgba(147, 197, 253, 0.08);
       pointer-events: none;
     }
 
     .year-card.expanded {
-      border-color: rgba(255, 143, 171, 0.25);
+      border-color: rgba(59, 130, 246, 0.25);
       transform: translateY(-4px);
       box-shadow: 0 32px 72px rgba(6, 8, 18, 0.65);
     }
@@ -286,7 +318,7 @@
 
     .year-card-toggle:focus-visible .year-badge,
     .year-card-toggle:focus-visible .year-title {
-      box-shadow: 0 0 0 3px rgba(255, 143, 171, 0.35);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
     }
 
     .year-header-text {
@@ -300,17 +332,17 @@
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(147, 197, 253, 0.28);
       display: grid;
       place-items: center;
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(147, 197, 253, 0.1);
       transition: transform 0.25s ease, background 0.25s ease;
     }
 
     .year-card.expanded .year-toggle-icon {
       transform: rotate(180deg);
-      background: rgba(255, 143, 171, 0.14);
-      border-color: rgba(255, 143, 171, 0.35);
+      background: rgba(59, 130, 246, 0.14);
+      border-color: rgba(59, 130, 246, 0.35);
     }
 
     .year-badge {
@@ -320,7 +352,7 @@
       padding: 10px 18px;
       border-radius: 999px;
       border: 1px solid var(--chip-border);
-      background: linear-gradient(135deg, rgba(255, 143, 171, 0.2), rgba(255, 198, 217, 0.1));
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 197, 253, 0.1));
       text-transform: uppercase;
       letter-spacing: 0.12em;
       font-size: 0.85rem;
@@ -361,8 +393,8 @@
     .edit-toggle {
       padding: 10px 18px;
       border-radius: 999px;
-      border: 1px solid rgba(255, 143, 171, 0.35);
-      background: rgba(255, 143, 171, 0.16);
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      background: rgba(59, 130, 246, 0.16);
       color: var(--chip-text);
       font-weight: 500;
       font-size: 0.85rem;
@@ -379,8 +411,8 @@
     .edit-toggle:focus-visible {
       outline: none;
       transform: translateY(-2px);
-      box-shadow: 0 16px 32px rgba(255, 143, 171, 0.25);
-      background: linear-gradient(135deg, rgba(255, 143, 171, 0.2), rgba(255, 198, 217, 0.3));
+      box-shadow: 0 16px 32px rgba(59, 130, 246, 0.25);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 197, 253, 0.3));
     }
 
     .edit-toggle {
@@ -388,15 +420,15 @@
     }
 
     .edit-toggle.active {
-      background: linear-gradient(135deg, rgba(255, 143, 171, 0.35), rgba(255, 198, 217, 0.5));
-      color: #2a0f1a;
-      border-color: rgba(255, 143, 171, 0.55);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.35), rgba(147, 197, 253, 0.5));
+      color: #031c3b;
+      border-color: rgba(59, 130, 246, 0.55);
     }
 
     .edit-hint {
       display: none;
       font-size: 0.8rem;
-      color: rgba(255, 231, 239, 0.7);
+      color: rgba(219, 234, 254, 0.7);
     }
 
     body.edit-mode .inline-edit-button {
@@ -416,20 +448,25 @@
 
     body.edit-mode [data-editable] {
       border-radius: 12px;
-      box-shadow: inset 0 0 0 1px rgba(255, 198, 217, 0.25);
-      background: rgba(255, 143, 171, 0.08);
+      box-shadow: inset 0 0 0 1px rgba(147, 197, 253, 0.25);
+      background: rgba(59, 130, 246, 0.08);
       padding: 6px 8px;
     }
 
     body.edit-mode [data-editable]:focus-visible {
       outline: none;
-      box-shadow: inset 0 0 0 2px rgba(255, 198, 217, 0.9);
-      background: rgba(255, 143, 171, 0.12);
+      box-shadow: inset 0 0 0 2px rgba(147, 197, 253, 0.9);
+      background: rgba(59, 130, 246, 0.12);
     }
 
     body.edit-mode [data-editable][data-placeholder]:empty::before {
       content: attr(data-placeholder);
-      color: rgba(255, 231, 239, 0.65);
+      color: rgba(219, 234, 254, 0.65);
+    }
+
+    body.edit-mode .image-edit-button,
+    body.edit-mode .rating-edit-button {
+      display: inline-flex;
     }
 
     .category-section {
@@ -442,13 +479,79 @@
       font-size: 1rem;
       text-transform: uppercase;
       letter-spacing: 0.18em;
-      color: rgba(255, 198, 217, 0.8);
+      color: rgba(147, 197, 253, 0.8);
     }
 
     .category-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 22px;
+    }
+
+    .carousel {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .carousel-track {
+      display: flex;
+      gap: 18px;
+      overflow-x: auto;
+      padding: 10px 4px;
+      scroll-snap-type: x proximity;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 18px;
+    }
+
+    .carousel-track::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .carousel-track::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.3);
+      border-radius: 999px;
+    }
+
+    .carousel-track::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .carousel-track > * {
+      flex: 0 0 clamp(220px, 80vw, 320px);
+      scroll-snap-align: start;
+    }
+
+    .carousel-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(147, 197, 253, 0.35);
+      background: rgba(8, 20, 38, 0.9);
+      color: var(--accent-strong);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
+    }
+
+    .carousel-button:hover,
+    .carousel-button:focus-visible {
+      background: rgba(10, 28, 52, 0.95);
+      border-color: rgba(147, 197, 253, 0.7);
+      color: #e0f2ff;
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .carousel-button:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      transform: none;
     }
 
     .movie-list {
@@ -478,8 +581,8 @@
     .card:hover,
     .card:focus-visible {
       transform: translateY(-6px);
-      box-shadow: 0 24px 45px rgba(3, 5, 12, 0.55);
-      border-color: rgba(255, 143, 171, 0.35);
+      box-shadow: 0 24px 45px rgba(3, 12, 28, 0.55);
+      border-color: rgba(59, 130, 246, 0.35);
       outline: none;
     }
 
@@ -500,7 +603,7 @@
       border-radius: 16px;
       overflow: hidden;
       aspect-ratio: 4 / 3;
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(147, 197, 253, 0.08);
       display: grid;
       place-items: center;
     }
@@ -536,9 +639,9 @@
       gap: 22px;
       padding: 20px;
       border-radius: 24px;
-      background: rgba(21, 24, 33, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 24px 45px rgba(3, 5, 12, 0.55);
+      background: rgba(12, 26, 48, 0.9);
+      border: 1px solid rgba(147, 197, 253, 0.16);
+      box-shadow: 0 24px 45px rgba(3, 12, 28, 0.55);
       overflow: hidden;
     }
 
@@ -550,10 +653,10 @@
       width: 16px;
       height: 16px;
       background: var(--bg-gradient);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(147, 197, 253, 0.2);
       border-radius: 50%;
       transform: translateY(-50%);
-      box-shadow: inset 0 0 0 2px rgba(21, 24, 33, 0.9);
+      box-shadow: inset 0 0 0 2px rgba(12, 26, 48, 0.9);
     }
 
     .movie-ticket::before {
@@ -568,7 +671,7 @@
       position: relative;
       border-radius: 18px;
       overflow: hidden;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(147, 197, 253, 0.12);
       display: grid;
     }
 
@@ -582,8 +685,8 @@
       position: absolute;
       inset: auto 14px 14px 14px;
       padding: 10px 14px;
-      background: rgba(7, 9, 16, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(4, 16, 34, 0.8);
+      border: 1px solid rgba(147, 197, 253, 0.2);
       border-radius: 14px;
       display: grid;
       gap: 6px;
@@ -594,7 +697,7 @@
       font-size: 0.7rem;
       text-transform: uppercase;
       letter-spacing: 0.16em;
-      color: rgba(255, 231, 239, 0.65);
+      color: rgba(219, 234, 254, 0.65);
     }
 
     .ticket-rating-value {
@@ -613,7 +716,7 @@
       font-size: 0.75rem;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: rgba(255, 231, 239, 0.7);
+      color: rgba(219, 234, 254, 0.7);
     }
 
     .ticket-details h4 {
@@ -633,7 +736,7 @@
     }
 
     .ticket-meta strong {
-      color: rgba(255, 231, 239, 0.85);
+      color: rgba(219, 234, 254, 0.85);
       font-weight: 600;
     }
 
@@ -654,7 +757,7 @@
     .modal-highlight {
       margin: 0;
       font-size: 0.9rem;
-      color: rgba(255, 198, 217, 0.85);
+      color: rgba(147, 197, 253, 0.85);
       font-style: italic;
     }
 
@@ -664,9 +767,9 @@
       gap: 18px;
       padding: 18px;
       border-radius: 22px;
-      background: rgba(21, 24, 33, 0.92);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 22px 45px rgba(3, 5, 12, 0.55);
+      background: rgba(12, 26, 48, 0.92);
+      border: 1px solid rgba(147, 197, 253, 0.16);
+      box-shadow: 0 22px 45px rgba(3, 12, 28, 0.55);
       cursor: pointer;
       transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     }
@@ -675,14 +778,14 @@
     .food-card:focus-visible {
       outline: none;
       transform: translateY(-4px);
-      border-color: rgba(255, 143, 171, 0.35);
-      box-shadow: 0 28px 60px rgba(3, 5, 12, 0.6);
+      border-color: rgba(59, 130, 246, 0.35);
+      box-shadow: 0 28px 60px rgba(3, 12, 28, 0.6);
     }
 
     .food-media {
       border-radius: 18px;
       overflow: hidden;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(147, 197, 253, 0.12);
       position: relative;
     }
 
@@ -692,23 +795,100 @@
       object-fit: cover;
     }
 
+    .image-edit-button {
+      position: absolute;
+      inset: 12px 12px auto auto;
+      border: 1px solid rgba(147, 197, 253, 0.5);
+      border-radius: 999px;
+      background: rgba(4, 16, 34, 0.8);
+      color: var(--accent-strong);
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 6px 12px;
+      display: none;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .image-edit-button span[aria-hidden="true"] {
+      font-size: 1rem;
+    }
+
+    .image-edit-button:hover,
+    .image-edit-button:focus-visible {
+      background: rgba(8, 24, 44, 0.95);
+      border-color: rgba(147, 197, 253, 0.8);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
     .food-rating {
       position: absolute;
       inset: auto 12px 12px 12px;
       padding: 10px 14px;
       border-radius: 12px;
-      background: rgba(7, 9, 16, 0.82);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(4, 16, 34, 0.82);
+      border: 1px solid rgba(147, 197, 253, 0.18);
       font-size: 0.85rem;
       display: inline-flex;
       gap: 6px;
       align-items: center;
-      color: rgba(255, 231, 239, 0.75);
+      flex-wrap: wrap;
+      color: rgba(219, 234, 254, 0.75);
     }
 
     .food-rating strong {
       color: var(--accent-strong);
       font-weight: 600;
+    }
+
+    .food-rating-score {
+      font-size: 0.95rem;
+    }
+
+    .star-rating-display {
+      position: relative;
+      display: inline-block;
+      font-size: 1rem;
+      line-height: 1;
+      letter-spacing: 2px;
+    }
+
+    .star-rating-display .star-rating-base {
+      color: rgba(147, 197, 253, 0.25);
+      display: block;
+    }
+
+    .star-rating-display .star-rating-fill {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      color: var(--accent-strong);
+      display: block;
+      white-space: nowrap;
+    }
+
+    .rating-edit-button {
+      border: 1px solid rgba(147, 197, 253, 0.4);
+      background: rgba(8, 20, 38, 0.9);
+      color: var(--accent-strong);
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      padding: 4px 10px;
+      display: none;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .rating-edit-button:hover,
+    .rating-edit-button:focus-visible {
+      background: rgba(10, 28, 52, 0.95);
+      border-color: rgba(147, 197, 253, 0.8);
+      transform: translateY(-1px);
+      outline: none;
     }
 
     .food-content {
@@ -733,33 +913,45 @@
     }
 
     .food-highlight {
-      color: rgba(255, 198, 217, 0.88);
+      color: rgba(147, 197, 253, 0.88);
       font-style: italic;
     }
 
     .food-location strong {
-      color: rgba(255, 231, 239, 0.85);
+      color: rgba(219, 234, 254, 0.85);
     }
 
     footer {
       margin-top: auto;
       padding: 32px clamp(18px, 5vw, 48px) 48px;
       text-align: center;
-      color: rgba(255, 231, 239, 0.72);
+      color: rgba(219, 234, 254, 0.72);
       font-size: 0.9rem;
-      background: rgba(10, 13, 19, 0.85);
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(7, 20, 42, 0.85);
+      border-top: 1px solid rgba(59, 130, 246, 0.12);
     }
 
     footer a {
       color: var(--accent-strong);
       text-decoration: none;
-      border-bottom: 1px dashed rgba(255, 198, 217, 0.5);
+      border-bottom: 1px dashed rgba(147, 197, 253, 0.5);
     }
 
     footer a:hover,
     footer a:focus-visible {
-      color: #ffe0ec;
+      color: #e0f2ff;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
 
     .modal-overlay {
@@ -784,7 +976,7 @@
     .modal {
       background: var(--modal-bg);
       border-radius: 22px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(147, 197, 253, 0.14);
       box-shadow: var(--modal-shadow);
       max-width: min(760px, 90vw);
       width: 100%;
@@ -814,7 +1006,7 @@
     .close-button {
       background: transparent;
       border: none;
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(147, 197, 253, 0.8);
       cursor: pointer;
       font-size: 1.6rem;
       line-height: 1;
@@ -823,7 +1015,7 @@
 
     .close-button:hover,
     .close-button:focus-visible {
-      color: #fff;
+      color: var(--accent-strong);
       transform: scale(1.1);
       outline: none;
     }
@@ -836,7 +1028,7 @@
     .modal-image {
       border-radius: 18px;
       overflow: hidden;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(147, 197, 253, 0.12);
       aspect-ratio: 16 / 9;
     }
 
@@ -851,7 +1043,7 @@
       font-size: 0.95rem;
       text-transform: uppercase;
       letter-spacing: 0.18em;
-      color: rgba(255, 198, 217, 0.75);
+      color: rgba(147, 197, 253, 0.75);
     }
 
     .moments-list {
@@ -900,6 +1092,19 @@
         grid-template-columns: 1fr;
       }
 
+      .carousel {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .carousel-button {
+        display: none;
+      }
+
+      .carousel-track {
+        padding: 6px 2px;
+      }
+
       .movie-ticket {
         grid-template-columns: 1fr;
       }
@@ -924,6 +1129,20 @@
       <h1>Anuário de Namoro</h1>
       <h2>Um arquivo carinhoso com tudo o que vivemos ano após ano</h2>
       <p>Escolha um ano para abrir a pasta, explorar badges, cartas especiais e agora até os nossos filmes favoritos.</p>
+      <p class="days-counter" aria-live="polite">
+        <span class="days-counter-label">Estamos juntos há</span>
+        <span class="days-counter-values">
+          <span class="days-counter-value" id="days-since-start">0</span>
+          <span class="days-counter-unit">dias,</span>
+          <span class="time-counter-value" id="hours-since-start">00</span>
+          <span class="days-counter-unit">horas,</span>
+          <span class="time-counter-value" id="minutes-since-start">00</span>
+          <span class="days-counter-unit">minutos e</span>
+          <span class="time-counter-value" id="seconds-since-start">00</span>
+          <span class="days-counter-unit">segundos</span>
+        </span>
+        <span class="days-counter-unit">desde 15 de setembro de 2023</span>
+      </p>
       <nav class="filters" aria-label="Navegar por ano">
         <!-- Botões de navegação são gerados dinamicamente via JavaScript -->
       </nav>
@@ -1026,7 +1245,7 @@
           titulo: "Jantar no Burger Garage",
           tipo: "Review gastronômica",
           imagem: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?auto=format&fit=crop&w=800&q=80",
-          nota: "9/10",
+          nota: 4.5,
           local: "Burger Garage — Barra da Tijuca",
           descricao: "Descobrimos o burger suculento e dividimos batatas com cheddar até não aguentar mais.",
           destaque: "Voltamos duas vezes no mesmo mês porque não conseguimos superar a batatinha.",
@@ -1077,7 +1296,7 @@
           titulo: "Brunch de domingo",
           tipo: "Review gastronômica",
           imagem: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=800&q=80",
-          nota: "9.5/10",
+          nota: 4.8,
           local: "Café da Praça — Botafogo",
           descricao: "Virou ritual começar o domingo com panquecas, café coado e nossas conversas infinitas.",
           destaque: "Você roubou metade do meu maple syrup e mesmo assim eu achei fofo.",
@@ -1127,6 +1346,10 @@
   const filtersContainer = document.querySelector(".filters");
   const yearsCollection = document.querySelector(".years-collection");
   const editToggleButton = document.querySelector(".edit-toggle");
+  const daysSinceStartValue = document.getElementById("days-since-start");
+  const hoursSinceStartValue = document.getElementById("hours-since-start");
+  const minutesSinceStartValue = document.getElementById("minutes-since-start");
+  const secondsSinceStartValue = document.getElementById("seconds-since-start");
 
   const modalOverlay = document.querySelector(".modal-overlay");
   const modalTitle = document.getElementById("modal-title");
@@ -1141,6 +1364,49 @@
   const filterButtons = new Map();
   let editMode = false;
 
+  const referenciaRelacionamento = new Date(Date.UTC(2023, 8, 15));
+
+  function calcularDuracaoDesde(dataReferencia) {
+    const agora = Date.now();
+    const diferenca = Math.max(0, Math.floor((agora - dataReferencia.getTime()) / 1000));
+    const dias = Math.floor(diferenca / 86400);
+    const restanteDia = diferenca % 86400;
+    const horas = Math.floor(restanteDia / 3600);
+    const restanteHora = restanteDia % 3600;
+    const minutos = Math.floor(restanteHora / 60);
+    const segundos = restanteHora % 60;
+
+    return { dias, horas, minutos, segundos };
+  }
+
+  function formatarComDoisDigitos(valor) {
+    return valor.toLocaleString("pt-BR", {
+      minimumIntegerDigits: 2,
+      useGrouping: false
+    });
+  }
+
+  function atualizarContadorRelacionamento() {
+    if (!daysSinceStartValue) {
+      return;
+    }
+
+    const { dias, horas, minutos, segundos } = calcularDuracaoDesde(referenciaRelacionamento);
+    daysSinceStartValue.textContent = dias.toLocaleString("pt-BR");
+
+    if (hoursSinceStartValue) {
+      hoursSinceStartValue.textContent = formatarComDoisDigitos(horas);
+    }
+
+    if (minutesSinceStartValue) {
+      minutesSinceStartValue.textContent = formatarComDoisDigitos(minutos);
+    }
+
+    if (secondsSinceStartValue) {
+      secondsSinceStartValue.textContent = formatarComDoisDigitos(segundos);
+    }
+  }
+
   function salvarDados() {
     try {
       window.localStorage?.setItem(STORAGE_KEY, JSON.stringify(colecaoAnual));
@@ -1149,7 +1415,130 @@
     }
   }
 
-  function registrarCampoEditavel(element, { yearIndex, category = "ano", itemIndex, field, allowBreaks = false, placeholder = "" }) {
+  function limitarValor(valor, minimo, maximo) {
+    return Math.min(Math.max(valor, minimo), maximo);
+  }
+
+  function normalizarNotaEstrelas(valor) {
+    if (typeof valor === "number" && Number.isFinite(valor)) {
+      return limitarValor(valor, 0, 5);
+    }
+
+    if (typeof valor === "string") {
+      const texto = valor.trim();
+      if (!texto) {
+        return 0;
+      }
+
+      const partes = texto.split("/");
+      if (partes.length === 2) {
+        const numerador = parseFloat(partes[0].replace(",", "."));
+        const denominador = parseFloat(partes[1].replace(",", "."));
+        if (Number.isFinite(numerador) && Number.isFinite(denominador) && denominador !== 0) {
+          return limitarValor((numerador / denominador) * 5, 0, 5);
+        }
+      }
+
+      const numero = parseFloat(texto.replace(",", "."));
+      if (Number.isFinite(numero)) {
+        return limitarValor(numero, 0, 5);
+      }
+    }
+
+    return 0;
+  }
+
+  function formatarNotaEstrelas(valor) {
+    return Number.isInteger(valor) ? String(valor) : valor.toFixed(1);
+  }
+
+  function atualizarDisplayEstrelas(container, valor) {
+    const preenchimento = container?.querySelector?.(".star-rating-fill");
+    if (preenchimento) {
+      const percentual = limitarValor(valor, 0, 5) / 5;
+      preenchimento.style.width = `${(percentual * 100).toFixed(2)}%`;
+    }
+    if (container) {
+      container.dataset.ratingValue = String(limitarValor(valor, 0, 5));
+    }
+  }
+
+  function criarDisplayEstrelas(valor) {
+    const element = document.createElement("span");
+    element.className = "star-rating-display";
+    element.dataset.ratingValue = String(valor);
+
+    const base = document.createElement("span");
+    base.className = "star-rating-base";
+    base.textContent = "★★★★★";
+    element.appendChild(base);
+
+    const preenchimento = document.createElement("span");
+    preenchimento.className = "star-rating-fill";
+    preenchimento.textContent = "★★★★★";
+    element.appendChild(preenchimento);
+
+    atualizarDisplayEstrelas(element, valor);
+
+    return element;
+  }
+
+  function atualizarImagemItem(anoIndex, categoria, itemIndex, novaUrl, imagemElemento, campoImagem = "imagem") {
+    const ano = colecaoAnual[anoIndex];
+    if (!ano) {
+      return;
+    }
+
+    const lista = Array.isArray(ano[categoria]) ? ano[categoria] : null;
+    if (!lista) {
+      return;
+    }
+
+    const item = lista[itemIndex];
+    if (!item) {
+      return;
+    }
+
+    const urlTratada = typeof novaUrl === "string" ? novaUrl.trim() : "";
+    if (!urlTratada) {
+      return;
+    }
+
+    item[campoImagem] = urlTratada;
+    if (imagemElemento) {
+      imagemElemento.src = urlTratada;
+    }
+
+    if (!editMode) {
+      salvarDados();
+    }
+  }
+
+  function atualizarNotaComida(anoIndex, comidaIndex, novoValor) {
+    const ano = colecaoAnual[anoIndex];
+    if (!ano || !Array.isArray(ano.comidas)) {
+      return 0;
+    }
+
+    const item = ano.comidas[comidaIndex];
+    if (!item) {
+      return 0;
+    }
+
+    const notaNormalizada = normalizarNotaEstrelas(novoValor);
+    item.nota = notaNormalizada;
+
+    if (!editMode) {
+      salvarDados();
+    }
+
+    return notaNormalizada;
+  }
+
+  function registrarCampoEditavel(
+    element,
+    { yearIndex, category = "ano", itemIndex, field, allowBreaks = false, placeholder = "" } = {}
+  ) {
     element.dataset.editable = "true";
     element.dataset.yearIndex = String(yearIndex);
     element.dataset.field = field;
@@ -1343,6 +1732,31 @@
     img.alt = item.titulo;
     img.loading = "lazy";
     imageWrapper.appendChild(img);
+
+    const imageEditButton = document.createElement("button");
+    imageEditButton.type = "button";
+    imageEditButton.className = "image-edit-button";
+    imageEditButton.innerHTML = '<span aria-hidden="true">🖼️</span><span>Trocar foto</span>';
+    imageEditButton.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (!editMode) {
+        return;
+      }
+
+      const sugestao = prompt("Cole a URL da nova imagem:", item.imagem ?? "");
+      if (sugestao === null) {
+        return;
+      }
+
+      const url = sugestao.trim();
+      if (!url) {
+        return;
+      }
+
+      atualizarImagemItem(anoIndex, categoria, itemIndex, url, img);
+    });
+    imageWrapper.appendChild(imageEditButton);
     card.appendChild(imageWrapper);
 
     const titulo = document.createElement("h3");
@@ -1404,12 +1818,69 @@
       return section;
     }
 
-    const grid = document.createElement("div");
-    grid.className = "category-grid";
-    itens.forEach((item, index) => {
-      grid.appendChild(criarCardItem(item, ano, anoIndex, categoria, index));
-    });
-    section.appendChild(grid);
+    const usarCarousel = categoria === "badges" || categoria === "cartas";
+
+    if (usarCarousel) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "carousel";
+
+      const anterior = document.createElement("button");
+      anterior.type = "button";
+      anterior.className = "carousel-button carousel-button-prev";
+      anterior.setAttribute("aria-label", `Ver item anterior em ${titulo}`);
+      anterior.innerHTML = "&#10094;";
+
+      const proximo = document.createElement("button");
+      proximo.type = "button";
+      proximo.className = "carousel-button carousel-button-next";
+      proximo.setAttribute("aria-label", `Ver próximo item em ${titulo}`);
+      proximo.innerHTML = "&#10095;";
+
+      const trilho = document.createElement("div");
+      trilho.className = "carousel-track";
+      itens.forEach((item, index) => {
+        trilho.appendChild(criarCardItem(item, ano, anoIndex, categoria, index));
+      });
+
+      const atualizarBotoes = () => {
+        const alcance = trilho.scrollWidth - trilho.clientWidth;
+        anterior.disabled = trilho.scrollLeft <= 2;
+        proximo.disabled = trilho.scrollLeft >= alcance - 2;
+      };
+
+      const deslocar = direcao => {
+        const passo = Math.max(trilho.clientWidth * 0.85, 220);
+        trilho.scrollBy({ left: passo * direcao, behavior: "smooth" });
+      };
+
+      anterior.addEventListener("click", () => {
+        deslocar(-1);
+      });
+
+      proximo.addEventListener("click", () => {
+        deslocar(1);
+      });
+
+      trilho.addEventListener("scroll", () => {
+        window.requestAnimationFrame(atualizarBotoes);
+      });
+
+      window.addEventListener("resize", atualizarBotoes, { passive: true });
+
+      wrapper.appendChild(anterior);
+      wrapper.appendChild(trilho);
+      wrapper.appendChild(proximo);
+      section.appendChild(wrapper);
+
+      window.requestAnimationFrame(atualizarBotoes);
+    } else {
+      const grid = document.createElement("div");
+      grid.className = "category-grid";
+      itens.forEach((item, index) => {
+        grid.appendChild(criarCardItem(item, ano, anoIndex, categoria, index));
+      });
+      section.appendChild(grid);
+    }
 
     return section;
   }
@@ -1425,6 +1896,31 @@
     img.alt = `Cartaz do filme ${filme.nome}`;
     img.loading = "lazy";
     media.appendChild(img);
+
+    const imageEditButton = document.createElement("button");
+    imageEditButton.type = "button";
+    imageEditButton.className = "image-edit-button";
+    imageEditButton.innerHTML = '<span aria-hidden="true">🖼️</span><span>Trocar foto</span>';
+    imageEditButton.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (!editMode) {
+        return;
+      }
+
+      const sugestao = prompt("Cole a URL do novo cartaz:", filme.capa ?? "");
+      if (sugestao === null) {
+        return;
+      }
+
+      const url = sugestao.trim();
+      if (!url) {
+        return;
+      }
+
+      atualizarImagemItem(anoIndex, "filmes", filmeIndex, url, img, "capa");
+    });
+    media.appendChild(imageEditButton);
 
     const rating = document.createElement("div");
     rating.className = "ticket-rating";
@@ -1573,25 +2069,93 @@
     media.className = "food-media";
     const img = document.createElement("img");
     img.src = comida.imagem;
-    img.alt = comida.titulo;
+    img.alt = comida.titulo || "Foto do review gastronômico";
     img.loading = "lazy";
     media.appendChild(img);
+
+    const imageEditButton = document.createElement("button");
+    imageEditButton.type = "button";
+    imageEditButton.className = "image-edit-button";
+    imageEditButton.innerHTML = '<span aria-hidden="true">🖼️</span><span>Trocar foto</span>';
+    imageEditButton.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (!editMode) {
+        return;
+      }
+
+      const sugestao = prompt("Cole a URL da nova foto do review:", comida.imagem ?? "");
+      if (sugestao === null) {
+        return;
+      }
+
+      const url = sugestao.trim();
+      if (!url) {
+        return;
+      }
+
+      atualizarImagemItem(anoIndex, "comidas", comidaIndex, url, img);
+    });
+    media.appendChild(imageEditButton);
+
+    let notaAtual = normalizarNotaEstrelas(comida.nota);
+    if (notaAtual !== comida.nota) {
+      comida.nota = notaAtual;
+      if (!editMode) {
+        salvarDados();
+      }
+    }
 
     const rating = document.createElement("div");
     rating.className = "food-rating";
     const ratingLabel = document.createElement("span");
     ratingLabel.textContent = "Nota";
     rating.appendChild(ratingLabel);
-    const ratingValue = document.createElement("strong");
-    ratingValue.textContent = comida.nota ?? "";
-    registrarCampoEditavel(ratingValue, {
-      yearIndex: anoIndex,
-      category: "comidas",
-      itemIndex: comidaIndex,
-      field: "nota",
-      placeholder: "0/10"
+
+    const ratingScore = document.createElement("strong");
+    ratingScore.className = "food-rating-score";
+    ratingScore.textContent = formatarNotaEstrelas(notaAtual);
+    ratingScore.setAttribute("aria-hidden", "true");
+    rating.appendChild(ratingScore);
+
+    const ratingStars = criarDisplayEstrelas(notaAtual);
+    ratingStars.setAttribute("aria-hidden", "true");
+    rating.appendChild(ratingStars);
+
+    const ratingAssistiveText = document.createElement("span");
+    ratingAssistiveText.className = "sr-only";
+    ratingAssistiveText.textContent = `${formatarNotaEstrelas(notaAtual)} de 5 estrelas`;
+    rating.appendChild(ratingAssistiveText);
+
+    const ratingEditButton = document.createElement("button");
+    ratingEditButton.type = "button";
+    ratingEditButton.className = "rating-edit-button";
+    ratingEditButton.textContent = "Editar nota";
+    ratingEditButton.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (!editMode) {
+        return;
+      }
+
+      const resposta = prompt("Qual a nova nota (0 a 5)?", formatarNotaEstrelas(notaAtual).replace(".", ","));
+      if (resposta === null) {
+        return;
+      }
+
+      const valorNumerico = parseFloat(resposta.replace(",", "."));
+      if (!Number.isFinite(valorNumerico)) {
+        return;
+      }
+
+      const notaAtualizada = atualizarNotaComida(anoIndex, comidaIndex, valorNumerico);
+      notaAtual = notaAtualizada;
+      ratingScore.textContent = formatarNotaEstrelas(notaAtualizada);
+      ratingAssistiveText.textContent = `${formatarNotaEstrelas(notaAtualizada)} de 5 estrelas`;
+      atualizarDisplayEstrelas(ratingStars, notaAtualizada);
     });
-    rating.appendChild(ratingValue);
+    rating.appendChild(ratingEditButton);
+
     media.appendChild(rating);
 
     article.appendChild(media);
@@ -1613,6 +2177,10 @@
       itemIndex: comidaIndex,
       field: "titulo",
       placeholder: "Nome do prato ou rolê"
+    });
+    title.addEventListener("input", () => {
+      const texto = title.textContent?.trim() ?? "";
+      img.alt = texto || "Foto do review gastronômico";
     });
     content.appendChild(title);
 
@@ -1899,6 +2467,9 @@
       fecharModal();
     }
   });
+
+  atualizarContadorRelacionamento();
+  window.setInterval(atualizarContadorRelacionamento, 1000);
 
   criarNavegacaoAnos();
   renderizarColecao();
