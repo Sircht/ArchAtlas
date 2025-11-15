@@ -479,6 +479,36 @@
       gap: 18px;
     }
 
+    .add-item-button {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      align-self: flex-start;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px dashed rgba(147, 197, 253, 0.5);
+      background: rgba(15, 31, 56, 0.6);
+      color: var(--accent-strong);
+      font-weight: 500;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .add-item-button span[aria-hidden="true"] {
+      font-size: 1.1em;
+    }
+
+    body.edit-mode .add-item-button {
+      display: inline-flex;
+    }
+
+    body.edit-mode .add-item-button:hover {
+      background: rgba(37, 99, 235, 0.16);
+      border-color: rgba(147, 197, 253, 0.8);
+      color: var(--text-primary);
+    }
+
     .category-title {
       margin: 0;
       font-size: 1rem;
@@ -1391,6 +1421,13 @@
   const filterButtons = new Map();
   let editMode = false;
 
+  const CONFIG_ADICAO = {
+    badges: { icone: "✚", rotulo: "Adicionar badge" },
+    cartas: { icone: "✉️", rotulo: "Adicionar carta" },
+    filmes: { icone: "🎬", rotulo: "Adicionar filme" },
+    comidas: { icone: "🍽️", rotulo: "Adicionar review gastronômico" }
+  };
+
   const seletorArquivoImagem = document.createElement("input");
   seletorArquivoImagem.type = "file";
   seletorArquivoImagem.accept = "image/*";
@@ -1618,6 +1655,129 @@
     }
 
     return notaNormalizada;
+  }
+
+  function criarItemPadrao(categoria, ano) {
+    switch (categoria) {
+      case "badges":
+        return {
+          titulo: "Novo badge",
+          tipo: "Badge",
+          imagem: "https://placehold.co/600x600?text=Badge",
+          descricao: "",
+          momentos: []
+        };
+      case "cartas":
+        return {
+          titulo: "Nova carta",
+          tipo: "Carta",
+          imagem: "https://placehold.co/600x600?text=Carta",
+          descricao: "",
+          momentos: []
+        };
+      case "filmes":
+        return {
+          nome: "Novo filme",
+          nota: "",
+          capa: "https://placehold.co/400x600?text=Filme",
+          dataSessao: "",
+          local: "",
+          comentario: "",
+          destaque: ""
+        };
+      case "comidas":
+        return {
+          titulo: "Novo review gastronômico",
+          tipo: "Review gastronômica",
+          imagem: "https://placehold.co/600x400?text=Comida",
+          nota: 0,
+          local: "",
+          descricao: "",
+          destaque: "",
+          momentos: []
+        };
+      default:
+        return {
+          titulo: "Novo item",
+          tipo: "Memória",
+          imagem: "https://placehold.co/600x600?text=Memoria",
+          descricao: "",
+          momentos: []
+        };
+    }
+  }
+
+  function destacarNovoItem(anoNumero, categoria) {
+    requestAnimationFrame(() => {
+      abrirAno(anoNumero, { focar: true });
+      requestAnimationFrame(() => {
+        const section = document.querySelector(`#ano-${anoNumero} .category-section[data-category="${categoria}"]`);
+        if (!section) {
+          return;
+        }
+
+        let elementoNovo = null;
+        if (categoria === "filmes") {
+          elementoNovo = section.querySelector(".movie-list .movie-ticket:last-of-type");
+        } else if (categoria === "comidas") {
+          elementoNovo = section.querySelector(".food-card:last-of-type");
+        } else {
+          elementoNovo = section.querySelector(".carousel-track > .card:last-of-type") ||
+            section.querySelector(".category-grid > .card:last-of-type");
+        }
+
+        if (elementoNovo) {
+          elementoNovo.scrollIntoView({ behavior: "smooth", block: "center" });
+          if (typeof elementoNovo.focus === "function") {
+            try {
+              elementoNovo.focus({ preventScroll: true });
+            } catch (error) {
+              elementoNovo.focus();
+            }
+          }
+        }
+      });
+    });
+  }
+
+  function adicionarItemCategoria(anoIndex, categoria) {
+    const ano = colecaoAnual[anoIndex];
+    if (!ano) {
+      return;
+    }
+
+    if (!Array.isArray(ano[categoria])) {
+      ano[categoria] = [];
+    }
+
+    const novoItem = criarItemPadrao(categoria, ano);
+    if (!novoItem) {
+      return;
+    }
+
+    ano[categoria].push(novoItem);
+
+    if (!editMode) {
+      salvarDados();
+    }
+
+    renderizarColecao();
+    destacarNovoItem(ano.anoNumero, categoria);
+  }
+
+  function criarBotaoAdicionarItem(ano, anoIndex, categoria) {
+    const config = CONFIG_ADICAO[categoria] ?? { icone: "✚", rotulo: "Adicionar item" };
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.className = "add-item-button";
+    botao.innerHTML = `<span aria-hidden="true">${config.icone}</span><span>${config.rotulo}</span>`;
+    botao.addEventListener("click", () => {
+      if (!editMode) {
+        definirModoEdicao(true);
+      }
+      adicionarItemCategoria(anoIndex, categoria);
+    });
+    return botao;
   }
 
   function registrarCampoEditavel(
@@ -1887,84 +2047,87 @@
   function criarCategoriaGenerica(titulo, itens, ano, anoIndex, categoria) {
     const section = document.createElement("section");
     section.className = "category-section";
+    section.dataset.category = categoria;
 
     const heading = document.createElement("h3");
     heading.className = "category-title";
     heading.textContent = titulo;
     section.appendChild(heading);
 
-    if (!Array.isArray(itens) || itens.length === 0) {
+    const temItens = Array.isArray(itens) && itens.length > 0;
+
+    if (!temItens) {
       const empty = document.createElement("p");
       empty.className = "category-empty";
       empty.textContent = "Ainda não registramos nada aqui (por enquanto!).";
       section.appendChild(empty);
-      return section;
-    }
-
-    const usarCarousel = categoria === "badges" || categoria === "cartas";
-
-    if (usarCarousel) {
-      const wrapper = document.createElement("div");
-      wrapper.className = "carousel";
-
-      const anterior = document.createElement("button");
-      anterior.type = "button";
-      anterior.className = "carousel-button carousel-button-prev";
-      anterior.setAttribute("aria-label", `Ver item anterior em ${titulo}`);
-      anterior.innerHTML = "&#10094;";
-
-      const proximo = document.createElement("button");
-      proximo.type = "button";
-      proximo.className = "carousel-button carousel-button-next";
-      proximo.setAttribute("aria-label", `Ver próximo item em ${titulo}`);
-      proximo.innerHTML = "&#10095;";
-
-      const trilho = document.createElement("div");
-      trilho.className = "carousel-track";
-      itens.forEach((item, index) => {
-        trilho.appendChild(criarCardItem(item, ano, anoIndex, categoria, index));
-      });
-
-      const atualizarBotoes = () => {
-        const alcance = trilho.scrollWidth - trilho.clientWidth;
-        anterior.disabled = trilho.scrollLeft <= 2;
-        proximo.disabled = trilho.scrollLeft >= alcance - 2;
-      };
-
-      const deslocar = direcao => {
-        const passo = Math.max(trilho.clientWidth * 0.85, 220);
-        trilho.scrollBy({ left: passo * direcao, behavior: "smooth" });
-      };
-
-      anterior.addEventListener("click", () => {
-        deslocar(-1);
-      });
-
-      proximo.addEventListener("click", () => {
-        deslocar(1);
-      });
-
-      trilho.addEventListener("scroll", () => {
-        window.requestAnimationFrame(atualizarBotoes);
-      });
-
-      window.addEventListener("resize", atualizarBotoes, { passive: true });
-
-      wrapper.appendChild(anterior);
-      wrapper.appendChild(trilho);
-      wrapper.appendChild(proximo);
-      section.appendChild(wrapper);
-
-      window.requestAnimationFrame(atualizarBotoes);
     } else {
-      const grid = document.createElement("div");
-      grid.className = "category-grid";
-      itens.forEach((item, index) => {
-        grid.appendChild(criarCardItem(item, ano, anoIndex, categoria, index));
-      });
-      section.appendChild(grid);
+      const usarCarousel = categoria === "badges" || categoria === "cartas";
+
+      if (usarCarousel) {
+        const wrapper = document.createElement("div");
+        wrapper.className = "carousel";
+
+        const anterior = document.createElement("button");
+        anterior.type = "button";
+        anterior.className = "carousel-button carousel-button-prev";
+        anterior.setAttribute("aria-label", `Ver item anterior em ${titulo}`);
+        anterior.innerHTML = "&#10094;";
+
+        const proximo = document.createElement("button");
+        proximo.type = "button";
+        proximo.className = "carousel-button carousel-button-next";
+        proximo.setAttribute("aria-label", `Ver próximo item em ${titulo}`);
+        proximo.innerHTML = "&#10095;";
+
+        const trilho = document.createElement("div");
+        trilho.className = "carousel-track";
+        itens.forEach((item, index) => {
+          trilho.appendChild(criarCardItem(item, ano, anoIndex, categoria, index));
+        });
+
+        const atualizarBotoes = () => {
+          const alcance = trilho.scrollWidth - trilho.clientWidth;
+          anterior.disabled = trilho.scrollLeft <= 2;
+          proximo.disabled = trilho.scrollLeft >= alcance - 2;
+        };
+
+        const deslocar = direcao => {
+          const passo = Math.max(trilho.clientWidth * 0.85, 220);
+          trilho.scrollBy({ left: passo * direcao, behavior: "smooth" });
+        };
+
+        anterior.addEventListener("click", () => {
+          deslocar(-1);
+        });
+
+        proximo.addEventListener("click", () => {
+          deslocar(1);
+        });
+
+        trilho.addEventListener("scroll", () => {
+          window.requestAnimationFrame(atualizarBotoes);
+        });
+
+        window.addEventListener("resize", atualizarBotoes, { passive: true });
+
+        wrapper.appendChild(anterior);
+        wrapper.appendChild(trilho);
+        wrapper.appendChild(proximo);
+        section.appendChild(wrapper);
+
+        window.requestAnimationFrame(atualizarBotoes);
+      } else {
+        const grid = document.createElement("div");
+        grid.className = "category-grid";
+        itens.forEach((item, index) => {
+          grid.appendChild(criarCardItem(item, ano, anoIndex, categoria, index));
+        });
+        section.appendChild(grid);
+      }
     }
 
+    section.appendChild(criarBotaoAdicionarItem(ano, anoIndex, categoria));
     return section;
   }
 
@@ -2116,26 +2279,30 @@
   function criarCategoriaFilmes(ano, anoIndex) {
     const section = document.createElement("section");
     section.className = "category-section";
+    section.dataset.category = "filmes";
 
     const heading = document.createElement("h3");
     heading.className = "category-title";
     heading.textContent = "Filmes favoritos";
     section.appendChild(heading);
 
-    if (!Array.isArray(ano.filmes) || ano.filmes.length === 0) {
+    const temFilmes = Array.isArray(ano.filmes) && ano.filmes.length > 0;
+
+    if (!temFilmes) {
       const empty = document.createElement("p");
       empty.className = "category-empty";
       empty.textContent = "Ainda não colamos os ingressos deste ano.";
       section.appendChild(empty);
-      return section;
+    } else {
+      const lista = document.createElement("div");
+      lista.className = "movie-list";
+      ano.filmes.forEach((filme, index) => {
+        lista.appendChild(criarTicketFilme(filme, ano, anoIndex, index));
+      });
+      section.appendChild(lista);
     }
 
-    const lista = document.createElement("div");
-    lista.className = "movie-list";
-    ano.filmes.forEach((filme, index) => {
-      lista.appendChild(criarTicketFilme(filme, ano, anoIndex, index));
-    });
-    section.appendChild(lista);
+    section.appendChild(criarBotaoAdicionarItem(ano, anoIndex, "filmes"));
 
     return section;
   }
@@ -2330,23 +2497,27 @@
   function criarCategoriaComidas(ano, anoIndex) {
     const section = document.createElement("section");
     section.className = "category-section";
+    section.dataset.category = "comidas";
 
     const heading = document.createElement("h3");
     heading.className = "category-title";
     heading.textContent = "Comidas & Restaurantes";
     section.appendChild(heading);
 
-    if (!Array.isArray(ano.comidas) || ano.comidas.length === 0) {
+    const temComidas = Array.isArray(ano.comidas) && ano.comidas.length > 0;
+
+    if (!temComidas) {
       const empty = document.createElement("p");
       empty.className = "category-empty";
       empty.textContent = "Ainda não registramos os sabores deste ano.";
       section.appendChild(empty);
-      return section;
+    } else {
+      ano.comidas.forEach((comida, index) => {
+        section.appendChild(criarReviewComida(comida, ano, anoIndex, index));
+      });
     }
 
-    ano.comidas.forEach((comida, index) => {
-      section.appendChild(criarReviewComida(comida, ano, anoIndex, index));
-    });
+    section.appendChild(criarBotaoAdicionarItem(ano, anoIndex, "comidas"));
 
     return section;
   }
