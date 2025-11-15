@@ -1,15 +1,15 @@
 [
   {
     "anoNumero": 1,
-    "anoLabel": "Ano 1 (2023)",
-    "tema": "Ano do Tênis da Nike",
-    "resumo": "O começo de tudo, com descobertas e o símbolo do nosso tênis inseparável.",
+    "anoLabel": "Ano 0 (2023)",
+    "tema": "O Enigma do Tênis Azul",
+    "resumo": "Aqui foi onde tudo começou.",
     "badges": [
       {
-        "titulo": "Ano do Tênis da Nike",
+        "titulo": "O Tênis Azul da Nike",
         "tipo": "Badge",
         "imagem": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80",
-        "descricao": "Esse ano foi marcado pelo tênis da Nike, nosso símbolo de aventuras compartilhadas e trilhas de risadas.",
+        "descricao": "Esse ano foi marcado pelo tênis azul da Nike, nosso símbolo principal compartilhado sobre o maior mistério que ja tive que resolver e como nos encontramos. `Vai me contar o motivo de querer saber do tênis azul quando? kkkkk` `acho q vou demorar mais um pouquinho.`",
         "momentos": [
           "Primeiro filme juntos",
           "Nossa viagem para X",
