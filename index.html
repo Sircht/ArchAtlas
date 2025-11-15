@@ -78,6 +78,90 @@
       line-height: 1.5;
     }
 
+    .save-status {
+      margin: 14px 0 0;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: rgba(147, 197, 253, 0.7);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(12, 30, 56, 0.65);
+      border: 1px solid rgba(147, 197, 253, 0.18);
+      transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+    }
+
+    .save-status::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(147, 197, 253, 0.7);
+      box-shadow: 0 0 0 4px rgba(147, 197, 253, 0.14);
+      transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .save-status[data-status="pending"] {
+      color: var(--accent-strong);
+      border-color: rgba(147, 197, 253, 0.35);
+      background: rgba(12, 30, 56, 0.85);
+    }
+
+    .save-status[data-status="pending"]::before {
+      background: var(--accent-strong);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+      transform: scale(1.05);
+    }
+
+    .save-status[data-status="saving"] {
+      color: #fde68a;
+      border-color: rgba(250, 204, 21, 0.5);
+      background: rgba(56, 37, 9, 0.55);
+    }
+
+    .save-status[data-status="saving"]::before {
+      background: #fbbf24;
+      box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.18);
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+
+    .save-status[data-status="error"] {
+      color: #fca5a5;
+      border-color: rgba(248, 113, 113, 0.35);
+      background: rgba(80, 16, 23, 0.6);
+    }
+
+    .save-status[data-status="error"]::before {
+      background: #f87171;
+      box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.22);
+    }
+
+    .save-status[data-status="synced"] {
+      color: #bbf7d0;
+      border-color: rgba(34, 197, 94, 0.35);
+      background: rgba(18, 51, 33, 0.7);
+    }
+
+    .save-status[data-status="synced"]::before {
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
+    }
+
+    @keyframes pulse {
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+      50% {
+        transform: scale(1.25);
+        opacity: 1;
+      }
+    }
+
     .days-counter {
       display: inline-flex;
       flex-wrap: wrap;
@@ -1025,13 +1109,14 @@
     .ticket-rating {
       position: absolute;
       inset: auto 14px 14px 14px;
-      padding: 10px 14px;
-      background: rgba(4, 16, 34, 0.8);
-      border: 1px solid rgba(147, 197, 253, 0.2);
-      border-radius: 14px;
+      padding: 12px 16px;
+      background: rgba(4, 16, 34, 0.85);
+      border: 1px solid rgba(147, 197, 253, 0.22);
+      border-radius: 16px;
       display: grid;
-      gap: 6px;
+      gap: 4px;
       text-align: center;
+      min-width: 120px;
     }
 
     .ticket-rating-label {
@@ -1041,10 +1126,19 @@
       color: rgba(219, 234, 254, 0.65);
     }
 
-    .ticket-rating-value {
-      font-size: 1.2rem;
+    .ticket-rating-score {
+      font-size: 1.6rem;
       font-weight: 600;
       color: var(--accent-strong);
+    }
+
+    .ticket-rating-scale {
+      font-size: 0.75rem;
+      color: rgba(219, 234, 254, 0.7);
+    }
+
+    .ticket-rating .rating-edit-button {
+      justify-self: center;
     }
 
     .ticket-details {
@@ -1093,6 +1187,57 @@
       font-size: 0.85rem;
       color: var(--accent-strong);
       font-weight: 500;
+    }
+
+    .evaluation-block {
+      margin-top: 6px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(12, 26, 48, 0.72);
+      border: 1px solid rgba(147, 197, 253, 0.16);
+      display: grid;
+      gap: 12px;
+    }
+
+    .evaluation-block h5 {
+      margin: 0;
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(219, 234, 254, 0.72);
+    }
+
+    .evaluation-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .evaluation-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .evaluation-label {
+      display: grid;
+      gap: 2px;
+    }
+
+    .evaluation-label strong {
+      font-size: 0.95rem;
+      color: rgba(233, 237, 250, 0.9);
+    }
+
+    .evaluation-label span {
+      font-size: 0.75rem;
+      color: rgba(203, 213, 225, 0.65);
+    }
+
+    .evaluation-value {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--accent-strong);
     }
 
     .modal-highlight {
@@ -1230,6 +1375,10 @@
       border-color: rgba(147, 197, 253, 0.8);
       transform: translateY(-1px);
       outline: none;
+    }
+
+    .evaluation-item .rating-edit-button {
+      margin-left: auto;
     }
 
     .food-content {
@@ -1514,6 +1663,7 @@
         <!-- Botões de navegação são gerados dinamicamente via JavaScript -->
       </nav>
       <button class="edit-toggle" type="button" aria-pressed="false">Editar anuário</button>
+      <p class="save-status" role="status" aria-live="polite" data-status="idle">Tudo salvo ✨</p>
     </div>
   </header>
 
@@ -1570,6 +1720,67 @@
   
 <script>
   const API_COLLECTION_URL = "/api/collection";
+  const API_EVENTS_URL = "/api/events";
+
+  const CLIENT_ID = (() => {
+    try {
+      if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+        return crypto.randomUUID();
+      }
+    } catch (error) {
+      // Ignora e usa fallback
+    }
+
+    return `client-${Math.random().toString(36).slice(2)}-${Date.now()}`;
+  })();
+
+  const FILME_CRITERIOS_AVALIACAO = [
+    {
+      chave: "emocao",
+      titulo: "Emoção",
+      descricao: "Quanto o filme mexeu com a gente",
+      maximo: 10,
+      minimo: 0
+    },
+    {
+      chave: "risos",
+      titulo: "Risos compartilhados",
+      descricao: "O quanto demos risada juntas",
+      maximo: 10,
+      minimo: 0
+    },
+    {
+      chave: "trilha",
+      titulo: "Trilha sonora",
+      descricao: "A trilha combinou com o nosso momento?",
+      maximo: 10,
+      minimo: 0
+    }
+  ];
+
+  const COMIDA_CRITERIOS_AVALIACAO = [
+    {
+      chave: "sabor",
+      titulo: "Sabor",
+      descricao: "Explosão de sabor e tempero",
+      maximo: 5,
+      minimo: 0
+    },
+    {
+      chave: "ambiente",
+      titulo: "Ambiente",
+      descricao: "Clima do lugar ou do rolê",
+      maximo: 5,
+      minimo: 0
+    },
+    {
+      chave: "custoBeneficio",
+      titulo: "Custo-benefício",
+      descricao: "Valeu o investimento?",
+      maximo: 5,
+      minimo: 0
+    }
+  ];
 
   const colecaoPadrao = {
     anos: [
@@ -1925,6 +2136,144 @@
       .toLowerCase();
   }
 
+  function normalizarChaveCriterio(valor) {
+    return normalizarTextoBusca(typeof valor === "string" ? valor : valor?.toString?.() ?? "")
+      .replace(/[^a-z0-9]/g, "");
+  }
+
+  function criarNotasPadrao(criterios, valoresExistentes = [], valorFallback = null) {
+    const lista = Array.isArray(valoresExistentes) ? valoresExistentes : [];
+
+    return criterios.map(criterio => {
+      const chaveCriterio = normalizarChaveCriterio(criterio.chave ?? criterio.titulo ?? criterio.nome);
+      const itemExistente = lista.find(nota => {
+        const chaveExistente = normalizarChaveCriterio(
+          nota?.chave ?? nota?.criterio ?? nota?.titulo ?? nota?.nome
+        );
+        return chaveExistente === chaveCriterio;
+      });
+
+      const minimo = Number.isFinite(criterio.minimo) ? criterio.minimo : 0;
+      const maximoReferencia = criterio.maximo ?? criterio.max;
+      const maximo = Number.isFinite(maximoReferencia) ? maximoReferencia : null;
+
+      let valor = normalizarNumero(
+        itemExistente?.valor ?? itemExistente?.nota ?? itemExistente?.pontuacao ?? itemExistente?.score
+      );
+
+      if (!Number.isFinite(valor) && Number.isFinite(valorFallback)) {
+        valor = valorFallback;
+      }
+
+      if (Number.isFinite(valor) && Number.isFinite(maximo)) {
+        valor = Math.min(Math.max(valor, minimo), maximo);
+      }
+
+      return {
+        criterio: criterio.titulo ?? criterio.nome ?? "Critério",
+        chave: criterio.chave ?? chaveCriterio ?? "criterio",
+        descricao: criterio.descricao ?? "",
+        maximo: maximo,
+        minimo,
+        valor: Number.isFinite(valor) ? valor : null
+      };
+    });
+  }
+
+  function extrairNotaDez(nota) {
+    if (typeof nota === "number" && Number.isFinite(nota)) {
+      return Math.min(Math.max(nota, 0), 10);
+    }
+
+    if (typeof nota === "string") {
+      const texto = nota.trim();
+      if (!texto) {
+        return null;
+      }
+
+      const partes = texto.split("/");
+      if (partes.length === 2) {
+        const numerador = Number.parseFloat(partes[0].replace(",", "."));
+        const denominador = Number.parseFloat(partes[1].replace(",", "."));
+
+        if (Number.isFinite(numerador) && Number.isFinite(denominador) && denominador !== 0) {
+          return Math.min(Math.max((numerador / denominador) * 10, 0), 10);
+        }
+      }
+
+      const numero = Number.parseFloat(texto.replace(",", "."));
+      if (Number.isFinite(numero)) {
+        return Math.min(Math.max(numero, 0), 10);
+      }
+    }
+
+    return null;
+  }
+
+  function normalizarNotaDez(valor) {
+    return extrairNotaDez(valor);
+  }
+
+  function formatarNotaDez(valor, { comSufixo = false } = {}) {
+    if (!Number.isFinite(valor)) {
+      return comSufixo ? "--/10" : "--";
+    }
+
+    const temDecimal = Math.abs(valor % 1) > Number.EPSILON;
+    const texto = valor.toLocaleString("pt-BR", {
+      minimumFractionDigits: temDecimal ? 1 : 0,
+      maximumFractionDigits: 1
+    });
+
+    return comSufixo ? `${texto}/10` : texto;
+  }
+
+  function normalizarFilme(filme) {
+    const notaGeral = normalizarNotaDez(filme?.notaGeral ?? filme?.nota);
+    const avaliacoesOrigem = Array.isArray(filme?.avaliacoes) ? filme.avaliacoes : filme?.notas;
+    const avaliacoes = criarNotasPadrao(FILME_CRITERIOS_AVALIACAO, avaliacoesOrigem, notaGeral);
+
+    return {
+      nome: filme?.nome ?? "Filme sem título",
+      nota: notaGeral !== null ? formatarNotaDez(notaGeral, { comSufixo: true }) : "",
+      notaGeral,
+      capa: filme?.capa ?? "https://placehold.co/400x600?text=Filme",
+      dataSessao: filme?.dataSessao ?? "",
+      local: filme?.local ?? "",
+      comentario: filme?.comentario ?? "",
+      destaque: filme?.destaque ?? "",
+      avaliacoes,
+      momentos: Array.isArray(filme?.momentos) ? filme.momentos : []
+    };
+  }
+
+  function normalizarFilmes(lista) {
+    return (Array.isArray(lista) ? lista : []).map(normalizarFilme);
+  }
+
+  function normalizarComida(comida) {
+    const notaNormalizada = normalizarNumero(comida?.nota);
+    const nota = Number.isFinite(notaNormalizada) ? Math.min(Math.max(notaNormalizada, 0), 5) : null;
+    const avaliacoesOrigem = Array.isArray(comida?.avaliacoes) ? comida.avaliacoes : [];
+    const avaliacoes = criarNotasPadrao(COMIDA_CRITERIOS_AVALIACAO, avaliacoesOrigem, nota);
+
+    return {
+      titulo: comida?.titulo ?? "Novo review gastronômico",
+      tipo: comida?.tipo ?? "Review gastronômica",
+      imagem: comida?.imagem ?? "https://placehold.co/600x400?text=Comida",
+      nota,
+      local: comida?.local ?? "",
+      descricao: comida?.descricao ?? "",
+      destaque: comida?.destaque ?? "",
+      momentos: Array.isArray(comida?.momentos) ? comida.momentos : [],
+      avaliacoes
+    };
+  }
+
+  function normalizarComidas(lista) {
+    return (Array.isArray(lista) ? lista : []).map(normalizarComida);
+  }
+
   function normalizarAnos(lista) {
     return clonar(lista).map(ano => ({
       anoNumero: ano.anoNumero,
@@ -1933,8 +2282,8 @@
       resumo: ano.resumo ?? "",
       badges: Array.isArray(ano.badges) ? ano.badges : [],
       cartas: Array.isArray(ano.cartas) ? ano.cartas : [],
-      filmes: Array.isArray(ano.filmes) ? ano.filmes : [],
-      comidas: Array.isArray(ano.comidas) ? ano.comidas : [],
+      filmes: normalizarFilmes(ano.filmes ?? []),
+      comidas: normalizarComidas(ano.comidas ?? []),
     }));
   }
 
@@ -2019,9 +2368,60 @@
       renderizarColecao();
       renderizarGastronomia();
       aplicarVisaoAtual();
+      return true;
     } catch (error) {
       console.warn("Não foi possível sincronizar com o servidor:", error);
+      return false;
     }
+  }
+
+  function iniciarEventosTempoReal() {
+    if (typeof EventSource === "undefined") {
+      console.warn("Eventos em tempo real não são suportados neste navegador.");
+      return;
+    }
+
+    try {
+      eventSource = new EventSource(API_EVENTS_URL);
+    } catch (error) {
+      console.warn("Não foi possível iniciar a conexão em tempo real:", error);
+      return;
+    }
+
+    eventSource.addEventListener("collection-update", event => {
+      if (!event?.data) {
+        return;
+      }
+
+      try {
+        const payload = JSON.parse(event.data);
+        if (payload?.sourceId && payload.sourceId === CLIENT_ID) {
+          definirStatusSalvamento("synced", "Alterações salvas ✨");
+          return;
+        }
+
+        definirStatusSalvamento("pending", "Recebendo novidades…", { autoReset: false });
+
+        sincronizarColecaoServidor()
+          .then(sucesso => {
+            if (sucesso) {
+              definirStatusSalvamento("synced", "Atualizado com novas memórias ✨");
+            } else {
+              definirStatusSalvamento("error", "Erro ao sincronizar atualizações.", { autoReset: false });
+            }
+          })
+          .catch(sincronizacaoErro => {
+            console.warn("Erro ao aplicar atualização remota:", sincronizacaoErro);
+            definirStatusSalvamento("error", "Erro ao sincronizar atualizações.", { autoReset: false });
+          });
+      } catch (error) {
+        console.warn("Evento de atualização inválido:", error);
+      }
+    });
+
+    eventSource.addEventListener("error", () => {
+      definirStatusSalvamento("pending", "Tentando reconectar…", { autoReset: false });
+    });
   }
 
   const estadoExpansao = new Map();
@@ -2049,6 +2449,35 @@
   let visaoAtual = "anos";
   let editMode = false;
   let termoBuscaGastronomia = "";
+  let eventSource = null;
+
+  const saveStatusElement = document.querySelector(".save-status");
+  let statusResetTimeoutId = null;
+
+  function definirStatusSalvamento(status, mensagem, { autoReset = true } = {}) {
+    if (!saveStatusElement) {
+      return;
+    }
+
+    if (statusResetTimeoutId) {
+      window.clearTimeout(statusResetTimeoutId);
+      statusResetTimeoutId = null;
+    }
+
+    const statusValor = status ?? "idle";
+    saveStatusElement.dataset.status = statusValor;
+    saveStatusElement.textContent = mensagem;
+
+    if (autoReset && (statusValor === "synced" || statusValor === "idle")) {
+      statusResetTimeoutId = window.setTimeout(() => {
+        saveStatusElement.dataset.status = "idle";
+        saveStatusElement.textContent = "Tudo salvo ✨";
+        statusResetTimeoutId = null;
+      }, 4000);
+    }
+  }
+
+  definirStatusSalvamento("idle", "Tudo salvo ✨", { autoReset: false });
 
   const CONFIG_ADICAO = {
     badges: { icone: "✚", rotulo: "Adicionar badge" },
@@ -2173,18 +2602,26 @@
   async function salvarDados() {
     const payload = { anos: colecaoAnual, gastronomia: colecaoGastronomia };
 
+    definirStatusSalvamento("saving", "Salvando alterações…", { autoReset: false });
+
     try {
       const response = await fetch(API_COLLECTION_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "X-Client-Id": CLIENT_ID
+        },
         body: JSON.stringify(payload)
       });
 
       if (!response.ok) {
         throw new Error(`Status ${response.status}`);
       }
+
+      definirStatusSalvamento("synced", "Alterações salvas ✨");
     } catch (error) {
       console.warn("Não foi possível salvar as alterações no servidor:", error);
+      definirStatusSalvamento("error", "Erro ao salvar. Verifique sua conexão.", { autoReset: false });
     }
   }
 
@@ -2202,6 +2639,8 @@
       return;
     }
 
+    definirStatusSalvamento("pending", "Alterações pendentes…", { autoReset: false });
+
     salvarTimeoutId = window.setTimeout(() => {
       salvarTimeoutId = null;
       salvarDados();
@@ -2209,6 +2648,10 @@
   }
 
   function limitarValor(valor, minimo, maximo) {
+    if (!Number.isFinite(valor)) {
+      return valor;
+    }
+
     return Math.min(Math.max(valor, minimo), maximo);
   }
 
@@ -2220,7 +2663,7 @@
     if (typeof valor === "string") {
       const texto = valor.trim();
       if (!texto) {
-        return 0;
+        return null;
       }
 
       const partes = texto.split("/");
@@ -2238,7 +2681,7 @@
       }
     }
 
-    return 0;
+    return null;
   }
 
   function formatarNotaEstrelas(valor) {
@@ -2324,6 +2767,110 @@
     return notaNormalizada;
   }
 
+  function atualizarNotaGeralFilme(anoIndex, filmeIndex, novoValor) {
+    const ano = colecaoAnual[anoIndex];
+    if (!ano || !Array.isArray(ano.filmes)) {
+      return null;
+    }
+
+    const filme = ano.filmes[filmeIndex];
+    if (!filme) {
+      return null;
+    }
+
+    const notaNormalizada = normalizarNotaDez(novoValor);
+    filme.notaGeral = notaNormalizada;
+    filme.nota = notaNormalizada !== null ? formatarNotaDez(notaNormalizada, { comSufixo: true }) : "";
+
+    agendarPersistencia();
+
+    return notaNormalizada;
+  }
+
+  function atualizarAvaliacaoFilme(anoIndex, filmeIndex, avaliacaoIndex, novoValor) {
+    const ano = colecaoAnual[anoIndex];
+    if (!ano || !Array.isArray(ano.filmes)) {
+      return null;
+    }
+
+    const filme = ano.filmes[filmeIndex];
+    if (!filme || !Array.isArray(filme.avaliacoes)) {
+      return null;
+    }
+
+    const avaliacao = filme.avaliacoes[avaliacaoIndex];
+    if (!avaliacao) {
+      return null;
+    }
+
+    const criterio = FILME_CRITERIOS_AVALIACAO.find(item => {
+      const chaveItem = normalizarChaveCriterio(item.chave ?? item.titulo);
+      const chaveAtual = normalizarChaveCriterio(avaliacao.chave ?? avaliacao.criterio);
+      return chaveItem === chaveAtual;
+    });
+
+    const maximo = Number.isFinite(avaliacao.maximo)
+      ? avaliacao.maximo
+      : Number.isFinite(criterio?.maximo)
+        ? criterio.maximo
+        : 10;
+    const minimo = Number.isFinite(avaliacao.minimo)
+      ? avaliacao.minimo
+      : Number.isFinite(criterio?.minimo)
+        ? criterio.minimo
+        : 0;
+
+    const notaNormalizada = normalizarNotaDez(novoValor);
+    const valor = Number.isFinite(notaNormalizada) ? limitarValor(notaNormalizada, minimo, maximo) : null;
+    avaliacao.valor = valor;
+
+    agendarPersistencia();
+
+    return valor;
+  }
+
+  function atualizarAvaliacaoComida(anoIndex, comidaIndex, avaliacaoIndex, novoValor) {
+    const ano = colecaoAnual[anoIndex];
+    if (!ano || !Array.isArray(ano.comidas)) {
+      return null;
+    }
+
+    const comida = ano.comidas[comidaIndex];
+    if (!comida || !Array.isArray(comida.avaliacoes)) {
+      return null;
+    }
+
+    const avaliacao = comida.avaliacoes[avaliacaoIndex];
+    if (!avaliacao) {
+      return null;
+    }
+
+    const criterio = COMIDA_CRITERIOS_AVALIACAO.find(item => {
+      const chaveItem = normalizarChaveCriterio(item.chave ?? item.titulo);
+      const chaveAtual = normalizarChaveCriterio(avaliacao.chave ?? avaliacao.criterio);
+      return chaveItem === chaveAtual;
+    });
+
+    const maximo = Number.isFinite(avaliacao.maximo)
+      ? avaliacao.maximo
+      : Number.isFinite(criterio?.maximo)
+        ? criterio.maximo
+        : 5;
+    const minimo = Number.isFinite(avaliacao.minimo)
+      ? avaliacao.minimo
+      : Number.isFinite(criterio?.minimo)
+        ? criterio.minimo
+        : 0;
+
+    const notaNormalizada = normalizarNotaEstrelas(novoValor);
+    const valor = Number.isFinite(notaNormalizada) ? limitarValor(notaNormalizada, minimo, maximo) : null;
+    avaliacao.valor = valor;
+
+    agendarPersistencia();
+
+    return valor;
+  }
+
   function criarItemPadrao(categoria, ano) {
     switch (categoria) {
       case "badges":
@@ -2346,6 +2893,8 @@
         return {
           nome: "Novo filme",
           nota: "",
+          notaGeral: null,
+          avaliacoes: criarNotasPadrao(FILME_CRITERIOS_AVALIACAO),
           capa: "https://placehold.co/400x600?text=Filme",
           dataSessao: "",
           local: "",
@@ -2357,11 +2906,12 @@
           titulo: "Novo review gastronômico",
           tipo: "Review gastronômica",
           imagem: "https://placehold.co/600x400?text=Comida",
-          nota: 0,
+          nota: null,
           local: "",
           descricao: "",
           destaque: "",
-          momentos: []
+          momentos: [],
+          avaliacoes: criarNotasPadrao(COMIDA_CRITERIOS_AVALIACAO)
         };
       default:
         return {
@@ -2995,6 +3545,186 @@
     return section;
   }
 
+  function criarBlocoAvaliacoesFilme(filme, anoIndex, filmeIndex) {
+    const avaliacoes = Array.isArray(filme.avaliacoes) ? filme.avaliacoes : [];
+    if (avaliacoes.length === 0) {
+      return null;
+    }
+
+    const bloco = document.createElement("div");
+    bloco.className = "evaluation-block";
+
+    const titulo = document.createElement("h5");
+    titulo.textContent = "Parâmetros da sessão";
+    bloco.appendChild(titulo);
+
+    const grid = document.createElement("div");
+    grid.className = "evaluation-grid";
+    bloco.appendChild(grid);
+
+    avaliacoes.forEach((avaliacao, avaliacaoIndex) => {
+      const linha = document.createElement("div");
+      linha.className = "evaluation-item";
+
+      const rotulo = document.createElement("div");
+      rotulo.className = "evaluation-label";
+      const tituloRotulo = document.createElement("strong");
+      tituloRotulo.textContent = avaliacao.criterio;
+      rotulo.appendChild(tituloRotulo);
+
+      if (avaliacao.descricao) {
+        const descricao = document.createElement("span");
+        descricao.textContent = avaliacao.descricao;
+        rotulo.appendChild(descricao);
+      }
+
+      linha.appendChild(rotulo);
+
+      const escalaMaxima = Number.isFinite(avaliacao.maximo) ? avaliacao.maximo : 10;
+
+      const valor = document.createElement("span");
+      valor.className = "evaluation-value";
+      valor.textContent = Number.isFinite(avaliacao.valor)
+        ? `${formatarNotaDez(avaliacao.valor)} / ${escalaMaxima}`
+        : `-- / ${escalaMaxima}`;
+      linha.appendChild(valor);
+
+      const editar = document.createElement("button");
+      editar.type = "button";
+      editar.className = "rating-edit-button";
+      editar.textContent = "Dar nota";
+      editar.addEventListener("click", event => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!editMode) {
+          return;
+        }
+
+        const resposta = prompt(
+          `Qual a nota para ${avaliacao.criterio}? (0 a ${escalaMaxima})`,
+          Number.isFinite(avaliacao.valor) ? formatarNotaDez(avaliacao.valor) : ""
+        );
+        if (resposta === null) {
+          return;
+        }
+
+        const texto = resposta.trim();
+        if (!texto) {
+          const atualizado = atualizarAvaliacaoFilme(anoIndex, filmeIndex, avaliacaoIndex, null);
+          avaliacao.valor = atualizado;
+          valor.textContent = `-- / ${escalaMaxima}`;
+          return;
+        }
+
+        const numero = normalizarNotaDez(resposta);
+        if (!Number.isFinite(numero)) {
+          return;
+        }
+
+        const atualizado = atualizarAvaliacaoFilme(anoIndex, filmeIndex, avaliacaoIndex, numero);
+        avaliacao.valor = atualizado;
+        valor.textContent = Number.isFinite(atualizado)
+          ? `${formatarNotaDez(atualizado)} / ${escalaMaxima}`
+          : `-- / ${escalaMaxima}`;
+      });
+      linha.appendChild(editar);
+
+      grid.appendChild(linha);
+    });
+
+    return bloco;
+  }
+
+  function criarBlocoAvaliacoesComida(comida, anoIndex, comidaIndex) {
+    const avaliacoes = Array.isArray(comida.avaliacoes) ? comida.avaliacoes : [];
+    if (avaliacoes.length === 0) {
+      return null;
+    }
+
+    const bloco = document.createElement("div");
+    bloco.className = "evaluation-block";
+
+    const titulo = document.createElement("h5");
+    titulo.textContent = "Parâmetros do rolê";
+    bloco.appendChild(titulo);
+
+    const grid = document.createElement("div");
+    grid.className = "evaluation-grid";
+    bloco.appendChild(grid);
+
+    avaliacoes.forEach((avaliacao, avaliacaoIndex) => {
+      const linha = document.createElement("div");
+      linha.className = "evaluation-item";
+
+      const rotulo = document.createElement("div");
+      rotulo.className = "evaluation-label";
+      const tituloRotulo = document.createElement("strong");
+      tituloRotulo.textContent = avaliacao.criterio;
+      rotulo.appendChild(tituloRotulo);
+
+      if (avaliacao.descricao) {
+        const descricao = document.createElement("span");
+        descricao.textContent = avaliacao.descricao;
+        rotulo.appendChild(descricao);
+      }
+
+      linha.appendChild(rotulo);
+
+      const escalaMaxima = Number.isFinite(avaliacao.maximo) ? avaliacao.maximo : 5;
+
+      const valor = document.createElement("span");
+      valor.className = "evaluation-value";
+      valor.textContent = Number.isFinite(avaliacao.valor)
+        ? `${formatarNotaEstrelas(avaliacao.valor)} / ${escalaMaxima}`
+        : `-- / ${escalaMaxima}`;
+      linha.appendChild(valor);
+
+      const editar = document.createElement("button");
+      editar.type = "button";
+      editar.className = "rating-edit-button";
+      editar.textContent = "Dar nota";
+      editar.addEventListener("click", event => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!editMode) {
+          return;
+        }
+
+        const resposta = prompt(
+          `Qual a nota para ${avaliacao.criterio}? (0 a ${escalaMaxima})`,
+          Number.isFinite(avaliacao.valor) ? formatarNotaEstrelas(avaliacao.valor) : ""
+        );
+        if (resposta === null) {
+          return;
+        }
+
+        const texto = resposta.trim();
+        if (!texto) {
+          const atualizado = atualizarAvaliacaoComida(anoIndex, comidaIndex, avaliacaoIndex, null);
+          avaliacao.valor = atualizado;
+          valor.textContent = `-- / ${escalaMaxima}`;
+          return;
+        }
+
+        const numero = normalizarNotaEstrelas(resposta);
+        if (!Number.isFinite(numero)) {
+          return;
+        }
+
+        const atualizado = atualizarAvaliacaoComida(anoIndex, comidaIndex, avaliacaoIndex, numero);
+        avaliacao.valor = atualizado;
+        valor.textContent = Number.isFinite(atualizado)
+          ? `${formatarNotaEstrelas(atualizado)} / ${escalaMaxima}`
+          : `-- / ${escalaMaxima}`;
+      });
+      linha.appendChild(editar);
+
+      grid.appendChild(linha);
+    });
+
+    return bloco;
+  }
+
   function criarTicketFilme(filme, ano, anoIndex, filmeIndex) {
     const article = document.createElement("article");
     article.className = "movie-ticket";
@@ -3036,17 +3766,70 @@
     ratingLabel.className = "ticket-rating-label";
     ratingLabel.textContent = "Nota geral";
     rating.appendChild(ratingLabel);
-    const ratingValue = document.createElement("span");
-    ratingValue.className = "ticket-rating-value";
-    ratingValue.textContent = filme.nota ?? "";
-    registrarCampoEditavel(ratingValue, {
-      yearIndex: anoIndex,
-      category: "filmes",
-      itemIndex: filmeIndex,
-      field: "nota",
-      placeholder: "0/10"
+
+    let notaAtual = Number.isFinite(filme.notaGeral) ? filme.notaGeral : normalizarNotaDez(filme.nota);
+    if (!Number.isFinite(filme.notaGeral) && Number.isFinite(notaAtual)) {
+      filme.notaGeral = notaAtual;
+      filme.nota = formatarNotaDez(notaAtual, { comSufixo: true });
+    }
+
+    const ratingScore = document.createElement("strong");
+    ratingScore.className = "ticket-rating-score";
+    ratingScore.textContent = formatarNotaDez(notaAtual);
+    rating.appendChild(ratingScore);
+
+    const ratingScale = document.createElement("span");
+    ratingScale.className = "ticket-rating-scale";
+    ratingScale.textContent = "/10";
+    rating.appendChild(ratingScale);
+
+    const ratingAssistiveText = document.createElement("span");
+    ratingAssistiveText.className = "sr-only";
+    ratingAssistiveText.textContent = Number.isFinite(notaAtual)
+      ? `Nota geral ${formatarNotaDez(notaAtual)} de 10`
+      : "Nota geral ainda não informada";
+    rating.appendChild(ratingAssistiveText);
+
+    const ratingEditButton = document.createElement("button");
+    ratingEditButton.type = "button";
+    ratingEditButton.className = "rating-edit-button";
+    ratingEditButton.textContent = "Definir nota";
+    ratingEditButton.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (!editMode) {
+        return;
+      }
+
+      const resposta = prompt(
+        "Qual a nota geral do filme? (0 a 10)",
+        Number.isFinite(notaAtual) ? formatarNotaDez(notaAtual) : ""
+      );
+      if (resposta === null) {
+        return;
+      }
+
+      const texto = resposta.trim();
+      if (!texto) {
+        const atualizado = atualizarNotaGeralFilme(anoIndex, filmeIndex, null);
+        notaAtual = atualizado;
+        ratingScore.textContent = formatarNotaDez(atualizado);
+        ratingAssistiveText.textContent = "Nota geral ainda não informada";
+        return;
+      }
+
+      const numero = normalizarNotaDez(resposta);
+      if (!Number.isFinite(numero)) {
+        return;
+      }
+
+      const atualizado = atualizarNotaGeralFilme(anoIndex, filmeIndex, numero);
+      notaAtual = atualizado;
+      ratingScore.textContent = formatarNotaDez(atualizado);
+      ratingAssistiveText.textContent = `Nota geral ${formatarNotaDez(atualizado)} de 10`;
     });
-    rating.appendChild(ratingValue);
+    rating.appendChild(ratingEditButton);
+
     media.appendChild(rating);
 
     article.appendChild(media);
@@ -3134,6 +3917,11 @@
       placeholder: "O que deixou o filme inesquecível?"
     });
     details.appendChild(destaque);
+
+    const blocoAvaliacoes = criarBlocoAvaliacoesFilme(filme, anoIndex, filmeIndex);
+    if (blocoAvaliacoes) {
+      details.appendChild(blocoAvaliacoes);
+    }
 
     article.appendChild(details);
 
@@ -3332,7 +4120,9 @@
 
     const ratingAssistiveText = document.createElement("span");
     ratingAssistiveText.className = "sr-only";
-    ratingAssistiveText.textContent = `${formatarNotaEstrelas(notaAtual)} de 5 estrelas`;
+    ratingAssistiveText.textContent = Number.isFinite(notaAtual)
+      ? `${formatarNotaEstrelas(notaAtual)} de 5 estrelas`
+      : "Nota ainda não informada";
     rating.appendChild(ratingAssistiveText);
 
     const ratingEditButton = document.createElement("button");
@@ -3346,20 +4136,35 @@
         return;
       }
 
-      const resposta = prompt("Qual a nova nota (0 a 5)?", formatarNotaEstrelas(notaAtual).replace(".", ","));
+      const resposta = prompt(
+        "Qual a nova nota (0 a 5)?",
+        Number.isFinite(notaAtual) ? formatarNotaEstrelas(notaAtual) : ""
+      );
       if (resposta === null) {
         return;
       }
 
-      const valorNumerico = parseFloat(resposta.replace(",", "."));
-      if (!Number.isFinite(valorNumerico)) {
+      const texto = resposta.trim();
+      if (!texto) {
+        const notaAtualizada = atualizarNotaComida(anoIndex, comidaIndex, null);
+        notaAtual = notaAtualizada;
+        ratingScore.textContent = formatarNotaEstrelas(notaAtualizada);
+        ratingAssistiveText.textContent = "Nota ainda não informada";
+        atualizarDisplayEstrelas(ratingStars, notaAtualizada);
         return;
       }
 
-      const notaAtualizada = atualizarNotaComida(anoIndex, comidaIndex, valorNumerico);
+      const valorNormalizado = normalizarNotaEstrelas(resposta);
+      if (!Number.isFinite(valorNormalizado)) {
+        return;
+      }
+
+      const notaAtualizada = atualizarNotaComida(anoIndex, comidaIndex, valorNormalizado);
       notaAtual = notaAtualizada;
       ratingScore.textContent = formatarNotaEstrelas(notaAtualizada);
-      ratingAssistiveText.textContent = `${formatarNotaEstrelas(notaAtualizada)} de 5 estrelas`;
+      ratingAssistiveText.textContent = Number.isFinite(notaAtualizada)
+        ? `${formatarNotaEstrelas(notaAtualizada)} de 5 estrelas`
+        : "Nota ainda não informada";
       atualizarDisplayEstrelas(ratingStars, notaAtualizada);
     });
     rating.appendChild(ratingEditButton);
@@ -3435,6 +4240,11 @@
       placeholder: "Qual foi o momento marcante desse rolê?"
     });
     content.appendChild(highlight);
+
+    const blocoAvaliacoes = criarBlocoAvaliacoesComida(comida, anoIndex, comidaIndex);
+    if (blocoAvaliacoes) {
+      content.appendChild(blocoAvaliacoes);
+    }
 
     article.appendChild(content);
 
@@ -4056,7 +4866,18 @@
   renderizarColecao();
   renderizarGastronomia();
   aplicarVisaoAtual();
+  iniciarEventosTempoReal();
   sincronizarColecaoServidor();
+
+  window.addEventListener("beforeunload", () => {
+    if (eventSource) {
+      try {
+        eventSource.close();
+      } catch (error) {
+        // Ignora erros de fechamento
+      }
+    }
+  });
 </script>
 
 </body>

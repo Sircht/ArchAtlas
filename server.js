@@ -21,6 +21,7 @@ const dataFilePath = dataFileOverride
   ? path.resolve(dataFileOverride)
   : path.join(defaultDataDir, "collection.json");
 const dataDir = path.dirname(dataFilePath);
+const sseClients = new Set();
 
 async function ensureDataFile() {
   try {
@@ -58,6 +59,27 @@ async function writeCollection(data) {
   await fs.writeFile(dataFilePath, JSON.stringify(data, null, 2), "utf8");
 }
 
+function broadcastCollectionUpdate({ sourceId = null } = {}) {
+  if (!sseClients.size) {
+    return;
+  }
+
+  const payload = JSON.stringify({
+    type: "collection:update",
+    sourceId,
+    updatedAt: new Date().toISOString()
+  });
+
+  for (const client of sseClients) {
+    try {
+      client.res.write("event: collection-update\n");
+      client.res.write(`data: ${payload}\n\n`);
+    } catch (error) {
+      sseClients.delete(client);
+    }
+  }
+}
+
 app.get("/api/collection", async (req, res) => {
   try {
     const data = await readCollection();
@@ -70,6 +92,7 @@ app.get("/api/collection", async (req, res) => {
 
 app.post("/api/collection", async (req, res) => {
   const body = req.body;
+  const clientId = req.get("x-client-id") || null;
 
   if (!Array.isArray(body) && (typeof body !== "object" || body === null)) {
     return res.status(400).json({ message: "Formato inválido. A coleção deve ser uma lista ou um objeto." });
@@ -77,11 +100,44 @@ app.post("/api/collection", async (req, res) => {
 
   try {
     await writeCollection(body);
+    broadcastCollectionUpdate({ sourceId: clientId });
     res.status(204).end();
   } catch (error) {
     console.error("Erro ao salvar coleção:", error);
     res.status(500).json({ message: "Não foi possível salvar a coleção." });
   }
+});
+
+app.get("/api/events", (req, res) => {
+  res.set({
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    Connection: "keep-alive"
+  });
+
+  if (typeof res.flushHeaders === "function") {
+    res.flushHeaders();
+  }
+
+  const client = { res };
+  sseClients.add(client);
+
+  res.write("event: connected\n");
+  res.write("data: {}\n\n");
+
+  const heartbeat = setInterval(() => {
+    try {
+      res.write(":heartbeat\n\n");
+    } catch (error) {
+      clearInterval(heartbeat);
+      sseClients.delete(client);
+    }
+  }, 30000);
+
+  req.on("close", () => {
+    clearInterval(heartbeat);
+    sseClients.delete(client);
+  });
 });
 
 app.use(express.static(publicDir));
