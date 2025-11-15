@@ -6,7 +6,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "concurrently \"npm run start\" \"npx serve\""
+    "dev": "concurrently \"npm run start\" \"npx serve\"",
+    "test": "node --test"
   },
   "dependencies": {
     "cors": "^2.8.5",
