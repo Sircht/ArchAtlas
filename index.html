@@ -479,6 +479,36 @@
       gap: 18px;
     }
 
+    .add-item-button {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      align-self: flex-start;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px dashed rgba(147, 197, 253, 0.5);
+      background: rgba(15, 31, 56, 0.6);
+      color: var(--accent-strong);
+      font-weight: 500;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .add-item-button span[aria-hidden="true"] {
+      font-size: 1.1em;
+    }
+
+    body.edit-mode .add-item-button {
+      display: inline-flex;
+    }
+
+    body.edit-mode .add-item-button:hover {
+      background: rgba(37, 99, 235, 0.16);
+      border-color: rgba(147, 197, 253, 0.8);
+      color: var(--text-primary);
+    }
+
     .category-title {
       margin: 0;
       font-size: 1rem;
@@ -1265,6 +1295,33 @@
           local: "Cinemark Downtown",
           comentario: "Nosso primeiro filme como casal, com direito a mãos dadas do começo ao fim.",
           destaque: "Saímos cantando 'City of Stars' até chegar no carro."
+        },
+        {
+          nome: "Jogos Vorazes: A Cantiga dos Pássaros e das Serpentes",
+          nota: "Em breve",
+          capa: "https://images.unsplash.com/photo-1517602302552-471fe67acf66?auto=format&fit=crop&w=800&q=80",
+          dataSessao: "18 de novembro de 2023",
+          local: "Pré-estreia combinada",
+          comentario: "Já estamos planejando a maratona da saga antes de ver o novo capítulo.",
+          destaque: "Vai ser noite de pipoca gigante e comentários sobre Snow o caminho inteiro."
+        },
+        {
+          nome: "Wonka",
+          nota: "Em breve",
+          capa: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80",
+          dataSessao: "8 de dezembro de 2023",
+          local: "Cinema com chocolate obrigatório",
+          comentario: "Promessa feita: cada cena com doce vira desculpa para a nossa própria degustação.",
+          destaque: "Vamos sair procurando receitas malucas para testar em casa."
+        },
+        {
+          nome: "Aquaman 2: O Reino Perdido",
+          nota: "Em breve",
+          capa: "https://images.unsplash.com/photo-1505764706515-aa95265c5abc?auto=format&fit=crop&w=800&q=80",
+          dataSessao: "27 de dezembro de 2023",
+          local: "Sessão pós-Natal",
+          comentario: "Fecharemos o ano com aventura submarina e discussão sobre qual reino moraríamos.",
+          destaque: "Foto temática com nossas camisetas geek garantida antes de entrar na sala."
         }
       ],
       comidas: [
@@ -1316,6 +1373,51 @@
           local: "Sessão pipoca em casa",
           comentario: "Virou tradição: cobertor, chocolate quente e olhos marejados com o final.",
           destaque: "Prometemos assistir novamente quando viajarmos para a nossa próxima constelação."
+        },
+        {
+          nome: "Madame Teia",
+          nota: "Em breve",
+          capa: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=800&q=80",
+          dataSessao: "16 de fevereiro de 2024",
+          local: "Noite Marvel combinada",
+          comentario: "Vamos de combo duplo e discutir cada detalhe do multiverso na volta pra casa.",
+          destaque: "Lembrar de levar o casaco porque cinema de super-herói é sempre gelado."
+        },
+        {
+          nome: "Garfield – Fora de Casa",
+          nota: "Em breve",
+          capa: "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=800&q=80",
+          dataSessao: "1º de junho de 2024",
+          local: "Sessão de sábado com brunch antes",
+          comentario: "Filme perfeito pra rir junto e sair planejando receitas com lasanha.",
+          destaque: "Fotos com nossas meias combinando de gato antes de entrar no cinema."
+        },
+        {
+          nome: "Divertida Mente 2",
+          nota: "Em breve",
+          capa: "https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=800&q=80",
+          dataSessao: "27 de junho de 2024",
+          local: "Pré-estreia com caixa de lenços",
+          comentario: "Já prevendo lágrimas e abraços apertados em cada nova emoção que aparecer.",
+          destaque: "Depois da sessão vamos escolher qual emoção virou nossa favorita do dia."
+        },
+        {
+          nome: "Operação Natal",
+          nota: "Em breve",
+          capa: "https://images.unsplash.com/photo-1482517967863-00e15c9b44be?auto=format&fit=crop&w=800&q=80",
+          dataSessao: "23 de novembro de 2024",
+          local: "Maratona natalina",
+          comentario: "Inicio oficial da nossa temporada de filmes de Natal com chocolate quente.",
+          destaque: "Decorar a sala com luzinhas antes da sessão pra entrar no clima."
+        },
+        {
+          nome: "Venom: A Última Rodada",
+          nota: "Em breve",
+          capa: "https://images.unsplash.com/photo-1497091071254-cc9b2ba7c48a?auto=format&fit=crop&w=800&q=80",
+          dataSessao: "24 de novembro de 2024",
+          local: "Fim de semana geek",
+          comentario: "Um dia depois da maratona natalina, vamos alternar com um pouco de caos simbionte.",
+          destaque: "Prometido: sem spoiler até todo mundo terminar a pipoca."
         }
       ],
       comidas: [
@@ -1330,6 +1432,62 @@
           momentos: []
         }
       ]
+    },
+    {
+      anoNumero: 3,
+      anoLabel: "Ano 3 (2025)",
+      tema: "Ano das Estreias Inesquecíveis",
+      resumo: "Planejamos cada lançamento como se fosse uma viagem, com listas, trailers e expectativas compartilhadas.",
+      badges: [],
+      cartas: [],
+      filmes: [
+        {
+          nome: "Capitão América: Admirável Mundo Novo",
+          nota: "Em breve",
+          capa: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80",
+          dataSessao: "13 de fevereiro de 2025",
+          local: "Estreia com direito a cosplay",
+          comentario: "Vamos reviver a saga dos Vingadores antes e comentar cada referência pós-créditos.",
+          destaque: "Reservar os melhores lugares na sala XD assim que abrirem as vendas."
+        },
+        {
+          nome: "Thunderbolts",
+          nota: "Em breve",
+          capa: "https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=800&q=80",
+          dataSessao: "30 de abril de 2025",
+          local: "Semana geek no cinema",
+          comentario: "Maratona estratégica para lembrar de cada anti-herói antes do time improvável se formar.",
+          destaque: "Combinar lanches temáticos para cada integrante da equipe."
+        },
+        {
+          nome: "Lilo & Stitch",
+          nota: "Em breve",
+          capa: "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&w=800&q=80",
+          dataSessao: "24 de maio de 2025",
+          local: "Sessão especial com pelúcia na mão",
+          comentario: "Garantir que o Ohana esteja completo com direito a reprise do clássico animado na véspera.",
+          destaque: "Foto abraçados com nossas camisetas do Stitch antes de entrar."
+        },
+        {
+          nome: "Como Treinar o Seu Dragão (2025)",
+          nota: "Em breve",
+          capa: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=800&q=80",
+          dataSessao: "18 de junho de 2025",
+          local: "Sessão IMAX planejada",
+          comentario: "Vamos voltar a Berk de coração aberto e com lenços prontos para reencontrar Banguela.",
+          destaque: "Depois da sessão rola desenho temático para registrar o momento."
+        },
+        {
+          nome: "Quarteto Fantástico: Primeiros Passos",
+          nota: "Em breve",
+          capa: "https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=800&q=80",
+          dataSessao: "3 de agosto de 2025",
+          local: "Passeio geek com amigos",
+          comentario: "Combinado: levar nossa equipe favorita para assistir juntos a nova formação do Quarteto.",
+          destaque: "Montar playlist anos 60 para ouvir no caminho e entrar no clima."
+        }
+      ],
+      comidas: []
     }
   ];
 
@@ -1390,6 +1548,13 @@
   const editablesRegistrados = new WeakSet();
   const filterButtons = new Map();
   let editMode = false;
+
+  const CONFIG_ADICAO = {
+    badges: { icone: "✚", rotulo: "Adicionar badge" },
+    cartas: { icone: "✉️", rotulo: "Adicionar carta" },
+    filmes: { icone: "🎬", rotulo: "Adicionar filme" },
+    comidas: { icone: "🍽️", rotulo: "Adicionar review gastronômico" }
+  };
 
   const seletorArquivoImagem = document.createElement("input");
   seletorArquivoImagem.type = "file";
@@ -1618,6 +1783,129 @@
     }
 
     return notaNormalizada;
+  }
+
+  function criarItemPadrao(categoria, ano) {
+    switch (categoria) {
+      case "badges":
+        return {
+          titulo: "Novo badge",
+          tipo: "Badge",
+          imagem: "https://placehold.co/600x600?text=Badge",
+          descricao: "",
+          momentos: []
+        };
+      case "cartas":
+        return {
+          titulo: "Nova carta",
+          tipo: "Carta",
+          imagem: "https://placehold.co/600x600?text=Carta",
+          descricao: "",
+          momentos: []
+        };
+      case "filmes":
+        return {
+          nome: "Novo filme",
+          nota: "",
+          capa: "https://placehold.co/400x600?text=Filme",
+          dataSessao: "",
+          local: "",
+          comentario: "",
+          destaque: ""
+        };
+      case "comidas":
+        return {
+          titulo: "Novo review gastronômico",
+          tipo: "Review gastronômica",
+          imagem: "https://placehold.co/600x400?text=Comida",
+          nota: 0,
+          local: "",
+          descricao: "",
+          destaque: "",
+          momentos: []
+        };
+      default:
+        return {
+          titulo: "Novo item",
+          tipo: "Memória",
+          imagem: "https://placehold.co/600x600?text=Memoria",
+          descricao: "",
+          momentos: []
+        };
+    }
+  }
+
+  function destacarNovoItem(anoNumero, categoria) {
+    requestAnimationFrame(() => {
+      abrirAno(anoNumero, { focar: true });
+      requestAnimationFrame(() => {
+        const section = document.querySelector(`#ano-${anoNumero} .category-section[data-category="${categoria}"]`);
+        if (!section) {
+          return;
+        }
+
+        let elementoNovo = null;
+        if (categoria === "filmes") {
+          elementoNovo = section.querySelector(".movie-list .movie-ticket:last-of-type");
+        } else if (categoria === "comidas") {
+          elementoNovo = section.querySelector(".food-card:last-of-type");
+        } else {
+          elementoNovo = section.querySelector(".carousel-track > .card:last-of-type") ||
+            section.querySelector(".category-grid > .card:last-of-type");
+        }
+
+        if (elementoNovo) {
+          elementoNovo.scrollIntoView({ behavior: "smooth", block: "center" });
+          if (typeof elementoNovo.focus === "function") {
+            try {
+              elementoNovo.focus({ preventScroll: true });
+            } catch (error) {
+              elementoNovo.focus();
+            }
+          }
+        }
+      });
+    });
+  }
+
+  function adicionarItemCategoria(anoIndex, categoria) {
+    const ano = colecaoAnual[anoIndex];
+    if (!ano) {
+      return;
+    }
+
+    if (!Array.isArray(ano[categoria])) {
+      ano[categoria] = [];
+    }
+
+    const novoItem = criarItemPadrao(categoria, ano);
+    if (!novoItem) {
+      return;
+    }
+
+    ano[categoria].push(novoItem);
+
+    if (!editMode) {
+      salvarDados();
+    }
+
+    renderizarColecao();
+    destacarNovoItem(ano.anoNumero, categoria);
+  }
+
+  function criarBotaoAdicionarItem(ano, anoIndex, categoria) {
+    const config = CONFIG_ADICAO[categoria] ?? { icone: "✚", rotulo: "Adicionar item" };
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.className = "add-item-button";
+    botao.innerHTML = `<span aria-hidden="true">${config.icone}</span><span>${config.rotulo}</span>`;
+    botao.addEventListener("click", () => {
+      if (!editMode) {
+        definirModoEdicao(true);
+      }
+      adicionarItemCategoria(anoIndex, categoria);
+    });
+    return botao;
   }
 
   function registrarCampoEditavel(
@@ -1887,84 +2175,87 @@
   function criarCategoriaGenerica(titulo, itens, ano, anoIndex, categoria) {
     const section = document.createElement("section");
     section.className = "category-section";
+    section.dataset.category = categoria;
 
     const heading = document.createElement("h3");
     heading.className = "category-title";
     heading.textContent = titulo;
     section.appendChild(heading);
 
-    if (!Array.isArray(itens) || itens.length === 0) {
+    const temItens = Array.isArray(itens) && itens.length > 0;
+
+    if (!temItens) {
       const empty = document.createElement("p");
       empty.className = "category-empty";
       empty.textContent = "Ainda não registramos nada aqui (por enquanto!).";
       section.appendChild(empty);
-      return section;
-    }
-
-    const usarCarousel = categoria === "badges" || categoria === "cartas";
-
-    if (usarCarousel) {
-      const wrapper = document.createElement("div");
-      wrapper.className = "carousel";
-
-      const anterior = document.createElement("button");
-      anterior.type = "button";
-      anterior.className = "carousel-button carousel-button-prev";
-      anterior.setAttribute("aria-label", `Ver item anterior em ${titulo}`);
-      anterior.innerHTML = "&#10094;";
-
-      const proximo = document.createElement("button");
-      proximo.type = "button";
-      proximo.className = "carousel-button carousel-button-next";
-      proximo.setAttribute("aria-label", `Ver próximo item em ${titulo}`);
-      proximo.innerHTML = "&#10095;";
-
-      const trilho = document.createElement("div");
-      trilho.className = "carousel-track";
-      itens.forEach((item, index) => {
-        trilho.appendChild(criarCardItem(item, ano, anoIndex, categoria, index));
-      });
-
-      const atualizarBotoes = () => {
-        const alcance = trilho.scrollWidth - trilho.clientWidth;
-        anterior.disabled = trilho.scrollLeft <= 2;
-        proximo.disabled = trilho.scrollLeft >= alcance - 2;
-      };
-
-      const deslocar = direcao => {
-        const passo = Math.max(trilho.clientWidth * 0.85, 220);
-        trilho.scrollBy({ left: passo * direcao, behavior: "smooth" });
-      };
-
-      anterior.addEventListener("click", () => {
-        deslocar(-1);
-      });
-
-      proximo.addEventListener("click", () => {
-        deslocar(1);
-      });
-
-      trilho.addEventListener("scroll", () => {
-        window.requestAnimationFrame(atualizarBotoes);
-      });
-
-      window.addEventListener("resize", atualizarBotoes, { passive: true });
-
-      wrapper.appendChild(anterior);
-      wrapper.appendChild(trilho);
-      wrapper.appendChild(proximo);
-      section.appendChild(wrapper);
-
-      window.requestAnimationFrame(atualizarBotoes);
     } else {
-      const grid = document.createElement("div");
-      grid.className = "category-grid";
-      itens.forEach((item, index) => {
-        grid.appendChild(criarCardItem(item, ano, anoIndex, categoria, index));
-      });
-      section.appendChild(grid);
+      const usarCarousel = categoria === "badges" || categoria === "cartas";
+
+      if (usarCarousel) {
+        const wrapper = document.createElement("div");
+        wrapper.className = "carousel";
+
+        const anterior = document.createElement("button");
+        anterior.type = "button";
+        anterior.className = "carousel-button carousel-button-prev";
+        anterior.setAttribute("aria-label", `Ver item anterior em ${titulo}`);
+        anterior.innerHTML = "&#10094;";
+
+        const proximo = document.createElement("button");
+        proximo.type = "button";
+        proximo.className = "carousel-button carousel-button-next";
+        proximo.setAttribute("aria-label", `Ver próximo item em ${titulo}`);
+        proximo.innerHTML = "&#10095;";
+
+        const trilho = document.createElement("div");
+        trilho.className = "carousel-track";
+        itens.forEach((item, index) => {
+          trilho.appendChild(criarCardItem(item, ano, anoIndex, categoria, index));
+        });
+
+        const atualizarBotoes = () => {
+          const alcance = trilho.scrollWidth - trilho.clientWidth;
+          anterior.disabled = trilho.scrollLeft <= 2;
+          proximo.disabled = trilho.scrollLeft >= alcance - 2;
+        };
+
+        const deslocar = direcao => {
+          const passo = Math.max(trilho.clientWidth * 0.85, 220);
+          trilho.scrollBy({ left: passo * direcao, behavior: "smooth" });
+        };
+
+        anterior.addEventListener("click", () => {
+          deslocar(-1);
+        });
+
+        proximo.addEventListener("click", () => {
+          deslocar(1);
+        });
+
+        trilho.addEventListener("scroll", () => {
+          window.requestAnimationFrame(atualizarBotoes);
+        });
+
+        window.addEventListener("resize", atualizarBotoes, { passive: true });
+
+        wrapper.appendChild(anterior);
+        wrapper.appendChild(trilho);
+        wrapper.appendChild(proximo);
+        section.appendChild(wrapper);
+
+        window.requestAnimationFrame(atualizarBotoes);
+      } else {
+        const grid = document.createElement("div");
+        grid.className = "category-grid";
+        itens.forEach((item, index) => {
+          grid.appendChild(criarCardItem(item, ano, anoIndex, categoria, index));
+        });
+        section.appendChild(grid);
+      }
     }
 
+    section.appendChild(criarBotaoAdicionarItem(ano, anoIndex, categoria));
     return section;
   }
 
@@ -2116,26 +2407,30 @@
   function criarCategoriaFilmes(ano, anoIndex) {
     const section = document.createElement("section");
     section.className = "category-section";
+    section.dataset.category = "filmes";
 
     const heading = document.createElement("h3");
     heading.className = "category-title";
     heading.textContent = "Filmes favoritos";
     section.appendChild(heading);
 
-    if (!Array.isArray(ano.filmes) || ano.filmes.length === 0) {
+    const temFilmes = Array.isArray(ano.filmes) && ano.filmes.length > 0;
+
+    if (!temFilmes) {
       const empty = document.createElement("p");
       empty.className = "category-empty";
       empty.textContent = "Ainda não colamos os ingressos deste ano.";
       section.appendChild(empty);
-      return section;
+    } else {
+      const lista = document.createElement("div");
+      lista.className = "movie-list";
+      ano.filmes.forEach((filme, index) => {
+        lista.appendChild(criarTicketFilme(filme, ano, anoIndex, index));
+      });
+      section.appendChild(lista);
     }
 
-    const lista = document.createElement("div");
-    lista.className = "movie-list";
-    ano.filmes.forEach((filme, index) => {
-      lista.appendChild(criarTicketFilme(filme, ano, anoIndex, index));
-    });
-    section.appendChild(lista);
+    section.appendChild(criarBotaoAdicionarItem(ano, anoIndex, "filmes"));
 
     return section;
   }
@@ -2330,23 +2625,27 @@
   function criarCategoriaComidas(ano, anoIndex) {
     const section = document.createElement("section");
     section.className = "category-section";
+    section.dataset.category = "comidas";
 
     const heading = document.createElement("h3");
     heading.className = "category-title";
     heading.textContent = "Comidas & Restaurantes";
     section.appendChild(heading);
 
-    if (!Array.isArray(ano.comidas) || ano.comidas.length === 0) {
+    const temComidas = Array.isArray(ano.comidas) && ano.comidas.length > 0;
+
+    if (!temComidas) {
       const empty = document.createElement("p");
       empty.className = "category-empty";
       empty.textContent = "Ainda não registramos os sabores deste ano.";
       section.appendChild(empty);
-      return section;
+    } else {
+      ano.comidas.forEach((comida, index) => {
+        section.appendChild(criarReviewComida(comida, ano, anoIndex, index));
+      });
     }
 
-    ano.comidas.forEach((comida, index) => {
-      section.appendChild(criarReviewComida(comida, ano, anoIndex, index));
-    });
+    section.appendChild(criarBotaoAdicionarItem(ano, anoIndex, "comidas"));
 
     return section;
   }
