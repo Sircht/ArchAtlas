@@ -620,6 +620,67 @@
       transition: transform 0.3s ease;
     }
 
+    .card-badges .card-image {
+      aspect-ratio: 1;
+      padding: 12px;
+      background: rgba(147, 197, 253, 0.14);
+    }
+
+    .card-badges .card-image img {
+      object-fit: contain;
+    }
+
+    .card-badges .card-image::before,
+    .card-badges .card-image::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.7;
+      mix-blend-mode: screen;
+    }
+
+    .card-badges .card-image::before {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(188, 226, 255, 0.2) 42%, rgba(43, 92, 173, 0.35) 58%, rgba(255, 255, 255, 0.35) 100%);
+      background-size: 250% 250%;
+      animation: badgeFoilSweep 7s ease-in-out infinite;
+    }
+
+    .card-badges .card-image::after {
+      background-image:
+        radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 55%),
+        radial-gradient(circle at 78% 28%, rgba(147, 197, 253, 0.6) 0%, rgba(147, 197, 253, 0) 50%),
+        radial-gradient(circle at 32% 78%, rgba(226, 244, 255, 0.5) 0%, rgba(226, 244, 255, 0) 52%),
+        radial-gradient(circle at 82% 76%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 60%);
+      background-size: 160% 160%;
+      background-position: 0% 0%, 100% 20%, 20% 100%, 80% 80%;
+      animation: badgeSparkleShift 12s linear infinite;
+    }
+
+    @keyframes badgeFoilSweep {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    @keyframes badgeSparkleShift {
+      0% {
+        background-position: 0% 0%, 100% 20%, 20% 100%, 80% 80%;
+      }
+      50% {
+        background-position: 80% 40%, 20% 60%, 100% 20%, 0% 60%;
+      }
+      100% {
+        background-position: 0% 0%, 100% 20%, 20% 100%, 80% 80%;
+      }
+    }
+
     .card:hover .card-image img {
       transform: scale(1.06);
     }
@@ -1381,6 +1442,64 @@
   const filterButtons = new Map();
   let editMode = false;
 
+  const seletorArquivoImagem = document.createElement("input");
+  seletorArquivoImagem.type = "file";
+  seletorArquivoImagem.accept = "image/*";
+  seletorArquivoImagem.style.display = "none";
+  document.body.appendChild(seletorArquivoImagem);
+
+  function solicitarArquivoImagemDoDispositivo() {
+    return new Promise(resolve => {
+      seletorArquivoImagem.value = "";
+
+      const aoAlterar = () => {
+        seletorArquivoImagem.removeEventListener("change", aoAlterar);
+        const arquivo = seletorArquivoImagem.files?.[0];
+        if (!arquivo) {
+          resolve(null);
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          const resultado = typeof reader.result === "string" ? reader.result : null;
+          resolve(resultado);
+        };
+        reader.onerror = () => resolve(null);
+        reader.readAsDataURL(arquivo);
+      };
+
+      seletorArquivoImagem.addEventListener("change", aoAlterar);
+      seletorArquivoImagem.click();
+    });
+  }
+
+  async function selecionarNovaImagem({ mensagemUrl, valorAtual }) {
+    const usarArquivoLocal = window.confirm(
+      "Deseja carregar uma imagem do dispositivo? Clique em \"OK\" para escolher um arquivo ou em \"Cancelar\" para colar um link."
+    );
+
+    if (usarArquivoLocal) {
+      const arquivo = await solicitarArquivoImagemDoDispositivo();
+      if (arquivo) {
+        return arquivo;
+      }
+
+      const tentarUrl = window.confirm("Nenhum arquivo foi selecionado. Deseja colar um link em vez disso?");
+      if (!tentarUrl) {
+        return null;
+      }
+    }
+
+    const sugestao = prompt(mensagemUrl, valorAtual ?? "");
+    if (sugestao === null) {
+      return null;
+    }
+
+    const url = sugestao.trim();
+    return url || null;
+  }
+
   const referenciaRelacionamento = new Date(Date.UTC(2023, 8, 15));
 
   function calcularDuracaoDesde(dataReferencia) {
@@ -1732,7 +1851,7 @@
 
   function criarCardItem(item, ano, anoIndex, categoria, itemIndex) {
     const card = document.createElement("article");
-    card.className = "card";
+    card.className = `card card-${categoria}`;
     card.tabIndex = 0;
     const tipo = item.tipo || categoria;
     card.setAttribute("aria-label", `${tipo}: ${item.titulo}`);
@@ -1754,24 +1873,22 @@
     imageEditButton.type = "button";
     imageEditButton.className = "image-edit-button";
     imageEditButton.innerHTML = '<span aria-hidden="true">🖼️</span><span>Trocar foto</span>';
-    imageEditButton.addEventListener("click", event => {
+    imageEditButton.addEventListener("click", async event => {
       event.preventDefault();
       event.stopPropagation();
       if (!editMode) {
         return;
       }
 
-      const sugestao = prompt("Cole a URL da nova imagem:", item.imagem ?? "");
-      if (sugestao === null) {
+      const novaImagem = await selecionarNovaImagem({
+        mensagemUrl: "Cole a URL da nova imagem:",
+        valorAtual: item.imagem ?? ""
+      });
+      if (!novaImagem) {
         return;
       }
 
-      const url = sugestao.trim();
-      if (!url) {
-        return;
-      }
-
-      atualizarImagemItem(anoIndex, categoria, itemIndex, url, img);
+      atualizarImagemItem(anoIndex, categoria, itemIndex, novaImagem, img);
     });
     imageWrapper.appendChild(imageEditButton);
     card.appendChild(imageWrapper);
@@ -1918,24 +2035,22 @@
     imageEditButton.type = "button";
     imageEditButton.className = "image-edit-button";
     imageEditButton.innerHTML = '<span aria-hidden="true">🖼️</span><span>Trocar foto</span>';
-    imageEditButton.addEventListener("click", event => {
+    imageEditButton.addEventListener("click", async event => {
       event.preventDefault();
       event.stopPropagation();
       if (!editMode) {
         return;
       }
 
-      const sugestao = prompt("Cole a URL do novo cartaz:", filme.capa ?? "");
-      if (sugestao === null) {
+      const novaImagem = await selecionarNovaImagem({
+        mensagemUrl: "Cole a URL do novo cartaz:",
+        valorAtual: filme.capa ?? ""
+      });
+      if (!novaImagem) {
         return;
       }
 
-      const url = sugestao.trim();
-      if (!url) {
-        return;
-      }
-
-      atualizarImagemItem(anoIndex, "filmes", filmeIndex, url, img, "capa");
+      atualizarImagemItem(anoIndex, "filmes", filmeIndex, novaImagem, img, "capa");
     });
     media.appendChild(imageEditButton);
 
@@ -2094,24 +2209,22 @@
     imageEditButton.type = "button";
     imageEditButton.className = "image-edit-button";
     imageEditButton.innerHTML = '<span aria-hidden="true">🖼️</span><span>Trocar foto</span>';
-    imageEditButton.addEventListener("click", event => {
+    imageEditButton.addEventListener("click", async event => {
       event.preventDefault();
       event.stopPropagation();
       if (!editMode) {
         return;
       }
 
-      const sugestao = prompt("Cole a URL da nova foto do review:", comida.imagem ?? "");
-      if (sugestao === null) {
+      const novaImagem = await selecionarNovaImagem({
+        mensagemUrl: "Cole a URL da nova foto do review:",
+        valorAtual: comida.imagem ?? ""
+      });
+      if (!novaImagem) {
         return;
       }
 
-      const url = sugestao.trim();
-      if (!url) {
-        return;
-      }
-
-      atualizarImagemItem(anoIndex, "comidas", comidaIndex, url, img);
+      atualizarImagemItem(anoIndex, "comidas", comidaIndex, novaImagem, img);
     });
     media.appendChild(imageEditButton);
 
