@@ -80,6 +80,32 @@
       line-height: 1.5;
     }
 
+    .days-counter {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 6px;
+      margin-top: 12px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(26, 30, 40, 0.7);
+      border: 1px solid rgba(255, 143, 171, 0.22);
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+    }
+
+    .days-counter-value {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--accent-strong);
+      text-shadow: 0 0 12px rgba(255, 143, 171, 0.45);
+    }
+
+    .days-counter-suffix {
+      color: rgba(213, 217, 230, 0.65);
+    }
+
     .filters {
       margin-top: 20px;
       display: flex;
@@ -1018,6 +1044,11 @@
       <h1>Anuário de Namoro</h1>
       <h2>Um arquivo carinhoso com tudo o que vivemos ano após ano</h2>
       <p>Escolha um ano para abrir a pasta, explorar badges, cartas especiais e agora até os nossos filmes favoritos.</p>
+      <p class="days-counter" aria-live="polite">
+        <span class="days-counter-label">Estamos juntos há</span>
+        <span class="days-counter-value" id="days-since-start">0</span>
+        <span class="days-counter-suffix">dias desde 15 de setembro de 2023</span>
+      </p>
       <nav class="filters" aria-label="Navegar por ano">
         <!-- Botões de navegação são gerados dinamicamente via JavaScript -->
       </nav>
@@ -1221,6 +1252,7 @@
   const filtersContainer = document.querySelector(".filters");
   const yearsCollection = document.querySelector(".years-collection");
   const editToggleButton = document.querySelector(".edit-toggle");
+  const daysSinceStartValue = document.getElementById("days-since-start");
 
   const modalOverlay = document.querySelector(".modal-overlay");
   const modalTitle = document.getElementById("modal-title");
@@ -1234,6 +1266,22 @@
   const editablesRegistrados = new WeakSet();
   const filterButtons = new Map();
   let editMode = false;
+
+  const referenciaDias = new Date(Date.UTC(2023, 8, 15));
+
+  function calcularDiasDesde(dataReferencia) {
+    const agora = Date.now();
+    return Math.floor((agora - dataReferencia.getTime()) / (1000 * 60 * 60 * 24));
+  }
+
+  function atualizarContadorDias() {
+    if (!daysSinceStartValue) {
+      return;
+    }
+
+    const dias = Math.max(0, calcularDiasDesde(referenciaDias));
+    daysSinceStartValue.textContent = dias.toLocaleString("pt-BR");
+  }
 
   function salvarDados() {
     try {
@@ -2180,6 +2228,9 @@
       fecharModal();
     }
   });
+
+  atualizarContadorDias();
+  window.setInterval(atualizarContadorDias, 60 * 1000);
 
   criarNavegacaoAnos();
   renderizarColecao();
