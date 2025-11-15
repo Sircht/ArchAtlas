@@ -1185,7 +1185,7 @@
     <div class="header-content">
       <h1>Anuário de Namoro</h1>
       <h2>Um arquivo carinhoso com tudo o que vivemos ano após ano</h2>
-      <p>Escolha um ano para abrir a pasta, explorar badges, cartas especiais e agora até os nossos filmes favoritos.</p>
+      <p>Escolha um ano para abrir a pasta, explorar badges, cartas especiais e agora até os nossos filmes assistidos.</p>
       <p class="days-counter" aria-live="polite">
         <span class="days-counter-label">Estamos juntos há</span>
         <span class="days-counter-values">
@@ -2454,7 +2454,7 @@
 
     const heading = document.createElement("h3");
     heading.className = "category-title";
-    heading.textContent = "Filmes favoritos";
+    heading.textContent = "Filmes assistidos";
     section.appendChild(heading);
 
     const temFilmes = Array.isArray(ano.filmes) && ano.filmes.length > 0;
@@ -2462,7 +2462,7 @@
     if (!temFilmes) {
       const empty = document.createElement("p");
       empty.className = "category-empty";
-      empty.textContent = "Ainda não colamos os ingressos deste ano.";
+      empty.textContent = "Ainda não registramos os filmes assistidos deste ano.";
       section.appendChild(empty);
     } else {
       const lista = document.createElement("div");
