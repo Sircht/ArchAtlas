@@ -1569,7 +1569,6 @@
 
   
 <script>
-  const STORAGE_KEY = "anuario-namoro-v2";
   const API_COLLECTION_URL = "/api/collection";
 
   const colecaoPadrao = {
@@ -1993,21 +1992,11 @@
     return normalizarColecaoCompleta(colecaoPadrao);
   }
 
-  function carregarDadosLocais() {
-    try {
-      const salvo = window.localStorage?.getItem(STORAGE_KEY);
-      if (salvo) {
-        const dados = JSON.parse(salvo);
-        return normalizarColecaoCompleta(dados);
-      }
-    } catch (error) {
-      console.warn("Não foi possível carregar dados salvos:", error);
-    }
-
+  function carregarDadosIniciais() {
     return normalizarColecaoCompleta(colecaoPadrao);
   }
 
-  let colecaoDados = carregarDadosLocais();
+  let colecaoDados = carregarDadosIniciais();
   let colecaoAnual = colecaoDados.anos;
   let colecaoGastronomia = colecaoDados.gastronomia;
   colecaoAnual.sort((a, b) => a.anoNumero - b.anoNumero);
@@ -2025,13 +2014,6 @@
       colecaoAnual = colecaoDados.anos;
       colecaoGastronomia = colecaoDados.gastronomia;
       colecaoAnual.sort((a, b) => a.anoNumero - b.anoNumero);
-
-      try {
-        const payload = { anos: colecaoAnual, gastronomia: colecaoGastronomia };
-        window.localStorage?.setItem(STORAGE_KEY, JSON.stringify(payload));
-      } catch (error) {
-        console.warn("Não foi possível atualizar o cache local:", error);
-      }
 
       criarNavegacaoAnos();
       renderizarColecao();
@@ -2190,12 +2172,6 @@
 
   async function salvarDados() {
     const payload = { anos: colecaoAnual, gastronomia: colecaoGastronomia };
-
-    try {
-      window.localStorage?.setItem(STORAGE_KEY, JSON.stringify(payload));
-    } catch (error) {
-      console.warn("Não foi possível salvar as alterações localmente:", error);
-    }
 
     try {
       const response = await fetch(API_COLLECTION_URL, {
