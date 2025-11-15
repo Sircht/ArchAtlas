@@ -42,14 +42,12 @@
     }
 
     header.top-header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      position: static;
       background: rgba(10, 13, 19, 0.85);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       padding: 24px clamp(18px, 5vw, 48px) 16px;
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
     }
 
     .header-content {
@@ -83,6 +81,7 @@
     .days-counter {
       display: inline-flex;
       flex-wrap: wrap;
+      align-items: center;
       align-items: baseline;
       gap: 6px;
       margin-top: 12px;
@@ -95,6 +94,15 @@
       box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
     }
 
+    .days-counter-values {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .days-counter-value,
+    .time-counter-value {
     .days-counter-value {
       font-size: 1.2rem;
       font-weight: 600;
@@ -102,6 +110,7 @@
       text-shadow: 0 0 12px rgba(255, 143, 171, 0.45);
     }
 
+    .days-counter-unit {
     .days-counter-suffix {
       color: rgba(213, 217, 230, 0.65);
     }
@@ -480,6 +489,72 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 22px;
+    }
+
+    .carousel {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .carousel-track {
+      display: flex;
+      gap: 18px;
+      overflow-x: auto;
+      padding: 10px 4px;
+      scroll-snap-type: x proximity;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 18px;
+    }
+
+    .carousel-track::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .carousel-track::-webkit-scrollbar-thumb {
+      background: rgba(255, 143, 171, 0.3);
+      border-radius: 999px;
+    }
+
+    .carousel-track::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .carousel-track > * {
+      flex: 0 0 clamp(220px, 80vw, 320px);
+      scroll-snap-align: start;
+    }
+
+    .carousel-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 198, 217, 0.35);
+      background: rgba(12, 15, 24, 0.9);
+      color: var(--accent-strong);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
+    }
+
+    .carousel-button:hover,
+    .carousel-button:focus-visible {
+      background: rgba(18, 22, 32, 0.95);
+      border-color: rgba(255, 198, 217, 0.7);
+      color: #ffe0ec;
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .carousel-button:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      transform: none;
     }
 
     .movie-list {
@@ -1020,6 +1095,19 @@
         grid-template-columns: 1fr;
       }
 
+      .carousel {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .carousel-button {
+        display: none;
+      }
+
+      .carousel-track {
+        padding: 6px 2px;
+      }
+
       .movie-ticket {
         grid-template-columns: 1fr;
       }
@@ -1046,6 +1134,17 @@
       <p>Escolha um ano para abrir a pasta, explorar badges, cartas especiais e agora até os nossos filmes favoritos.</p>
       <p class="days-counter" aria-live="polite">
         <span class="days-counter-label">Estamos juntos há</span>
+        <span class="days-counter-values">
+          <span class="days-counter-value" id="days-since-start">0</span>
+          <span class="days-counter-unit">dias,</span>
+          <span class="time-counter-value" id="hours-since-start">00</span>
+          <span class="days-counter-unit">horas,</span>
+          <span class="time-counter-value" id="minutes-since-start">00</span>
+          <span class="days-counter-unit">minutos e</span>
+          <span class="time-counter-value" id="seconds-since-start">00</span>
+          <span class="days-counter-unit">segundos</span>
+        </span>
+        <span class="days-counter-unit">desde 15 de setembro de 2023</span>
         <span class="days-counter-value" id="days-since-start">0</span>
         <span class="days-counter-suffix">dias desde 15 de setembro de 2023</span>
       </p>
@@ -1253,6 +1352,9 @@
   const yearsCollection = document.querySelector(".years-collection");
   const editToggleButton = document.querySelector(".edit-toggle");
   const daysSinceStartValue = document.getElementById("days-since-start");
+  const hoursSinceStartValue = document.getElementById("hours-since-start");
+  const minutesSinceStartValue = document.getElementById("minutes-since-start");
+  const secondsSinceStartValue = document.getElementById("seconds-since-start");
 
   const modalOverlay = document.querySelector(".modal-overlay");
   const modalTitle = document.getElementById("modal-title");
@@ -1267,6 +1369,29 @@
   const filterButtons = new Map();
   let editMode = false;
 
+  const referenciaRelacionamento = new Date(Date.UTC(2023, 8, 15));
+
+  function calcularDuracaoDesde(dataReferencia) {
+    const agora = Date.now();
+    const diferenca = Math.max(0, Math.floor((agora - dataReferencia.getTime()) / 1000));
+    const dias = Math.floor(diferenca / 86400);
+    const restanteDia = diferenca % 86400;
+    const horas = Math.floor(restanteDia / 3600);
+    const restanteHora = restanteDia % 3600;
+    const minutos = Math.floor(restanteHora / 60);
+    const segundos = restanteHora % 60;
+
+    return { dias, horas, minutos, segundos };
+  }
+
+  function formatarComDoisDigitos(valor) {
+    return valor.toLocaleString("pt-BR", {
+      minimumIntegerDigits: 2,
+      useGrouping: false
+    });
+  }
+
+  function atualizarContadorRelacionamento() {
   const referenciaDias = new Date(Date.UTC(2023, 8, 15));
 
   function calcularDiasDesde(dataReferencia) {
@@ -1279,6 +1404,20 @@
       return;
     }
 
+    const { dias, horas, minutos, segundos } = calcularDuracaoDesde(referenciaRelacionamento);
+    daysSinceStartValue.textContent = dias.toLocaleString("pt-BR");
+
+    if (hoursSinceStartValue) {
+      hoursSinceStartValue.textContent = formatarComDoisDigitos(horas);
+    }
+
+    if (minutesSinceStartValue) {
+      minutesSinceStartValue.textContent = formatarComDoisDigitos(minutos);
+    }
+
+    if (secondsSinceStartValue) {
+      secondsSinceStartValue.textContent = formatarComDoisDigitos(segundos);
+    }
     const dias = Math.max(0, calcularDiasDesde(referenciaDias));
     daysSinceStartValue.textContent = dias.toLocaleString("pt-BR");
   }
@@ -1359,6 +1498,18 @@
     return element;
   }
 
+  function atualizarImagemItem(anoIndex, categoria, itemIndex, novaUrl, imagemElemento, campoImagem = "imagem") {
+    const ano = colecaoAnual[anoIndex];
+    if (!ano) {
+      return;
+    }
+
+    const lista = Array.isArray(ano[categoria]) ? ano[categoria] : null;
+    if (!lista) {
+      return;
+    }
+
+    const item = lista[itemIndex];
   function atualizarImagemComida(anoIndex, comidaIndex, novaUrl, imagemElemento) {
     const ano = colecaoAnual[anoIndex];
     if (!ano || !Array.isArray(ano.comidas)) {
@@ -1375,6 +1526,7 @@
       return;
     }
 
+    item[campoImagem] = urlTratada;
     item.imagem = urlTratada;
     if (imagemElemento) {
       imagemElemento.src = urlTratada;
@@ -1600,6 +1752,31 @@
     img.alt = item.titulo;
     img.loading = "lazy";
     imageWrapper.appendChild(img);
+
+    const imageEditButton = document.createElement("button");
+    imageEditButton.type = "button";
+    imageEditButton.className = "image-edit-button";
+    imageEditButton.innerHTML = '<span aria-hidden="true">🖼️</span><span>Trocar foto</span>';
+    imageEditButton.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (!editMode) {
+        return;
+      }
+
+      const sugestao = prompt("Cole a URL da nova imagem:", item.imagem ?? "");
+      if (sugestao === null) {
+        return;
+      }
+
+      const url = sugestao.trim();
+      if (!url) {
+        return;
+      }
+
+      atualizarImagemItem(anoIndex, categoria, itemIndex, url, img);
+    });
+    imageWrapper.appendChild(imageEditButton);
     card.appendChild(imageWrapper);
 
     const titulo = document.createElement("h3");
@@ -1661,12 +1838,69 @@
       return section;
     }
 
-    const grid = document.createElement("div");
-    grid.className = "category-grid";
-    itens.forEach((item, index) => {
-      grid.appendChild(criarCardItem(item, ano, anoIndex, categoria, index));
-    });
-    section.appendChild(grid);
+    const usarCarousel = categoria === "badges" || categoria === "cartas";
+
+    if (usarCarousel) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "carousel";
+
+      const anterior = document.createElement("button");
+      anterior.type = "button";
+      anterior.className = "carousel-button carousel-button-prev";
+      anterior.setAttribute("aria-label", `Ver item anterior em ${titulo}`);
+      anterior.innerHTML = "&#10094;";
+
+      const proximo = document.createElement("button");
+      proximo.type = "button";
+      proximo.className = "carousel-button carousel-button-next";
+      proximo.setAttribute("aria-label", `Ver próximo item em ${titulo}`);
+      proximo.innerHTML = "&#10095;";
+
+      const trilho = document.createElement("div");
+      trilho.className = "carousel-track";
+      itens.forEach((item, index) => {
+        trilho.appendChild(criarCardItem(item, ano, anoIndex, categoria, index));
+      });
+
+      const atualizarBotoes = () => {
+        const alcance = trilho.scrollWidth - trilho.clientWidth;
+        anterior.disabled = trilho.scrollLeft <= 2;
+        proximo.disabled = trilho.scrollLeft >= alcance - 2;
+      };
+
+      const deslocar = direcao => {
+        const passo = Math.max(trilho.clientWidth * 0.85, 220);
+        trilho.scrollBy({ left: passo * direcao, behavior: "smooth" });
+      };
+
+      anterior.addEventListener("click", () => {
+        deslocar(-1);
+      });
+
+      proximo.addEventListener("click", () => {
+        deslocar(1);
+      });
+
+      trilho.addEventListener("scroll", () => {
+        window.requestAnimationFrame(atualizarBotoes);
+      });
+
+      window.addEventListener("resize", atualizarBotoes, { passive: true });
+
+      wrapper.appendChild(anterior);
+      wrapper.appendChild(trilho);
+      wrapper.appendChild(proximo);
+      section.appendChild(wrapper);
+
+      window.requestAnimationFrame(atualizarBotoes);
+    } else {
+      const grid = document.createElement("div");
+      grid.className = "category-grid";
+      itens.forEach((item, index) => {
+        grid.appendChild(criarCardItem(item, ano, anoIndex, categoria, index));
+      });
+      section.appendChild(grid);
+    }
 
     return section;
   }
@@ -1682,6 +1916,31 @@
     img.alt = `Cartaz do filme ${filme.nome}`;
     img.loading = "lazy";
     media.appendChild(img);
+
+    const imageEditButton = document.createElement("button");
+    imageEditButton.type = "button";
+    imageEditButton.className = "image-edit-button";
+    imageEditButton.innerHTML = '<span aria-hidden="true">🖼️</span><span>Trocar foto</span>';
+    imageEditButton.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (!editMode) {
+        return;
+      }
+
+      const sugestao = prompt("Cole a URL do novo cartaz:", filme.capa ?? "");
+      if (sugestao === null) {
+        return;
+      }
+
+      const url = sugestao.trim();
+      if (!url) {
+        return;
+      }
+
+      atualizarImagemItem(anoIndex, "filmes", filmeIndex, url, img, "capa");
+    });
+    media.appendChild(imageEditButton);
 
     const rating = document.createElement("div");
     rating.className = "ticket-rating";
@@ -1855,6 +2114,7 @@
         return;
       }
 
+      atualizarImagemItem(anoIndex, "comidas", comidaIndex, url, img);
       atualizarImagemComida(anoIndex, comidaIndex, url, img);
     });
     media.appendChild(imageEditButton);
@@ -2229,6 +2489,8 @@
     }
   });
 
+  atualizarContadorRelacionamento();
+  window.setInterval(atualizarContadorRelacionamento, 1000);
   atualizarContadorDias();
   window.setInterval(atualizarContadorDias, 60 * 1000);
 
