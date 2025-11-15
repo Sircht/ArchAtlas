@@ -589,9 +589,81 @@
       transform: none;
     }
 
-    .movie-list {
+    .movie-controls {
+      margin-top: 12px;
+      margin-bottom: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .movie-search {
+      flex: 1;
+      min-width: min(260px, 100%);
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(147, 197, 253, 0.35);
+      background: rgba(8, 20, 38, 0.75);
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .movie-search::placeholder {
+      color: rgba(219, 234, 254, 0.55);
+    }
+
+    .movie-search:focus-visible {
+      outline: none;
+      border-color: rgba(147, 197, 253, 0.65);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+      background: rgba(10, 24, 44, 0.9);
+    }
+
+    .movie-carousel {
       display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .movie-list {
+      position: relative;
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(260px, clamp(280px, 45vw, 380px));
       gap: 24px;
+      overflow-x: auto;
+      padding: 6px;
+      border-radius: 18px;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(59, 130, 246, 0.35) transparent;
+      background: rgba(8, 20, 38, 0.35);
+    }
+
+    .movie-list::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .movie-list::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.35);
+      border-radius: 999px;
+    }
+
+    .movie-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .movie-list .movie-ticket {
+      scroll-snap-align: center;
+    }
+
+    .movie-search-feedback {
+      margin: 12px 0 0;
+      font-size: 0.9rem;
+      color: rgba(213, 217, 230, 0.75);
     }
 
     .category-empty {
@@ -1160,6 +1232,20 @@
 
       .carousel-track {
         padding: 6px 2px;
+      }
+
+      .movie-carousel {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .movie-carousel .carousel-button {
+        display: none;
+      }
+
+      .movie-list {
+        padding: 4px 2px;
+        grid-auto-columns: minmax(240px, 85vw);
       }
 
       .movie-ticket {
@@ -2465,12 +2551,112 @@
       empty.textContent = "Ainda não registramos os filmes assistidos deste ano.";
       section.appendChild(empty);
     } else {
+      const tituloSecao = heading.textContent || "Filmes assistidos";
+      const searchId = `movie-search-${anoIndex}`;
+
+      const controls = document.createElement("div");
+      controls.className = "movie-controls";
+
+      const searchLabel = document.createElement("label");
+      searchLabel.className = "sr-only";
+      searchLabel.setAttribute("for", searchId);
+      searchLabel.textContent = "Buscar filme por nome";
+      controls.appendChild(searchLabel);
+
+      const searchInput = document.createElement("input");
+      searchInput.type = "search";
+      searchInput.id = searchId;
+      searchInput.className = "movie-search";
+      searchInput.placeholder = "Buscar filme por nome";
+      searchInput.setAttribute("aria-label", "Buscar filme por nome");
+      controls.appendChild(searchInput);
+
+      section.appendChild(controls);
+
+      const carousel = document.createElement("div");
+      carousel.className = "movie-carousel";
+
+      const anterior = document.createElement("button");
+      anterior.type = "button";
+      anterior.className = "carousel-button";
+      anterior.setAttribute("aria-label", `Ver filme anterior em ${tituloSecao}`);
+      anterior.innerHTML = "&#10094;";
+
+      const proximo = document.createElement("button");
+      proximo.type = "button";
+      proximo.className = "carousel-button";
+      proximo.setAttribute("aria-label", `Ver próximo filme em ${tituloSecao}`);
+      proximo.innerHTML = "&#10095;";
+
       const lista = document.createElement("div");
       lista.className = "movie-list";
-      ano.filmes.forEach((filme, index) => {
-        lista.appendChild(criarTicketFilme(filme, ano, anoIndex, index));
+
+      carousel.appendChild(anterior);
+      carousel.appendChild(lista);
+      carousel.appendChild(proximo);
+
+      section.appendChild(carousel);
+
+      const mensagemBusca = document.createElement("p");
+      mensagemBusca.className = "category-empty movie-search-feedback";
+      mensagemBusca.textContent = "Nenhum filme encontrado com esse nome.";
+      mensagemBusca.hidden = true;
+      section.appendChild(mensagemBusca);
+
+      const filmesEnumerados = ano.filmes.map((filme, index) => ({ filme, index }));
+
+      const atualizarBotoes = () => {
+        const alcance = lista.scrollWidth - lista.clientWidth;
+        const semOverflow = alcance <= 2;
+        anterior.disabled = semOverflow || lista.scrollLeft <= 2;
+        proximo.disabled = semOverflow || lista.scrollLeft >= alcance - 2;
+      };
+
+      const deslocar = direcao => {
+        const passo = Math.max(lista.clientWidth * 0.85, 240);
+        lista.scrollBy({ left: passo * direcao, behavior: "smooth" });
+      };
+
+      anterior.addEventListener("click", () => deslocar(-1));
+      proximo.addEventListener("click", () => deslocar(1));
+
+      lista.addEventListener("scroll", () => {
+        window.requestAnimationFrame(atualizarBotoes);
       });
-      section.appendChild(lista);
+
+      window.addEventListener("resize", atualizarBotoes, { passive: true });
+
+      const renderFilmes = filmesParaRender => {
+        lista.innerHTML = "";
+        lista.scrollLeft = 0;
+
+        filmesParaRender.forEach(({ filme, index }) => {
+          lista.appendChild(criarTicketFilme(filme, ano, anoIndex, index));
+        });
+
+        const temResultados = filmesParaRender.length > 0;
+        carousel.hidden = !temResultados;
+        mensagemBusca.hidden = temResultados;
+
+        window.requestAnimationFrame(atualizarBotoes);
+      };
+
+      renderFilmes(filmesEnumerados);
+
+      searchInput.addEventListener("input", () => {
+        const termo = searchInput.value.trim().toLowerCase();
+        if (!termo) {
+          renderFilmes(filmesEnumerados);
+          return;
+        }
+
+        const filtrados = filmesEnumerados.filter(({ filme }) => {
+          const nome = filme?.nome ?? "";
+          return nome.toLowerCase().includes(termo);
+        });
+
+        renderFilmes(filtrados);
+      });
     }
 
     section.appendChild(criarBotaoAdicionarItem(ano, anoIndex, "filmes"));
