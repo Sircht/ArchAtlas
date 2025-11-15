@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'archatlas-v2';
+const CACHE_VERSION = 'archatlas-v3';
 const CACHE_FILES = [
   '/',
   '/index.html',
@@ -36,6 +36,10 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) {
+    return;
+  }
+
+  if (url.pathname.startsWith('/api/')) {
     return;
   }
 

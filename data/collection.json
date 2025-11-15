@@ -1,0 +1,232 @@
+[
+  {
+    "anoNumero": 1,
+    "anoLabel": "Ano 1 (2023)",
+    "tema": "Ano do Tênis da Nike",
+    "resumo": "O começo de tudo, com descobertas e o símbolo do nosso tênis inseparável.",
+    "badges": [
+      {
+        "titulo": "Ano do Tênis da Nike",
+        "tipo": "Badge",
+        "imagem": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80",
+        "descricao": "Esse ano foi marcado pelo tênis da Nike, nosso símbolo de aventuras compartilhadas e trilhas de risadas.",
+        "momentos": [
+          "Primeiro filme juntos",
+          "Nossa viagem para X",
+          "O presente do tênis da Nike"
+        ]
+      }
+    ],
+    "cartas": [
+      {
+        "titulo": "Carta Ano 1",
+        "tipo": "Carta",
+        "imagem": "https://images.unsplash.com/photo-1483794344563-d27a8d18014e?auto=format&fit=crop&w=800&q=80",
+        "descricao": "Resumo da carta do Ano 1: memórias escritas à mão com promessas de novos capítulos juntos.",
+        "momentos": []
+      }
+    ],
+    "filmes": [
+      {
+        "nome": "La La Land",
+        "nota": "9.5/10",
+        "capa": "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=800&q=80",
+        "dataSessao": "26 de setembro de 2023",
+        "local": "Cinemark Downtown",
+        "comentario": "Nosso primeiro filme como casal, com direito a mãos dadas do começo ao fim.",
+        "destaque": "Saímos cantando 'City of Stars' até chegar no carro."
+      },
+      {
+        "nome": "Jogos Vorazes: A Cantiga dos Pássaros e das Serpentes",
+        "nota": "Em breve",
+        "capa": "https://images.unsplash.com/photo-1517602302552-471fe67acf66?auto=format&fit=crop&w=800&q=80",
+        "dataSessao": "18 de novembro de 2023",
+        "local": "Pré-estreia combinada",
+        "comentario": "Já estamos planejando a maratona da saga antes de ver o novo capítulo.",
+        "destaque": "Vai ser noite de pipoca gigante e comentários sobre Snow o caminho inteiro."
+      },
+      {
+        "nome": "Wonka",
+        "nota": "Em breve",
+        "capa": "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80",
+        "dataSessao": "8 de dezembro de 2023",
+        "local": "Cinema com chocolate obrigatório",
+        "comentario": "Promessa feita: cada cena com doce vira desculpa para a nossa própria degustação.",
+        "destaque": "Vamos sair procurando receitas malucas para testar em casa."
+      },
+      {
+        "nome": "Aquaman 2: O Reino Perdido",
+        "nota": "Em breve",
+        "capa": "https://images.unsplash.com/photo-1505764706515-aa95265c5abc?auto=format&fit=crop&w=800&q=80",
+        "dataSessao": "27 de dezembro de 2023",
+        "local": "Sessão pós-Natal",
+        "comentario": "Fecharemos o ano com aventura submarina e discussão sobre qual reino moraríamos.",
+        "destaque": "Foto temática com nossas camisetas geek garantida antes de entrar na sala."
+      }
+    ],
+    "comidas": [
+      {
+        "titulo": "Jantar no Burger Garage",
+        "tipo": "Review gastronômica",
+        "imagem": "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?auto=format&fit=crop&w=800&q=80",
+        "nota": 4.5,
+        "local": "Burger Garage — Barra da Tijuca",
+        "descricao": "Descobrimos o burger suculento e dividimos batatas com cheddar até não aguentar mais.",
+        "destaque": "Voltamos duas vezes no mesmo mês porque não conseguimos superar a batatinha.",
+        "momentos": []
+      }
+    ]
+  },
+  {
+    "anoNumero": 2,
+    "anoLabel": "Ano 2 (2024)",
+    "tema": "Ano das Constelações",
+    "resumo": "Transformamos o céu em mapa para os nossos planos e sonhos compartilhados.",
+    "badges": [
+      {
+        "titulo": "Ano das Constelações",
+        "tipo": "Badge",
+        "imagem": "https://images.unsplash.com/photo-1527176930608-09cb256ab504?auto=format&fit=crop&w=800&q=80",
+        "descricao": "Colecionamos estrelas e sonhos, com noites observando constelações e planos para o futuro.",
+        "momentos": [
+          "Piquenique sob as estrelas",
+          "Nosso show favorito",
+          "Descobrimos a música que virou trilha sonora"
+        ]
+      }
+    ],
+    "cartas": [
+      {
+        "titulo": "Carta Ano 2",
+        "tipo": "Carta",
+        "imagem": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80",
+        "descricao": "Uma carta cheia de planos, agradecendo por cada constelação que desenhamos juntos.",
+        "momentos": []
+      }
+    ],
+    "filmes": [
+      {
+        "nome": "Interestelar",
+        "nota": "10/10",
+        "capa": "https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=800&q=80",
+        "dataSessao": "12 de maio de 2024",
+        "local": "Sessão pipoca em casa",
+        "comentario": "Virou tradição: cobertor, chocolate quente e olhos marejados com o final.",
+        "destaque": "Prometemos assistir novamente quando viajarmos para a nossa próxima constelação."
+      },
+      {
+        "nome": "Madame Teia",
+        "nota": "Em breve",
+        "capa": "https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=800&q=80",
+        "dataSessao": "16 de fevereiro de 2024",
+        "local": "Noite Marvel combinada",
+        "comentario": "Vamos de combo duplo e discutir cada detalhe do multiverso na volta pra casa.",
+        "destaque": "Lembrar de levar o casaco porque cinema de super-herói é sempre gelado."
+      },
+      {
+        "nome": "Garfield – Fora de Casa",
+        "nota": "Em breve",
+        "capa": "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=800&q=80",
+        "dataSessao": "1º de junho de 2024",
+        "local": "Sessão de sábado com brunch antes",
+        "comentario": "Filme perfeito pra rir junto e sair planejando receitas com lasanha.",
+        "destaque": "Fotos com nossas meias combinando de gato antes de entrar no cinema."
+      },
+      {
+        "nome": "Divertida Mente 2",
+        "nota": "Em breve",
+        "capa": "https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=800&q=80",
+        "dataSessao": "27 de junho de 2024",
+        "local": "Pré-estreia com caixa de lenços",
+        "comentario": "Já prevendo lágrimas e abraços apertados em cada nova emoção que aparecer.",
+        "destaque": "Depois da sessão vamos escolher qual emoção virou nossa favorita do dia."
+      },
+      {
+        "nome": "Operação Natal",
+        "nota": "Em breve",
+        "capa": "https://images.unsplash.com/photo-1482517967863-00e15c9b44be?auto=format&fit=crop&w=800&q=80",
+        "dataSessao": "23 de novembro de 2024",
+        "local": "Maratona natalina",
+        "comentario": "Inicio oficial da nossa temporada de filmes de Natal com chocolate quente.",
+        "destaque": "Decorar a sala com luzinhas antes da sessão pra entrar no clima."
+      },
+      {
+        "nome": "Venom: A Última Rodada",
+        "nota": "Em breve",
+        "capa": "https://images.unsplash.com/photo-1497091071254-cc9b2ba7c48a?auto=format&fit=crop&w=800&q=80",
+        "dataSessao": "24 de novembro de 2024",
+        "local": "Fim de semana geek",
+        "comentario": "Um dia depois da maratona natalina, vamos alternar com um pouco de caos simbionte.",
+        "destaque": "Prometido: sem spoiler até todo mundo terminar a pipoca."
+      }
+    ],
+    "comidas": [
+      {
+        "titulo": "Brunch de domingo",
+        "tipo": "Review gastronômica",
+        "imagem": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=800&q=80",
+        "nota": 4.8,
+        "local": "Café da Praça — Botafogo",
+        "descricao": "Virou ritual começar o domingo com panquecas, café coado e nossas conversas infinitas.",
+        "destaque": "Você roubou metade do meu maple syrup e mesmo assim eu achei fofo.",
+        "momentos": []
+      }
+    ]
+  },
+  {
+    "anoNumero": 3,
+    "anoLabel": "Ano 3 (2025)",
+    "tema": "Ano das Estreias Inesquecíveis",
+    "resumo": "Planejamos cada lançamento como se fosse uma viagem, com listas, trailers e expectativas compartilhadas.",
+    "badges": [],
+    "cartas": [],
+    "filmes": [
+      {
+        "nome": "Capitão América: Admirável Mundo Novo",
+        "nota": "Em breve",
+        "capa": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80",
+        "dataSessao": "13 de fevereiro de 2025",
+        "local": "Estreia com direito a cosplay",
+        "comentario": "Vamos reviver a saga dos Vingadores antes e comentar cada referência pós-créditos.",
+        "destaque": "Reservar os melhores lugares na sala XD assim que abrirem as vendas."
+      },
+      {
+        "nome": "Thunderbolts",
+        "nota": "Em breve",
+        "capa": "https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=800&q=80",
+        "dataSessao": "30 de abril de 2025",
+        "local": "Semana geek no cinema",
+        "comentario": "Maratona estratégica para lembrar de cada anti-herói antes do time improvável se formar.",
+        "destaque": "Combinar lanches temáticos para cada integrante da equipe."
+      },
+      {
+        "nome": "Lilo & Stitch",
+        "nota": "Em breve",
+        "capa": "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&w=800&q=80",
+        "dataSessao": "24 de maio de 2025",
+        "local": "Sessão especial com pelúcia na mão",
+        "comentario": "Garantir que o Ohana esteja completo com direito a reprise do clássico animado na véspera.",
+        "destaque": "Foto abraçados com nossas camisetas do Stitch antes de entrar."
+      },
+      {
+        "nome": "Como Treinar o Seu Dragão (2025)",
+        "nota": "Em breve",
+        "capa": "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=800&q=80",
+        "dataSessao": "18 de junho de 2025",
+        "local": "Sessão IMAX planejada",
+        "comentario": "Vamos voltar a Berk de coração aberto e com lenços prontos para reencontrar Banguela.",
+        "destaque": "Depois da sessão rola desenho temático para registrar o momento."
+      },
+      {
+        "nome": "Quarteto Fantástico: Primeiros Passos",
+        "nota": "Em breve",
+        "capa": "https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=800&q=80",
+        "dataSessao": "3 de agosto de 2025",
+        "local": "Passeio geek com amigos",
+        "comentario": "Combinado: levar nossa equipe favorita para assistir juntos a nova formação do Quarteto.",
+        "destaque": "Montar playlist anos 60 para ouvir no caminho e entrar no clima."
+      }
+    ],
+    "comidas": []
+  }
+]

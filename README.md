@@ -17,7 +17,7 @@ Um álbum digital comemorativo para celebrar cada ano do relacionamento com badg
 
 ## Executando localmente
 
-O site é estático, mas o repositório inclui um pequeno servidor Express para facilitar o desenvolvimento local e lidar com cabeçalhos PWA.
+O site é estático, mas o repositório inclui um pequeno servidor Express para facilitar o desenvolvimento local, lidar com cabeçalhos PWA e manter as alterações compartilhadas em `data/collection.json` através da rota `/api/collection`.
 
 ```bash
 npm install
