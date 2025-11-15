@@ -332,10 +332,53 @@
       gap: 10px;
     }
 
-    .gastronomy-grid {
-      display: grid;
-      gap: 18px;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    .gastronomy-search-wrapper {
+      margin: 24px 0 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .gastronomy-search {
+      flex: 1;
+      min-width: min(260px, 100%);
+      border-radius: 18px;
+      padding: 12px 18px;
+      border: 1px solid rgba(147, 197, 253, 0.25);
+      background: rgba(7, 20, 38, 0.85);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.95rem;
+      box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.12);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .gastronomy-search:focus {
+      outline: none;
+      border-color: rgba(147, 197, 253, 0.55);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    }
+
+    .gastronomy-carousel {
+      margin-top: 8px;
+    }
+
+    .gastronomy-carousel .carousel-track {
+      padding: 12px 6px;
+      gap: 20px;
+    }
+
+    .gastronomy-carousel .carousel-track > * {
+      flex: 0 0 clamp(250px, 70vw, 360px);
+    }
+
+    .gastronomy-category-feedback {
+      margin: 12px 0 0;
+    }
+
+    .gastronomy-search-feedback {
+      margin: 0 0 12px;
     }
 
     .gastronomy-card {
@@ -407,12 +450,45 @@
       font-size: 0.95rem;
       color: var(--text-primary);
       justify-self: flex-start;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .gastronomy-overall-value {
+      color: var(--accent-strong);
+      min-width: 2ch;
     }
 
     .gastronomy-overall[data-missing="true"] {
       background: rgba(147, 197, 253, 0.12);
       border-style: dashed;
       color: rgba(226, 235, 255, 0.75);
+    }
+
+    .gastronomy-overall[data-missing="true"] .gastronomy-overall-value {
+      color: rgba(219, 234, 254, 0.9);
+    }
+
+    .gastronomy-overall-hint {
+      font-size: 0.85rem;
+      color: rgba(214, 226, 255, 0.7);
+      font-weight: 400;
+    }
+
+    .gastronomy-card.recently-added {
+      outline: 2px solid rgba(147, 197, 253, 0.7);
+      outline-offset: 2px;
+      animation: gastronomy-card-flash 1.6s ease-in-out 2;
+    }
+
+    @keyframes gastronomy-card-flash {
+      0%, 100% {
+        box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.08);
+      }
+      50% {
+        box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.45);
+      }
     }
 
     .year-card {
@@ -1839,6 +1915,17 @@
     return null;
   }
 
+  function normalizarTextoBusca(texto) {
+    if (typeof texto !== "string") {
+      return "";
+    }
+
+    return texto
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+  }
+
   function normalizarAnos(lista) {
     return clonar(lista).map(ano => ({
       anoNumero: ano.anoNumero,
@@ -1979,6 +2066,7 @@
   let gastronomiaFilterButton = null;
   let visaoAtual = "anos";
   let editMode = false;
+  let termoBuscaGastronomia = "";
 
   const CONFIG_ADICAO = {
     badges: { icone: "✚", rotulo: "Adicionar badge" },
@@ -2381,16 +2469,136 @@
     return botao;
   }
 
+  function criarReviewGastronomiaPadrao() {
+    return {
+      local: "",
+      produto: "",
+      notas: [
+        { criterio: "Sabor", valor: null },
+        { criterio: "Tamanho", valor: null },
+        { criterio: "Recheio", valor: null }
+      ],
+      notaGeral: null
+    };
+  }
+
+  function destacarNovaReviewGastronomia(slug) {
+    if (!slug) {
+      return;
+    }
+
+    window.requestAnimationFrame(() => {
+      const section = document.getElementById(`gastronomia-${slug}`);
+      if (!section) {
+        return;
+      }
+
+      const card =
+        section.querySelector(".carousel-track .gastronomy-card:last-of-type") ||
+        section.querySelector(".gastronomy-card:last-of-type");
+
+      if (!card) {
+        return;
+      }
+
+      if (!card.hasAttribute("tabindex")) {
+        card.tabIndex = -1;
+      }
+
+      card.classList.add("recently-added");
+
+      if (typeof card.scrollIntoView === "function") {
+        card.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+      }
+
+      if (typeof card.focus === "function") {
+        try {
+          card.focus({ preventScroll: true });
+        } catch (error) {
+          card.focus();
+        }
+      }
+
+      window.setTimeout(() => {
+        card.classList.remove("recently-added");
+      }, 2400);
+    });
+  }
+
+  function adicionarReviewGastronomico(categoriaIndex) {
+    if (!colecaoGastronomia || !Array.isArray(colecaoGastronomia.categorias)) {
+      return;
+    }
+
+    const categoria = colecaoGastronomia.categorias[categoriaIndex];
+    if (!categoria) {
+      return;
+    }
+
+    if (!Array.isArray(categoria.avaliacoes)) {
+      categoria.avaliacoes = [];
+    }
+
+    categoria.avaliacoes.push(criarReviewGastronomiaPadrao());
+    agendarPersistencia();
+
+    termoBuscaGastronomia = "";
+    renderizarGastronomia();
+    destacarNovaReviewGastronomia(categoria.slug ?? `categoria-${categoriaIndex}`);
+  }
+
+  function criarBotaoAdicionarReviewGastronomia(categoria, categoriaIndex) {
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.className = "add-item-button";
+    const icone = categoria?.icone ?? "🍽️";
+    botao.innerHTML = `<span aria-hidden="true">${icone}</span><span>Adicionar review gastronômico</span>`;
+    botao.addEventListener("click", () => {
+      if (!editMode) {
+        definirModoEdicao(true);
+      }
+      adicionarReviewGastronomico(categoriaIndex);
+    });
+    return botao;
+  }
+
   function registrarCampoEditavel(
     element,
-    { yearIndex, category = "ano", itemIndex, field, allowBreaks = false, placeholder = "" } = {}
+    {
+      yearIndex,
+      category = "ano",
+      itemIndex,
+      field,
+      allowBreaks = false,
+      placeholder = "",
+      collection = "anos",
+      gastronomyCategoryIndex,
+      gastronomyReviewIndex,
+      gastronomyRatingIndex
+    } = {}
   ) {
     element.dataset.editable = "true";
-    element.dataset.yearIndex = String(yearIndex);
     element.dataset.field = field;
-    element.dataset.category = category;
-    if (typeof itemIndex === "number") {
-      element.dataset.itemIndex = String(itemIndex);
+    element.dataset.collection = collection;
+
+    if (collection === "gastronomia") {
+      if (typeof gastronomyCategoryIndex === "number") {
+        element.dataset.gastronomyCategoryIndex = String(gastronomyCategoryIndex);
+      }
+      if (typeof gastronomyReviewIndex === "number") {
+        element.dataset.gastronomyReviewIndex = String(gastronomyReviewIndex);
+      }
+      if (typeof gastronomyRatingIndex === "number") {
+        element.dataset.gastronomyRatingIndex = String(gastronomyRatingIndex);
+      }
+    } else {
+      if (typeof yearIndex === "number") {
+        element.dataset.yearIndex = String(yearIndex);
+      }
+      element.dataset.category = category;
+      if (typeof itemIndex === "number") {
+        element.dataset.itemIndex = String(itemIndex);
+      }
     }
     if (allowBreaks) {
       element.dataset.allowBreaks = "true";
@@ -2453,6 +2661,71 @@
     });
   }
 
+  function atualizarDadoGastronomia(element, campo, valor) {
+    if (!campo || !colecaoGastronomia) {
+      return;
+    }
+
+    if (campo === "introducao") {
+      colecaoGastronomia.introducao = valor;
+      agendarPersistencia();
+      return;
+    }
+
+    if (!Array.isArray(colecaoGastronomia.categorias)) {
+      return;
+    }
+
+    const categoriaIndex = Number(element.dataset.gastronomyCategoryIndex);
+    if (!Number.isFinite(categoriaIndex)) {
+      return;
+    }
+
+    const categoria = colecaoGastronomia.categorias[categoriaIndex];
+    if (!categoria) {
+      return;
+    }
+
+    if (!Array.isArray(categoria.avaliacoes)) {
+      categoria.avaliacoes = [];
+    }
+
+    const reviewIndex = Number(element.dataset.gastronomyReviewIndex);
+    if (!Number.isFinite(reviewIndex) || !categoria.avaliacoes[reviewIndex]) {
+      return;
+    }
+
+    const avaliacao = categoria.avaliacoes[reviewIndex];
+    const ratingIndex = element.dataset.gastronomyRatingIndex !== undefined
+      ? Number(element.dataset.gastronomyRatingIndex)
+      : NaN;
+
+    if (Number.isFinite(ratingIndex)) {
+      if (!Array.isArray(avaliacao.notas)) {
+        avaliacao.notas = [];
+      }
+
+      const notaAtual = avaliacao.notas[ratingIndex] ?? { criterio: "", valor: null };
+      if (campo === "criterio") {
+        notaAtual.criterio = valor;
+      } else {
+        const numero = normalizarNumero(valor);
+        notaAtual.valor = Number.isFinite(numero) ? numero : null;
+      }
+      avaliacao.notas[ratingIndex] = notaAtual;
+    } else if (campo === "notaGeral") {
+      const numero = normalizarNumero(valor);
+      avaliacao.notaGeral = Number.isFinite(numero) ? numero : null;
+    } else if (campo === "local" || campo === "produto") {
+      avaliacao[campo] = valor;
+    } else {
+      avaliacao[campo] = valor;
+    }
+
+    agendarPersistencia();
+    renderizarGastronomia();
+  }
+
   function obterValorEditado(element) {
     const texto = element.innerText.replace(/ /g, " ");
     if (element.dataset.allowBreaks === "true") {
@@ -2462,9 +2735,18 @@
   }
 
   function atualizarDado(element) {
+    const campo = element.dataset.field;
+    const collection = element.dataset.collection ?? "anos";
+
+    const valor = obterValorEditado(element);
+
+    if (collection === "gastronomia") {
+      atualizarDadoGastronomia(element, campo, valor);
+      return;
+    }
+
     const yearIndex = Number(element.dataset.yearIndex);
     const categoria = element.dataset.category || "ano";
-    const campo = element.dataset.field;
     const itemIndex = element.dataset.itemIndex ? Number(element.dataset.itemIndex) : undefined;
 
     if (!Number.isFinite(yearIndex) || !campo) {
@@ -2475,8 +2757,6 @@
     if (!ano) {
       return;
     }
-
-    const valor = obterValorEditado(element);
 
     if (categoria === "ano") {
       ano[campo] = valor;
@@ -3363,6 +3643,127 @@
     return soma / valores.length;
   }
 
+  function criarCartaoGastronomia(avaliacao, categoriaIndex, avaliacaoIndex) {
+    const card = document.createElement("article");
+    card.className = "gastronomy-card";
+    card.tabIndex = -1;
+
+    const cardHeader = document.createElement("div");
+    cardHeader.className = "gastronomy-card-header";
+
+    const place = document.createElement("span");
+    place.className = "gastronomy-place";
+    place.textContent = avaliacao?.local ?? "";
+    registrarCampoEditavel(place, {
+      collection: "gastronomia",
+      field: "local",
+      gastronomyCategoryIndex: categoriaIndex,
+      gastronomyReviewIndex: avaliacaoIndex,
+      placeholder: "Nome do lugar"
+    });
+    cardHeader.appendChild(place);
+
+    const product = document.createElement("p");
+    product.className = "gastronomy-product";
+    product.textContent = avaliacao?.produto ?? "";
+    registrarCampoEditavel(product, {
+      collection: "gastronomia",
+      field: "produto",
+      gastronomyCategoryIndex: categoriaIndex,
+      gastronomyReviewIndex: avaliacaoIndex,
+      placeholder: "Qual foi a delícia?"
+    });
+    cardHeader.appendChild(product);
+
+    card.appendChild(cardHeader);
+
+    const ratings = document.createElement("div");
+    ratings.className = "gastronomy-ratings";
+
+    (avaliacao?.notas ?? []).forEach((nota, notaIndex) => {
+      const linha = document.createElement("div");
+      linha.className = "gastronomy-rating";
+
+      const criterio = document.createElement("span");
+      criterio.className = "gastronomy-rating-label";
+      criterio.textContent = nota?.criterio ?? "";
+      registrarCampoEditavel(criterio, {
+        collection: "gastronomia",
+        field: "criterio",
+        gastronomyCategoryIndex: categoriaIndex,
+        gastronomyReviewIndex: avaliacaoIndex,
+        gastronomyRatingIndex: notaIndex,
+        placeholder: "Critério"
+      });
+      linha.appendChild(criterio);
+
+      const valor = document.createElement("span");
+      valor.className = "gastronomy-rating-value";
+      const notaNormalizada = normalizarNumero(nota?.valor);
+      valor.textContent = formatarNotaDecimal(Number.isFinite(notaNormalizada) ? notaNormalizada : NaN);
+      registrarCampoEditavel(valor, {
+        collection: "gastronomia",
+        field: "valor",
+        gastronomyCategoryIndex: categoriaIndex,
+        gastronomyReviewIndex: avaliacaoIndex,
+        gastronomyRatingIndex: notaIndex,
+        placeholder: "0-10"
+      });
+      linha.appendChild(valor);
+
+      ratings.appendChild(linha);
+    });
+
+    card.appendChild(ratings);
+
+    const overall = document.createElement("span");
+    overall.className = "gastronomy-overall";
+    const overallLabel = document.createElement("span");
+    overallLabel.textContent = "Nota geral:";
+    overall.appendChild(overallLabel);
+
+    const overallValue = document.createElement("span");
+    overallValue.className = "gastronomy-overall-value";
+
+    const notaFinal = normalizarNumero(avaliacao?.notaGeral);
+    const media = Number.isFinite(notaFinal) ? notaFinal : calcularMediaNotas(avaliacao);
+
+    let hintText = "";
+
+    if (Number.isFinite(notaFinal)) {
+      overallValue.textContent = formatarNotaDecimal(notaFinal);
+    } else if (Number.isFinite(media)) {
+      overall.dataset.missing = "true";
+      overallValue.textContent = formatarNotaDecimal(media);
+      hintText = "(média estimada)";
+    } else {
+      overall.dataset.missing = "true";
+      overallValue.textContent = "--";
+      hintText = "(em breve)";
+    }
+
+    registrarCampoEditavel(overallValue, {
+      collection: "gastronomia",
+      field: "notaGeral",
+      gastronomyCategoryIndex: categoriaIndex,
+      gastronomyReviewIndex: avaliacaoIndex,
+      placeholder: "0-10"
+    });
+
+    overall.appendChild(overallValue);
+
+    if (hintText) {
+      const hint = document.createElement("span");
+      hint.className = "gastronomy-overall-hint";
+      hint.textContent = hintText;
+      overall.appendChild(hint);
+    }
+
+    card.appendChild(overall);
+
+    return card;
+  }
+
   function renderizarGastronomia() {
     if (!gastronomyCollection) {
       return;
@@ -3376,12 +3777,16 @@
     titulo.textContent = "Reviews gastronômicas";
     gastronomyCollection.appendChild(titulo);
 
-    if (colecaoGastronomia?.introducao) {
-      const intro = document.createElement("p");
-      intro.className = "gastronomy-intro";
-      intro.textContent = colecaoGastronomia.introducao;
-      gastronomyCollection.appendChild(intro);
-    }
+    const intro = document.createElement("p");
+    intro.className = "gastronomy-intro";
+    intro.textContent = colecaoGastronomia?.introducao ?? "";
+    registrarCampoEditavel(intro, {
+      collection: "gastronomia",
+      field: "introducao",
+      allowBreaks: true,
+      placeholder: "Conte um pouco sobre as aventuras gastronômicas de vocês"
+    });
+    gastronomyCollection.appendChild(intro);
 
     if (!Array.isArray(colecaoGastronomia?.categorias) || colecaoGastronomia.categorias.length === 0) {
       const vazio = document.createElement("p");
@@ -3391,7 +3796,36 @@
       return;
     }
 
-    colecaoGastronomia.categorias.forEach(categoria => {
+    const searchWrapper = document.createElement("div");
+    searchWrapper.className = "gastronomy-search-wrapper";
+
+    const searchId = "gastronomy-search";
+    const searchLabel = document.createElement("label");
+    searchLabel.className = "sr-only";
+    searchLabel.setAttribute("for", searchId);
+    searchLabel.textContent = "Buscar review gastronômico";
+    searchWrapper.appendChild(searchLabel);
+
+    const searchInput = document.createElement("input");
+    searchInput.type = "search";
+    searchInput.id = searchId;
+    searchInput.className = "gastronomy-search";
+    searchInput.placeholder = "Buscar por comida ou lugar";
+    searchInput.setAttribute("aria-label", "Buscar por comida ou lugar");
+    searchInput.value = termoBuscaGastronomia;
+    searchWrapper.appendChild(searchInput);
+
+    gastronomyCollection.appendChild(searchWrapper);
+
+    const searchFeedback = document.createElement("p");
+    searchFeedback.className = "category-empty gastronomy-search-feedback";
+    searchFeedback.textContent = "Nenhum review encontrado com esse termo.";
+    searchFeedback.hidden = true;
+    gastronomyCollection.appendChild(searchFeedback);
+
+    const secoes = [];
+
+    colecaoGastronomia.categorias.forEach((categoria, categoriaIndex) => {
       const section = document.createElement("section");
       section.className = "gastronomy-category";
       section.id = `gastronomia-${categoria.slug}`;
@@ -3414,76 +3848,115 @@
       header.appendChild(heading);
       section.appendChild(header);
 
-      const grid = document.createElement("div");
-      grid.className = "gastronomy-grid";
+      const avaliacoes = Array.isArray(categoria.avaliacoes) ? categoria.avaliacoes : [];
 
-      (categoria.avaliacoes ?? []).forEach(avaliacao => {
-        const card = document.createElement("article");
-        card.className = "gastronomy-card";
+      if (avaliacoes.length === 0) {
+        const vazio = document.createElement("p");
+        vazio.className = "category-empty";
+        vazio.textContent = "Ainda não registramos nenhuma avaliação por aqui.";
+        section.appendChild(vazio);
+      } else {
+        const entries = avaliacoes.map((avaliacao, avaliacaoIndex) => ({
+          avaliacao,
+          element: criarCartaoGastronomia(avaliacao, categoriaIndex, avaliacaoIndex),
+          tokens: [
+            normalizarTextoBusca(avaliacao?.local ?? ""),
+            normalizarTextoBusca(avaliacao?.produto ?? "")
+          ]
+        }));
 
-        const cardHeader = document.createElement("div");
-        cardHeader.className = "gastronomy-card-header";
+        const carousel = document.createElement("div");
+        carousel.className = "carousel gastronomy-carousel";
 
-        const place = document.createElement("span");
-        place.className = "gastronomy-place";
-        place.textContent = avaliacao.local ?? "";
-        cardHeader.appendChild(place);
+        const anterior = document.createElement("button");
+        anterior.type = "button";
+        anterior.className = "carousel-button carousel-button-prev";
+        anterior.setAttribute("aria-label", `Ver avaliação anterior em ${label.textContent}`);
+        anterior.innerHTML = "&#10094;";
 
-        const product = document.createElement("p");
-        product.className = "gastronomy-product";
-        product.textContent = avaliacao.produto ?? "";
-        cardHeader.appendChild(product);
+        const proximo = document.createElement("button");
+        proximo.type = "button";
+        proximo.className = "carousel-button carousel-button-next";
+        proximo.setAttribute("aria-label", `Ver próxima avaliação em ${label.textContent}`);
+        proximo.innerHTML = "&#10095;";
 
-        card.appendChild(cardHeader);
+        const trilho = document.createElement("div");
+        trilho.className = "carousel-track";
 
-        const ratings = document.createElement("div");
-        ratings.className = "gastronomy-ratings";
+        carousel.appendChild(anterior);
+        carousel.appendChild(trilho);
+        carousel.appendChild(proximo);
 
-        (avaliacao.notas ?? []).forEach(nota => {
-          const linha = document.createElement("div");
-          linha.className = "gastronomy-rating";
+        section.appendChild(carousel);
 
-          const criterio = document.createElement("span");
-          criterio.className = "gastronomy-rating-label";
-          criterio.textContent = nota?.criterio ?? "";
-          linha.appendChild(criterio);
+        const categoriaFeedback = document.createElement("p");
+        categoriaFeedback.className = "category-empty gastronomy-category-feedback";
+        categoriaFeedback.textContent = "Nenhum review desta categoria combina com sua busca.";
+        categoriaFeedback.hidden = true;
+        section.appendChild(categoriaFeedback);
 
-          const valor = document.createElement("span");
-          valor.className = "gastronomy-rating-value";
-          const notaNormalizada = normalizarNumero(nota?.valor);
-          valor.textContent = formatarNotaDecimal(notaNormalizada ?? NaN);
-          linha.appendChild(valor);
+        const atualizarBotoes = () => {
+          const alcance = trilho.scrollWidth - trilho.clientWidth;
+          const semOverflow = alcance <= 2;
+          anterior.disabled = semOverflow || trilho.scrollLeft <= 2;
+          proximo.disabled = semOverflow || trilho.scrollLeft >= alcance - 2;
+        };
 
-          ratings.appendChild(linha);
+        const deslocar = direcao => {
+          const passo = Math.max(trilho.clientWidth * 0.85, 240);
+          trilho.scrollBy({ left: passo * direcao, behavior: "smooth" });
+        };
+
+        anterior.addEventListener("click", () => deslocar(-1));
+        proximo.addEventListener("click", () => deslocar(1));
+        trilho.addEventListener("scroll", () => {
+          window.requestAnimationFrame(atualizarBotoes);
         });
+        window.addEventListener("resize", atualizarBotoes, { passive: true });
 
-        card.appendChild(ratings);
+        const aplicarFiltro = termo => {
+          const filtradas = termo
+            ? entries.filter(entry => entry.tokens.some(token => token.includes(termo)))
+            : entries;
 
-        const overall = document.createElement("span");
-        overall.className = "gastronomy-overall";
+          trilho.innerHTML = "";
+          filtradas.forEach(entry => {
+            trilho.appendChild(entry.element);
+          });
 
-        const notaFinal = Number.isFinite(avaliacao?.notaGeral)
-          ? Number(avaliacao.notaGeral)
-          : normalizarNumero(avaliacao?.notaGeral);
-        const media = Number.isFinite(notaFinal) ? notaFinal : calcularMediaNotas(avaliacao);
+          const temResultados = filtradas.length > 0;
+          carousel.hidden = !temResultados;
+          categoriaFeedback.hidden = temResultados;
 
-        if (Number.isFinite(notaFinal)) {
-          overall.textContent = `Nota geral: ${formatarNotaDecimal(notaFinal)}`;
-        } else if (Number.isFinite(media)) {
-          overall.dataset.missing = "true";
-          overall.textContent = `Média estimada: ${formatarNotaDecimal(media)}`;
-        } else {
-          overall.dataset.missing = "true";
-          overall.textContent = "Nota geral: em breve";
-        }
+          if (temResultados) {
+            trilho.scrollLeft = 0;
+            window.requestAnimationFrame(atualizarBotoes);
+          }
 
-        card.appendChild(overall);
-        grid.appendChild(card);
-      });
+          return filtradas.length;
+        };
 
-      section.appendChild(grid);
+        secoes.push({ aplicarFiltro });
+      }
+
+      section.appendChild(criarBotaoAdicionarReviewGastronomia(categoria, categoriaIndex));
       gastronomyCollection.appendChild(section);
     });
+
+    const atualizarResultados = () => {
+      const termoBruto = searchInput.value;
+      termoBuscaGastronomia = termoBruto;
+      const termo = normalizarTextoBusca(termoBruto.trim());
+      const total = secoes.reduce((acc, secao) => acc + secao.aplicarFiltro(termo), 0);
+      const temConteudo = secoes.length > 0;
+      searchFeedback.hidden = !temConteudo || total > 0;
+    };
+
+    atualizarResultados();
+    searchInput.addEventListener("input", atualizarResultados);
+
+    configurarCamposEditaveis();
+    aplicarModoEdicao();
   }
 
   function aplicarVisaoAtual() {
