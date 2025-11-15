@@ -1794,6 +1794,26 @@
     }
   }
 
+  const SALVAR_DEBOUNCE_MS = 1000;
+  let salvarTimeoutId = null;
+
+  function agendarPersistencia(imediato = false) {
+    if (salvarTimeoutId) {
+      window.clearTimeout(salvarTimeoutId);
+      salvarTimeoutId = null;
+    }
+
+    if (imediato) {
+      salvarDados();
+      return;
+    }
+
+    salvarTimeoutId = window.setTimeout(() => {
+      salvarTimeoutId = null;
+      salvarDados();
+    }, SALVAR_DEBOUNCE_MS);
+  }
+
   function limitarValor(valor, minimo, maximo) {
     return Math.min(Math.max(valor, minimo), maximo);
   }
@@ -1888,9 +1908,7 @@
       imagemElemento.src = urlTratada;
     }
 
-    if (!editMode) {
-      salvarDados();
-    }
+    agendarPersistencia();
   }
 
   function atualizarNotaComida(anoIndex, comidaIndex, novoValor) {
@@ -1907,9 +1925,7 @@
     const notaNormalizada = normalizarNotaEstrelas(novoValor);
     item.nota = notaNormalizada;
 
-    if (!editMode) {
-      salvarDados();
-    }
+    agendarPersistencia();
 
     return notaNormalizada;
   }
@@ -2014,9 +2030,7 @@
 
     ano[categoria].push(novoItem);
 
-    if (!editMode) {
-      salvarDados();
-    }
+    agendarPersistencia();
 
     renderizarColecao();
     destacarNovoItem(ano.anoNumero, categoria);
@@ -2099,7 +2113,7 @@
     }
     aplicarModoEdicao();
     if (!ativo) {
-      salvarDados();
+      agendarPersistencia(true);
     }
   }
 
@@ -2140,9 +2154,7 @@
       ano[categoria][itemIndex][campo] = valor;
     }
 
-    if (!editMode) {
-      salvarDados();
-    }
+    agendarPersistencia();
   }
 
   function obterEstadoExpansao(anoNumero, padrao = false) {
@@ -2704,9 +2716,7 @@
     let notaAtual = normalizarNotaEstrelas(comida.nota);
     if (notaAtual !== comida.nota) {
       comida.nota = notaAtual;
-      if (!editMode) {
-        salvarDados();
-      }
+      agendarPersistencia();
     }
 
     const rating = document.createElement("div");

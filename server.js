@@ -15,8 +15,12 @@ const publicDir = __dirname;
 
 const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY || "AIzaSyDOJb2_2hPShr2KC7AJaFFUZvKrKdvAZmI";
 
-const dataDir = path.join(__dirname, "data");
-const dataFilePath = path.join(dataDir, "collection.json");
+const defaultDataDir = path.join(__dirname, "data");
+const dataFileOverride = process.env.COLLECTION_FILE_PATH;
+const dataFilePath = dataFileOverride
+  ? path.resolve(dataFileOverride)
+  : path.join(defaultDataDir, "collection.json");
+const dataDir = path.dirname(dataFilePath);
 
 async function ensureDataFile() {
   try {
@@ -249,4 +253,17 @@ app.get("*", (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`✅ Servidor rodando em http://localhost:${PORT}`));
+
+export function startServer(port = PORT, { silent = false } = {}) {
+  return app.listen(port, () => {
+    if (!silent) {
+      console.log(`✅ Servidor rodando em http://localhost:${port}`);
+    }
+  });
+}
+
+if (process.env.NODE_ENV !== "test") {
+  startServer(PORT);
+}
+
+export { app };
