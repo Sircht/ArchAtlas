@@ -82,6 +82,7 @@
       display: inline-flex;
       flex-wrap: wrap;
       align-items: center;
+      align-items: baseline;
       gap: 6px;
       margin-top: 12px;
       padding: 10px 16px;
@@ -102,6 +103,7 @@
 
     .days-counter-value,
     .time-counter-value {
+    .days-counter-value {
       font-size: 1.2rem;
       font-weight: 600;
       color: var(--accent-strong);
@@ -109,6 +111,7 @@
     }
 
     .days-counter-unit {
+    .days-counter-suffix {
       color: rgba(213, 217, 230, 0.65);
     }
 
@@ -1142,6 +1145,8 @@
           <span class="days-counter-unit">segundos</span>
         </span>
         <span class="days-counter-unit">desde 15 de setembro de 2023</span>
+        <span class="days-counter-value" id="days-since-start">0</span>
+        <span class="days-counter-suffix">dias desde 15 de setembro de 2023</span>
       </p>
       <nav class="filters" aria-label="Navegar por ano">
         <!-- Botões de navegação são gerados dinamicamente via JavaScript -->
@@ -1387,6 +1392,14 @@
   }
 
   function atualizarContadorRelacionamento() {
+  const referenciaDias = new Date(Date.UTC(2023, 8, 15));
+
+  function calcularDiasDesde(dataReferencia) {
+    const agora = Date.now();
+    return Math.floor((agora - dataReferencia.getTime()) / (1000 * 60 * 60 * 24));
+  }
+
+  function atualizarContadorDias() {
     if (!daysSinceStartValue) {
       return;
     }
@@ -1405,6 +1418,8 @@
     if (secondsSinceStartValue) {
       secondsSinceStartValue.textContent = formatarComDoisDigitos(segundos);
     }
+    const dias = Math.max(0, calcularDiasDesde(referenciaDias));
+    daysSinceStartValue.textContent = dias.toLocaleString("pt-BR");
   }
 
   function salvarDados() {
@@ -1495,6 +1510,13 @@
     }
 
     const item = lista[itemIndex];
+  function atualizarImagemComida(anoIndex, comidaIndex, novaUrl, imagemElemento) {
+    const ano = colecaoAnual[anoIndex];
+    if (!ano || !Array.isArray(ano.comidas)) {
+      return;
+    }
+
+    const item = ano.comidas[comidaIndex];
     if (!item) {
       return;
     }
@@ -1505,6 +1527,7 @@
     }
 
     item[campoImagem] = urlTratada;
+    item.imagem = urlTratada;
     if (imagemElemento) {
       imagemElemento.src = urlTratada;
     }
@@ -2092,6 +2115,7 @@
       }
 
       atualizarImagemItem(anoIndex, "comidas", comidaIndex, url, img);
+      atualizarImagemComida(anoIndex, comidaIndex, url, img);
     });
     media.appendChild(imageEditButton);
 
@@ -2467,6 +2491,8 @@
 
   atualizarContadorRelacionamento();
   window.setInterval(atualizarContadorRelacionamento, 1000);
+  atualizarContadorDias();
+  window.setInterval(atualizarContadorDias, 60 * 1000);
 
   criarNavegacaoAnos();
   renderizarColecao();
