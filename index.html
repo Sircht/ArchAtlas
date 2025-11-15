@@ -1,2502 +1,1376 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Anuário de Namoro</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg-gradient: radial-gradient(circle at 20% 20%, #1b1f2a 0%, #0e1118 55%, #070910 100%);
-      --card-bg: rgba(21, 24, 33, 0.85);
-      --card-border: rgba(255, 255, 255, 0.06);
-      --card-shadow: rgba(4, 7, 16, 0.45);
-      --accent: #ff8fab;
-      --accent-strong: #ffc6d9;
-      --accent-muted: rgba(255, 143, 171, 0.2);
-      --text-primary: #f9fafc;
-      --text-secondary: #d5d9e6;
-      --chip-bg: rgba(255, 143, 171, 0.14);
-      --chip-border: rgba(255, 199, 219, 0.4);
-      --chip-text: #ffd6e5;
-      --modal-overlay: rgba(5, 7, 12, 0.78);
-      --modal-bg: #141823;
-      --modal-shadow: 0 30px 60px rgba(3, 4, 8, 0.6);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg-gradient);
-      color: var(--text-primary);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    header.top-header {
-      position: static;
-      background: rgba(10, 13, 19, 0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      padding: 24px clamp(18px, 5vw, 48px) 16px;
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
-    }
-
-    .header-content {
-      max-width: 960px;
-      margin: 0 auto;
-    }
-
-    .header-content h1 {
-      margin: 0;
-      font-size: clamp(2.1rem, 4vw, 3rem);
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .header-content h2 {
-      margin: 10px 0 6px;
-      font-weight: 400;
-      font-size: clamp(1.1rem, 2.8vw, 1.4rem);
-      color: var(--text-secondary);
-    }
-
-    .header-content p {
-      margin: 0;
-      max-width: 560px;
-      font-size: 0.95rem;
-      color: rgba(213, 217, 230, 0.8);
-      line-height: 1.5;
-    }
-
-    .days-counter {
-      display: inline-flex;
-      flex-wrap: wrap;
-      align-items: center;
-      align-items: baseline;
-      gap: 6px;
-      margin-top: 12px;
-      padding: 10px 16px;
-      border-radius: 999px;
-      background: rgba(26, 30, 40, 0.7);
-      border: 1px solid rgba(255, 143, 171, 0.22);
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
-    }
-
-    .days-counter-values {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .days-counter-value,
-    .time-counter-value {
-    .days-counter-value {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--accent-strong);
-      text-shadow: 0 0 12px rgba(255, 143, 171, 0.45);
-    }
-
-    .days-counter-unit {
-    .days-counter-suffix {
-      color: rgba(213, 217, 230, 0.65);
-    }
-
-    .filters {
-      margin-top: 20px;
-      display: flex;
-      flex-wrap: nowrap;
-      gap: 12px;
-      overflow-x: auto;
-      padding-bottom: 6px;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(255, 143, 171, 0.3) transparent;
-      scroll-snap-type: x proximity;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .filters::-webkit-scrollbar {
-      height: 6px;
-    }
-
-    .filters::-webkit-scrollbar-thumb {
-      background: rgba(255, 143, 171, 0.3);
-      border-radius: 999px;
-    }
-
-    .filters::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    .filters::after {
-      content: "";
-      position: sticky;
-      right: -18px;
-      width: 30px;
-      height: 100%;
-      pointer-events: none;
-      background: linear-gradient(90deg, rgba(14, 17, 24, 0) 0%, rgba(14, 17, 24, 0.8) 100%);
-      border-radius: 0 999px 999px 0;
-    }
-
-    .filter-button {
-      padding: 10px 18px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      cursor: pointer;
-      font-size: 0.9rem;
-      font-weight: 500;
-      background: rgba(26, 30, 40, 0.9);
-      color: var(--text-secondary);
-      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
-      white-space: nowrap;
-      scroll-snap-align: start;
-    }
-
-    .filter-button:hover,
-    .filter-button:focus-visible {
-      transform: translateY(-2px);
-      border-color: rgba(255, 255, 255, 0.16);
-      outline: none;
-      box-shadow: 0 14px 28px rgba(255, 143, 171, 0.2);
-    }
-
-    .filter-button.active {
-      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-      color: #2a0f1a;
-      border-color: var(--chip-border);
-      box-shadow: 0 16px 32px rgba(255, 143, 171, 0.25);
-    }
-
-    .filter-button[aria-pressed="true"] {
-      outline: none;
-    }
-
-    @media (min-width: 900px) {
-      .filters {
-        flex-wrap: wrap;
-        overflow-x: visible;
-        padding-bottom: 0;
-        scroll-snap-type: none;
-      }
-
-      .filters::after {
-        display: none;
-      }
-
-      .filter-button {
-        scroll-snap-align: unset;
-      }
-    }
-
-    main {
-      flex: 1;
-      width: 100%;
-      padding: 24px clamp(18px, 5vw, 48px) 64px;
-    }
-
-    .grid-wrapper {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .dedication-section {
-      margin-top: 32px;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 22px;
-      padding: clamp(20px, 4vw, 32px);
-      box-shadow: 0 22px 50px var(--card-shadow);
-      display: grid;
-      gap: 18px;
-    }
-
-    .dedication-header h2 {
-      margin: 0;
-      font-size: clamp(1.5rem, 4vw, 2rem);
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .dedication-subtitle {
-      margin: 6px 0 0;
-      color: rgba(255, 231, 239, 0.75);
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-
-    .dedication-content {
-      min-height: 140px;
-      padding: 18px;
-      border-radius: 16px;
-      border: 1px dashed rgba(255, 198, 217, 0.45);
-      background: rgba(255, 143, 171, 0.08);
-      color: var(--text-primary);
-      font-size: 1rem;
-      line-height: 1.6;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .dedication-content:focus-visible {
-      outline: none;
-      border-color: rgba(255, 198, 217, 0.9);
-      box-shadow: 0 0 0 3px rgba(255, 143, 171, 0.25);
-    }
-
-    .dedication-hint {
-      margin: 0;
-      font-size: 0.85rem;
-      color: rgba(213, 217, 230, 0.7);
-    }
-
-    .years-collection {
-      display: grid;
-      gap: 24px;
-      margin-top: 32px;
-    }
-
-    .year-card {
-      background: linear-gradient(135deg, rgba(21, 24, 33, 0.92), rgba(14, 17, 26, 0.92));
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 28px;
-      padding: clamp(18px, 3.5vw, 28px);
-      box-shadow: 0 28px 60px rgba(5, 7, 16, 0.55);
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-    }
-
-    .year-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 28px;
-      border: 1px solid rgba(255, 198, 217, 0.08);
-      pointer-events: none;
-    }
-
-    .year-card.expanded {
-      border-color: rgba(255, 143, 171, 0.25);
-      transform: translateY(-4px);
-      box-shadow: 0 32px 72px rgba(6, 8, 18, 0.65);
-    }
-
-    .year-card-header {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .year-card-toggle {
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-      padding: 0;
-      border: none;
-      background: transparent;
-      color: inherit;
-      font: inherit;
-      text-align: left;
-      cursor: pointer;
-    }
-
-    .year-card-toggle:focus-visible {
-      outline: none;
-    }
-
-    .year-card-toggle:focus-visible .year-badge,
-    .year-card-toggle:focus-visible .year-title {
-      box-shadow: 0 0 0 3px rgba(255, 143, 171, 0.35);
-    }
-
-    .year-header-text {
-      display: grid;
-      gap: 6px;
-      flex: 1;
-    }
-
-    .year-toggle-icon {
-      margin-left: auto;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      display: grid;
-      place-items: center;
-      background: rgba(255, 255, 255, 0.04);
-      transition: transform 0.25s ease, background 0.25s ease;
-    }
-
-    .year-card.expanded .year-toggle-icon {
-      transform: rotate(180deg);
-      background: rgba(255, 143, 171, 0.14);
-      border-color: rgba(255, 143, 171, 0.35);
-    }
-
-    .year-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 18px;
-      border-radius: 999px;
-      border: 1px solid var(--chip-border);
-      background: linear-gradient(135deg, rgba(255, 143, 171, 0.2), rgba(255, 198, 217, 0.1));
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-size: 0.85rem;
-      color: var(--chip-text);
-    }
-
-    .year-title {
-      margin: 0;
-      font-size: clamp(1.6rem, 3.8vw, 2.1rem);
-      font-weight: 600;
-    }
-
-    .year-summary {
-      margin: 6px 0 0;
-      max-width: 520px;
-      color: rgba(233, 237, 250, 0.78);
-      line-height: 1.6;
-      font-size: 0.95rem;
-    }
-
-    .year-card-body {
-      display: grid;
-      gap: 28px;
-      margin-top: 22px;
-    }
-
-    .year-card-body[hidden] {
-      display: none;
-    }
-
-    .year-card-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .inline-edit-button,
-    .edit-toggle {
-      padding: 10px 18px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 143, 171, 0.35);
-      background: rgba(255, 143, 171, 0.16);
-      color: var(--chip-text);
-      font-weight: 500;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .inline-edit-button:hover,
-    .inline-edit-button:focus-visible,
-    .edit-toggle:hover,
-    .edit-toggle:focus-visible {
-      outline: none;
-      transform: translateY(-2px);
-      box-shadow: 0 16px 32px rgba(255, 143, 171, 0.25);
-      background: linear-gradient(135deg, rgba(255, 143, 171, 0.2), rgba(255, 198, 217, 0.3));
-    }
-
-    .edit-toggle {
-      margin-top: 20px;
-    }
-
-    .edit-toggle.active {
-      background: linear-gradient(135deg, rgba(255, 143, 171, 0.35), rgba(255, 198, 217, 0.5));
-      color: #2a0f1a;
-      border-color: rgba(255, 143, 171, 0.55);
-    }
-
-    .edit-hint {
-      display: none;
-      font-size: 0.8rem;
-      color: rgba(255, 231, 239, 0.7);
-    }
-
-    body.edit-mode .inline-edit-button {
-      display: none;
-    }
-
-    body.edit-mode .edit-hint {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    [data-editable] {
-      position: relative;
-      transition: box-shadow 0.2s ease, background 0.2s ease;
-    }
-
-    body.edit-mode [data-editable] {
-      border-radius: 12px;
-      box-shadow: inset 0 0 0 1px rgba(255, 198, 217, 0.25);
-      background: rgba(255, 143, 171, 0.08);
-      padding: 6px 8px;
-    }
-
-    body.edit-mode [data-editable]:focus-visible {
-      outline: none;
-      box-shadow: inset 0 0 0 2px rgba(255, 198, 217, 0.9);
-      background: rgba(255, 143, 171, 0.12);
-    }
-
-    body.edit-mode [data-editable][data-placeholder]:empty::before {
-      content: attr(data-placeholder);
-      color: rgba(255, 231, 239, 0.65);
-    }
-
-    body.edit-mode .image-edit-button,
-    body.edit-mode .rating-edit-button {
-      display: inline-flex;
-    }
-
-    .category-section {
-      display: grid;
-      gap: 18px;
-    }
-
-    .category-title {
-      margin: 0;
-      font-size: 1rem;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: rgba(255, 198, 217, 0.8);
-    }
-
-    .category-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 22px;
-    }
-
-    .carousel {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .carousel-track {
-      display: flex;
-      gap: 18px;
-      overflow-x: auto;
-      padding: 10px 4px;
-      scroll-snap-type: x proximity;
-      scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
-      border-radius: 18px;
-    }
-
-    .carousel-track::-webkit-scrollbar {
-      height: 8px;
-    }
-
-    .carousel-track::-webkit-scrollbar-thumb {
-      background: rgba(255, 143, 171, 0.3);
-      border-radius: 999px;
-    }
-
-    .carousel-track::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    .carousel-track > * {
-      flex: 0 0 clamp(220px, 80vw, 320px);
-      scroll-snap-align: start;
-    }
-
-    .carousel-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      border: 1px solid rgba(255, 198, 217, 0.35);
-      background: rgba(12, 15, 24, 0.9);
-      color: var(--accent-strong);
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
-    }
-
-    .carousel-button:hover,
-    .carousel-button:focus-visible {
-      background: rgba(18, 22, 32, 0.95);
-      border-color: rgba(255, 198, 217, 0.7);
-      color: #ffe0ec;
-      transform: translateY(-1px);
-      outline: none;
-    }
-
-    .carousel-button:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .movie-list {
-      display: grid;
-      gap: 24px;
-    }
-
-    .category-empty {
-      margin: 0;
-      font-size: 0.9rem;
-      color: rgba(213, 217, 230, 0.7);
-    }
-
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      cursor: pointer;
-      box-shadow: 0 18px 40px var(--card-shadow);
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-    }
-
-    .card:hover,
-    .card:focus-visible {
-      transform: translateY(-6px);
-      box-shadow: 0 24px 45px rgba(3, 5, 12, 0.55);
-      border-color: rgba(255, 143, 171, 0.35);
-      outline: none;
-    }
-
-    .card-tag {
-      font-size: 0.75rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--chip-text);
-      background: var(--chip-bg);
-      border: 1px solid var(--chip-border);
-      padding: 6px 12px;
-      border-radius: 999px;
-      width: fit-content;
-    }
-
-    .card-image {
-      position: relative;
-      border-radius: 16px;
-      overflow: hidden;
-      aspect-ratio: 4 / 3;
-      background: rgba(255, 255, 255, 0.04);
-      display: grid;
-      place-items: center;
-    }
-
-    .card-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-
-    .card:hover .card-image img {
-      transform: scale(1.06);
-    }
-
-    .card h3 {
-      margin: 0;
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-
-    .card-description {
-      margin: 0;
-      color: rgba(213, 217, 230, 0.8);
-      font-size: 0.9rem;
-      line-height: 1.5;
-    }
-
-    .movie-ticket {
-      position: relative;
-      display: grid;
-      grid-template-columns: minmax(160px, 220px) 1fr;
-      gap: 22px;
-      padding: 20px;
-      border-radius: 24px;
-      background: rgba(21, 24, 33, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 24px 45px rgba(3, 5, 12, 0.55);
-      overflow: hidden;
-    }
-
-    .movie-ticket::before,
-    .movie-ticket::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      width: 16px;
-      height: 16px;
-      background: var(--bg-gradient);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 50%;
-      transform: translateY(-50%);
-      box-shadow: inset 0 0 0 2px rgba(21, 24, 33, 0.9);
-    }
-
-    .movie-ticket::before {
-      left: -8px;
-    }
-
-    .movie-ticket::after {
-      right: -8px;
-    }
-
-    .ticket-media {
-      position: relative;
-      border-radius: 18px;
-      overflow: hidden;
-      background: rgba(255, 255, 255, 0.05);
-      display: grid;
-    }
-
-    .ticket-media img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .ticket-rating {
-      position: absolute;
-      inset: auto 14px 14px 14px;
-      padding: 10px 14px;
-      background: rgba(7, 9, 16, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 14px;
-      display: grid;
-      gap: 6px;
-      text-align: center;
-    }
-
-    .ticket-rating-label {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: rgba(255, 231, 239, 0.65);
-    }
-
-    .ticket-rating-value {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--accent-strong);
-    }
-
-    .ticket-details {
-      display: grid;
-      gap: 12px;
-      align-content: start;
-    }
-
-    .ticket-year-tag {
-      font-size: 0.75rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: rgba(255, 231, 239, 0.7);
-    }
-
-    .ticket-details h4 {
-      margin: 0;
-      font-size: 1.25rem;
-      font-weight: 600;
-    }
-
-    .ticket-meta {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: grid;
-      gap: 6px;
-      font-size: 0.9rem;
-      color: rgba(233, 237, 250, 0.85);
-    }
-
-    .ticket-meta strong {
-      color: rgba(255, 231, 239, 0.85);
-      font-weight: 600;
-    }
-
-    .ticket-comment {
-      margin: 0;
-      font-size: 0.9rem;
-      color: rgba(213, 217, 230, 0.85);
-      line-height: 1.6;
-    }
-
-    .ticket-highlight {
-      margin: 0;
-      font-size: 0.85rem;
-      color: var(--accent-strong);
-      font-weight: 500;
-    }
-
-    .modal-highlight {
-      margin: 0;
-      font-size: 0.9rem;
-      color: rgba(255, 198, 217, 0.85);
-      font-style: italic;
-    }
-
-    .food-card {
-      display: grid;
-      grid-template-columns: minmax(140px, 200px) 1fr;
-      gap: 18px;
-      padding: 18px;
-      border-radius: 22px;
-      background: rgba(21, 24, 33, 0.92);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 22px 45px rgba(3, 5, 12, 0.55);
-      cursor: pointer;
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-    }
-
-    .food-card:hover,
-    .food-card:focus-visible {
-      outline: none;
-      transform: translateY(-4px);
-      border-color: rgba(255, 143, 171, 0.35);
-      box-shadow: 0 28px 60px rgba(3, 5, 12, 0.6);
-    }
-
-    .food-media {
-      border-radius: 18px;
-      overflow: hidden;
-      background: rgba(255, 255, 255, 0.05);
-      position: relative;
-    }
-
-    .food-media img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .image-edit-button {
-      position: absolute;
-      inset: 12px 12px auto auto;
-      border: 1px solid rgba(255, 198, 217, 0.5);
-      border-radius: 999px;
-      background: rgba(7, 9, 16, 0.8);
-      color: var(--accent-strong);
-      font-size: 0.75rem;
-      font-weight: 500;
-      padding: 6px 12px;
-      display: none;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-    }
-
-    .image-edit-button span[aria-hidden="true"] {
-      font-size: 1rem;
-    }
-
-    .image-edit-button:hover,
-    .image-edit-button:focus-visible {
-      background: rgba(12, 16, 26, 0.95);
-      border-color: rgba(255, 198, 217, 0.8);
-      transform: translateY(-1px);
-      outline: none;
-    }
-
-    .food-rating {
-      position: absolute;
-      inset: auto 12px 12px 12px;
-      padding: 10px 14px;
-      border-radius: 12px;
-      background: rgba(7, 9, 16, 0.82);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      font-size: 0.85rem;
-      display: inline-flex;
-      gap: 6px;
-      align-items: center;
-      flex-wrap: wrap;
-      color: rgba(255, 231, 239, 0.75);
-    }
-
-    .food-rating strong {
-      color: var(--accent-strong);
-      font-weight: 600;
-    }
-
-    .food-rating-score {
-      font-size: 0.95rem;
-    }
-
-    .star-rating-display {
-      position: relative;
-      display: inline-block;
-      font-size: 1rem;
-      line-height: 1;
-      letter-spacing: 2px;
-    }
-
-    .star-rating-display .star-rating-base {
-      color: rgba(255, 255, 255, 0.18);
-      display: block;
-    }
-
-    .star-rating-display .star-rating-fill {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      color: var(--accent-strong);
-      display: block;
-      white-space: nowrap;
-    }
-
-    .rating-edit-button {
-      border: 1px solid rgba(255, 198, 217, 0.4);
-      background: rgba(12, 15, 24, 0.9);
-      color: var(--accent-strong);
-      border-radius: 999px;
-      font-size: 0.7rem;
-      font-weight: 500;
-      padding: 4px 10px;
-      display: none;
-      cursor: pointer;
-      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-    }
-
-    .rating-edit-button:hover,
-    .rating-edit-button:focus-visible {
-      background: rgba(18, 21, 32, 0.95);
-      border-color: rgba(255, 198, 217, 0.8);
-      transform: translateY(-1px);
-      outline: none;
-    }
-
-    .food-content {
-      display: grid;
-      gap: 10px;
-      align-content: start;
-    }
-
-    .food-title {
-      margin: 0;
-      font-size: 1.2rem;
-      font-weight: 600;
-    }
-
-    .food-location,
-    .food-description,
-    .food-highlight {
-      margin: 0;
-      font-size: 0.9rem;
-      color: rgba(233, 237, 250, 0.85);
-      line-height: 1.6;
-    }
-
-    .food-highlight {
-      color: rgba(255, 198, 217, 0.88);
-      font-style: italic;
-    }
-
-    .food-location strong {
-      color: rgba(255, 231, 239, 0.85);
-    }
-
-    footer {
-      margin-top: auto;
-      padding: 32px clamp(18px, 5vw, 48px) 48px;
-      text-align: center;
-      color: rgba(255, 231, 239, 0.72);
-      font-size: 0.9rem;
-      background: rgba(10, 13, 19, 0.85);
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    footer a {
-      color: var(--accent-strong);
-      text-decoration: none;
-      border-bottom: 1px dashed rgba(255, 198, 217, 0.5);
-    }
-
-    footer a:hover,
-    footer a:focus-visible {
-      color: #ffe0ec;
-    }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: var(--modal-overlay);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s ease;
-      padding: 24px;
-      z-index: 30;
-    }
-
-    .modal-overlay.open {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .modal {
-      background: var(--modal-bg);
-      border-radius: 22px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      box-shadow: var(--modal-shadow);
-      max-width: min(760px, 90vw);
-      width: 100%;
-      padding: clamp(20px, 4vw, 36px);
-      display: grid;
-      gap: 22px;
-      transform: translateY(20px);
-      transition: transform 0.3s ease;
-    }
-
-    .modal-overlay.open .modal {
-      transform: translateY(0);
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 16px;
-    }
-
-    .modal-header h3 {
-      margin: 0;
-      font-size: clamp(1.4rem, 3.5vw, 1.8rem);
-    }
-
-    .close-button {
-      background: transparent;
-      border: none;
-      color: rgba(255, 255, 255, 0.7);
-      cursor: pointer;
-      font-size: 1.6rem;
-      line-height: 1;
-      padding: 4px;
-    }
-
-    .close-button:hover,
-    .close-button:focus-visible {
-      color: #fff;
-      transform: scale(1.1);
-      outline: none;
-    }
-
-    .modal-content {
-      display: grid;
-      gap: 18px;
-    }
-
-    .modal-image {
-      border-radius: 18px;
-      overflow: hidden;
-      background: rgba(255, 255, 255, 0.05);
-      aspect-ratio: 16 / 9;
-    }
-
-    .modal-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .moments-title {
-      margin: 0;
-      font-size: 0.95rem;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: rgba(255, 198, 217, 0.75);
-    }
-
-    .moments-list {
-      margin: 8px 0 0 0;
-      padding-left: 20px;
-      color: rgba(233, 237, 250, 0.85);
-    }
-
-    .moments-list li {
-      margin-bottom: 6px;
-    }
-
-    @media (max-width: 680px) {
-      header.top-header {
-        padding: 20px clamp(16px, 6vw, 32px) 14px;
-      }
-
-      main {
-        padding-bottom: 80px;
-      }
-
-      .dedication-section {
-        padding: 24px;
-        gap: 16px;
-      }
-
-      .dedication-content {
-        min-height: 120px;
-        padding: 16px;
-      }
-
-      .card {
-        padding: 16px;
-      }
-
-      .year-card {
-        padding: 24px;
-      }
-
-      .year-card-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .category-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .carousel {
-        grid-template-columns: 1fr;
-        gap: 8px;
-      }
-
-      .carousel-button {
-        display: none;
-      }
-
-      .carousel-track {
-        padding: 6px 2px;
-      }
-
-      .movie-ticket {
-        grid-template-columns: 1fr;
-      }
-
-      .ticket-media {
-        max-height: 220px;
-      }
-
-      .food-card {
-        grid-template-columns: 1fr;
-      }
-
-      .modal {
-        padding: 24px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <header class="top-header">
-    <div class="header-content">
-      <h1>Anuário de Namoro</h1>
-      <h2>Um arquivo carinhoso com tudo o que vivemos ano após ano</h2>
-      <p>Escolha um ano para abrir a pasta, explorar badges, cartas especiais e agora até os nossos filmes favoritos.</p>
-      <p class="days-counter" aria-live="polite">
-        <span class="days-counter-label">Estamos juntos há</span>
-        <span class="days-counter-values">
-          <span class="days-counter-value" id="days-since-start">0</span>
-          <span class="days-counter-unit">dias,</span>
-          <span class="time-counter-value" id="hours-since-start">00</span>
-          <span class="days-counter-unit">horas,</span>
-          <span class="time-counter-value" id="minutes-since-start">00</span>
-          <span class="days-counter-unit">minutos e</span>
-          <span class="time-counter-value" id="seconds-since-start">00</span>
-          <span class="days-counter-unit">segundos</span>
-        </span>
-        <span class="days-counter-unit">desde 15 de setembro de 2023</span>
-        <span class="days-counter-value" id="days-since-start">0</span>
-        <span class="days-counter-suffix">dias desde 15 de setembro de 2023</span>
-      </p>
-      <nav class="filters" aria-label="Navegar por ano">
-        <!-- Botões de navegação são gerados dinamicamente via JavaScript -->
-      </nav>
-      <button class="edit-toggle" type="button" aria-pressed="false">Editar anuário</button>
-    </div>
-  </header>
-
-  <main>
-    <div class="grid-wrapper">
-      <section class="dedication-section" aria-labelledby="dedication-title">
-        <div class="dedication-header">
-          <h2 id="dedication-title">Dedicatória</h2>
-          <p class="dedication-subtitle">Não é bem uma dedicatória de livro, mas acho que vai gostar :).</p>
-        </div>
-        <div class="dedication-content">
-          <p>Desde setembro de 2023, quando você entrou na minha vida, tudo ganhou outra profundidade. Você mudou meu ritmo, meu olhar e a forma como eu enxergo o mundo.</p>
-          <p>Obrigado por cada detalhe seu: pela leveza, pela paciência (quem diria), pelo carinho e por esse amor que me encontra até nos dias mais pesados. Estar com você me faz sentir que estou exatamente onde eu sempre quis estar e me faz sentir em casa.</p>
-          <p>Dois anos depois, a certeza só cresce: quero continuar construindo com você, sonhando com você e vivendo tudo o que ainda falta a gente viver.</p>
-          <p>Eu te amo mais do que ontem e menos que amanhã :)<br>Pra sempre.</p>
-          <p>Com amor,<br>Garinho</p>
-          <p>P.s.: espero que goste da surpresa</p>
-        </div>
-      </section>
-      <section class="years-collection" aria-live="polite">
-        <!-- Pastas anuais são geradas dinamicamente via JavaScript -->
-      </section>
-    </div>
-  </main>
-
-  <div class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
-    <article class="modal">
-      <header class="modal-header">
-        <h3 id="modal-title"></h3>
-        <button class="close-button" type="button" aria-label="Fechar">&times;</button>
-      </header>
-      <div class="modal-content">
-        <div class="modal-image">
-          <img id="modal-image" src="" alt="" loading="lazy">
-        </div>
-        <p id="modal-description"></p>
-        <p id="modal-highlight" class="modal-highlight" hidden></p>
-        <div class="modal-moments" hidden>
-          <h4 class="moments-title">Momentos marcantes</h4>
-          <ul class="moments-list"></ul>
-        </div>
-      </div>
-    </article>
-  </div>
-
-  <footer>
-    Feito para registrar cada ano da nossa história ❤️<br>
-    <span><a href="#">Com amor, Garinho ❤️</a>.</span>
-  </footer>
-
-  
-<script>
-  const STORAGE_KEY = "anuario-namoro-v2";
-
-  const colecaoPadrao = [
-    {
-      anoNumero: 1,
-      anoLabel: "Ano 1 (2023)",
-      tema: "Ano do Tênis da Nike",
-      resumo: "O começo de tudo, com descobertas e o símbolo do nosso tênis inseparável.",
-      badges: [
-        {
-          titulo: "Ano do Tênis da Nike",
-          tipo: "Badge",
-          imagem: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80",
-          descricao: "Esse ano foi marcado pelo tênis da Nike, nosso símbolo de aventuras compartilhadas e trilhas de risadas.",
-          momentos: [
-            "Primeiro filme juntos",
-            "Nossa viagem para X",
-            "O presente do tênis da Nike"
-          ]
-        }
-      ],
-      cartas: [
-        {
-          titulo: "Carta Ano 1",
-          tipo: "Carta",
-          imagem: "https://images.unsplash.com/photo-1483794344563-d27a8d18014e?auto=format&fit=crop&w=800&q=80",
-          descricao: "Resumo da carta do Ano 1: memórias escritas à mão com promessas de novos capítulos juntos.",
-          momentos: []
-        }
-      ],
-      filmes: [
-        {
-          nome: "La La Land",
-          nota: "9.5/10",
-          capa: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=800&q=80",
-          dataSessao: "26 de setembro de 2023",
-          local: "Cinemark Downtown",
-          comentario: "Nosso primeiro filme como casal, com direito a mãos dadas do começo ao fim.",
-          destaque: "Saímos cantando 'City of Stars' até chegar no carro."
-        }
-      ],
-      comidas: [
-        {
-          titulo: "Jantar no Burger Garage",
-          tipo: "Review gastronômica",
-          imagem: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?auto=format&fit=crop&w=800&q=80",
-          nota: 4.5,
-          local: "Burger Garage — Barra da Tijuca",
-          descricao: "Descobrimos o burger suculento e dividimos batatas com cheddar até não aguentar mais.",
-          destaque: "Voltamos duas vezes no mesmo mês porque não conseguimos superar a batatinha.",
-          momentos: []
-        }
-      ]
-    },
-    {
-      anoNumero: 2,
-      anoLabel: "Ano 2 (2024)",
-      tema: "Ano das Constelações",
-      resumo: "Transformamos o céu em mapa para os nossos planos e sonhos compartilhados.",
-      badges: [
-        {
-          titulo: "Ano das Constelações",
-          tipo: "Badge",
-          imagem: "https://images.unsplash.com/photo-1527176930608-09cb256ab504?auto=format&fit=crop&w=800&q=80",
-          descricao: "Colecionamos estrelas e sonhos, com noites observando constelações e planos para o futuro.",
-          momentos: [
-            "Piquenique sob as estrelas",
-            "Nosso show favorito",
-            "Descobrimos a música que virou trilha sonora"
-          ]
-        }
-      ],
-      cartas: [
-        {
-          titulo: "Carta Ano 2",
-          tipo: "Carta",
-          imagem: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80",
-          descricao: "Uma carta cheia de planos, agradecendo por cada constelação que desenhamos juntos.",
-          momentos: []
-        }
-      ],
-      filmes: [
-        {
-          nome: "Interestelar",
-          nota: "10/10",
-          capa: "https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=800&q=80",
-          dataSessao: "12 de maio de 2024",
-          local: "Sessão pipoca em casa",
-          comentario: "Virou tradição: cobertor, chocolate quente e olhos marejados com o final.",
-          destaque: "Prometemos assistir novamente quando viajarmos para a nossa próxima constelação."
-        }
-      ],
-      comidas: [
-        {
-          titulo: "Brunch de domingo",
-          tipo: "Review gastronômica",
-          imagem: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=800&q=80",
-          nota: 4.8,
-          local: "Café da Praça — Botafogo",
-          descricao: "Virou ritual começar o domingo com panquecas, café coado e nossas conversas infinitas.",
-          destaque: "Você roubou metade do meu maple syrup e mesmo assim eu achei fofo.",
-          momentos: []
-        }
-      ]
-    }
-  ];
-
-  function clonar(obj) {
-    return JSON.parse(JSON.stringify(obj));
-  }
-
-  function normalizarColecao(dados) {
-    return clonar(dados).map(ano => ({
-      anoNumero: ano.anoNumero,
-      anoLabel: ano.anoLabel ?? `Ano ${ano.anoNumero}`,
-      tema: ano.tema ?? "",
-      resumo: ano.resumo ?? "",
-      badges: Array.isArray(ano.badges) ? ano.badges : [],
-      cartas: Array.isArray(ano.cartas) ? ano.cartas : [],
-      filmes: Array.isArray(ano.filmes) ? ano.filmes : [],
-      comidas: Array.isArray(ano.comidas) ? ano.comidas : [],
-    }));
-  }
-
-  function carregarDados() {
-    try {
-      const salvo = window.localStorage?.getItem(STORAGE_KEY);
-      if (salvo) {
-        const dados = JSON.parse(salvo);
-        if (Array.isArray(dados)) {
-          return normalizarColecao(dados);
-        }
-      }
-    } catch (error) {
-      console.warn("Não foi possível carregar dados salvos:", error);
-    }
-
-    return normalizarColecao(colecaoPadrao);
-  }
-
-  let colecaoAnual = carregarDados();
-  colecaoAnual.sort((a, b) => a.anoNumero - b.anoNumero);
-
-  const estadoExpansao = new Map();
-  const filtersContainer = document.querySelector(".filters");
-  const yearsCollection = document.querySelector(".years-collection");
-  const editToggleButton = document.querySelector(".edit-toggle");
-  const daysSinceStartValue = document.getElementById("days-since-start");
-  const hoursSinceStartValue = document.getElementById("hours-since-start");
-  const minutesSinceStartValue = document.getElementById("minutes-since-start");
-  const secondsSinceStartValue = document.getElementById("seconds-since-start");
-
-  const modalOverlay = document.querySelector(".modal-overlay");
-  const modalTitle = document.getElementById("modal-title");
-  const modalImage = document.getElementById("modal-image");
-  const modalDescription = document.getElementById("modal-description");
-  const modalHighlight = document.getElementById("modal-highlight");
-  const modalMomentsWrapper = document.querySelector(".modal-moments");
-  const modalMomentsList = document.querySelector(".moments-list");
-  const closeButton = document.querySelector(".close-button");
-
-  const editablesRegistrados = new WeakSet();
-  const filterButtons = new Map();
-  let editMode = false;
-
-  const referenciaRelacionamento = new Date(Date.UTC(2023, 8, 15));
-
-  function calcularDuracaoDesde(dataReferencia) {
-    const agora = Date.now();
-    const diferenca = Math.max(0, Math.floor((agora - dataReferencia.getTime()) / 1000));
-    const dias = Math.floor(diferenca / 86400);
-    const restanteDia = diferenca % 86400;
-    const horas = Math.floor(restanteDia / 3600);
-    const restanteHora = restanteDia % 3600;
-    const minutos = Math.floor(restanteHora / 60);
-    const segundos = restanteHora % 60;
-
-    return { dias, horas, minutos, segundos };
-  }
-
-  function formatarComDoisDigitos(valor) {
-    return valor.toLocaleString("pt-BR", {
-      minimumIntegerDigits: 2,
-      useGrouping: false
-    });
-  }
-
-  function atualizarContadorRelacionamento() {
-  const referenciaDias = new Date(Date.UTC(2023, 8, 15));
-
-  function calcularDiasDesde(dataReferencia) {
-    const agora = Date.now();
-    return Math.floor((agora - dataReferencia.getTime()) / (1000 * 60 * 60 * 24));
-  }
-
-  function atualizarContadorDias() {
-    if (!daysSinceStartValue) {
-      return;
-    }
-
-    const { dias, horas, minutos, segundos } = calcularDuracaoDesde(referenciaRelacionamento);
-    daysSinceStartValue.textContent = dias.toLocaleString("pt-BR");
-
-    if (hoursSinceStartValue) {
-      hoursSinceStartValue.textContent = formatarComDoisDigitos(horas);
-    }
-
-    if (minutesSinceStartValue) {
-      minutesSinceStartValue.textContent = formatarComDoisDigitos(minutos);
-    }
-
-    if (secondsSinceStartValue) {
-      secondsSinceStartValue.textContent = formatarComDoisDigitos(segundos);
-    }
-    const dias = Math.max(0, calcularDiasDesde(referenciaDias));
-    daysSinceStartValue.textContent = dias.toLocaleString("pt-BR");
-  }
-
-  function salvarDados() {
-    try {
-      window.localStorage?.setItem(STORAGE_KEY, JSON.stringify(colecaoAnual));
-    } catch (error) {
-      console.warn("Não foi possível salvar as alterações:", error);
-    }
-  }
-
-  function limitarValor(valor, minimo, maximo) {
-    return Math.min(Math.max(valor, minimo), maximo);
-  }
-
-  function normalizarNotaEstrelas(valor) {
-    if (typeof valor === "number" && Number.isFinite(valor)) {
-      return limitarValor(valor, 0, 5);
-    }
-
-    if (typeof valor === "string") {
-      const texto = valor.trim();
-      if (!texto) {
-        return 0;
-      }
-
-      const partes = texto.split("/");
-      if (partes.length === 2) {
-        const numerador = parseFloat(partes[0].replace(",", "."));
-        const denominador = parseFloat(partes[1].replace(",", "."));
-        if (Number.isFinite(numerador) && Number.isFinite(denominador) && denominador !== 0) {
-          return limitarValor((numerador / denominador) * 5, 0, 5);
-        }
-      }
-
-      const numero = parseFloat(texto.replace(",", "."));
-      if (Number.isFinite(numero)) {
-        return limitarValor(numero, 0, 5);
-      }
-    }
-
-    return 0;
-  }
-
-  function formatarNotaEstrelas(valor) {
-    return Number.isInteger(valor) ? String(valor) : valor.toFixed(1);
-  }
-
-  function atualizarDisplayEstrelas(container, valor) {
-    const preenchimento = container?.querySelector?.(".star-rating-fill");
-    if (preenchimento) {
-      const percentual = limitarValor(valor, 0, 5) / 5;
-      preenchimento.style.width = `${(percentual * 100).toFixed(2)}%`;
-    }
-    if (container) {
-      container.dataset.ratingValue = String(limitarValor(valor, 0, 5));
-    }
-  }
-
-  function criarDisplayEstrelas(valor) {
-    const element = document.createElement("span");
-    element.className = "star-rating-display";
-    element.dataset.ratingValue = String(valor);
-
-    const base = document.createElement("span");
-    base.className = "star-rating-base";
-    base.textContent = "★★★★★";
-    element.appendChild(base);
-
-    const preenchimento = document.createElement("span");
-    preenchimento.className = "star-rating-fill";
-    preenchimento.textContent = "★★★★★";
-    element.appendChild(preenchimento);
-
-    atualizarDisplayEstrelas(element, valor);
-
-    return element;
-  }
-
-  function atualizarImagemItem(anoIndex, categoria, itemIndex, novaUrl, imagemElemento, campoImagem = "imagem") {
-    const ano = colecaoAnual[anoIndex];
-    if (!ano) {
-      return;
-    }
-
-    const lista = Array.isArray(ano[categoria]) ? ano[categoria] : null;
-    if (!lista) {
-      return;
-    }
-
-    const item = lista[itemIndex];
-  function atualizarImagemComida(anoIndex, comidaIndex, novaUrl, imagemElemento) {
-    const ano = colecaoAnual[anoIndex];
-    if (!ano || !Array.isArray(ano.comidas)) {
-      return;
-    }
-
-    const item = ano.comidas[comidaIndex];
-    if (!item) {
-      return;
-    }
-
-    const urlTratada = typeof novaUrl === "string" ? novaUrl.trim() : "";
-    if (!urlTratada) {
-      return;
-    }
-
-    item[campoImagem] = urlTratada;
-    item.imagem = urlTratada;
-    if (imagemElemento) {
-      imagemElemento.src = urlTratada;
-    }
-
-    if (!editMode) {
-      salvarDados();
-    }
-  }
-
-  function atualizarNotaComida(anoIndex, comidaIndex, novoValor) {
-    const ano = colecaoAnual[anoIndex];
-    if (!ano || !Array.isArray(ano.comidas)) {
-      return 0;
-    }
-
-    const item = ano.comidas[comidaIndex];
-    if (!item) {
-      return 0;
-    }
-
-    const notaNormalizada = normalizarNotaEstrelas(novoValor);
-    item.nota = notaNormalizada;
-
-    if (!editMode) {
-      salvarDados();
-    }
-
-    return notaNormalizada;
-  }
-
-  function registrarCampoEditavel(element, { yearIndex, category = "ano", itemIndex, field, allowBreaks = false, placeholder = "" }) {
-    element.dataset.editable = "true";
-    element.dataset.yearIndex = String(yearIndex);
-    element.dataset.field = field;
-    element.dataset.category = category;
-    if (typeof itemIndex === "number") {
-      element.dataset.itemIndex = String(itemIndex);
-    }
-    if (allowBreaks) {
-      element.dataset.allowBreaks = "true";
-    }
-    if (placeholder) {
-      element.dataset.placeholder = placeholder;
-    }
-  }
-
-  function configurarCamposEditaveis() {
-    document.querySelectorAll("[data-editable]").forEach(element => {
-      if (editablesRegistrados.has(element)) {
-        return;
-      }
-
-      element.addEventListener("keydown", event => {
-        if (event.key === "Enter" && element.dataset.allowBreaks !== "true") {
-          event.preventDefault();
-          element.blur();
-        }
-      });
-
-      element.addEventListener("blur", () => {
-        atualizarDado(element);
-      });
-
-      editablesRegistrados.add(element);
-    });
-  }
-
-  function aplicarModoEdicao() {
-    document.querySelectorAll("[data-editable]").forEach(element => {
-      if (editMode) {
-        element.setAttribute("contenteditable", "true");
-        element.setAttribute("spellcheck", "false");
-      } else {
-        element.removeAttribute("contenteditable");
-        element.removeAttribute("spellcheck");
-      }
-    });
-  }
-
-  function definirModoEdicao(ativo) {
-    editMode = ativo;
-    document.body.classList.toggle("edit-mode", ativo);
-    if (editToggleButton) {
-      editToggleButton.classList.toggle("active", ativo);
-      editToggleButton.setAttribute("aria-pressed", ativo ? "true" : "false");
-      editToggleButton.textContent = ativo ? "Salvar alterações" : "Editar anuário";
-    }
-    aplicarModoEdicao();
-    if (!ativo) {
-      salvarDados();
-    }
-  }
-
-  if (editToggleButton) {
-    editToggleButton.addEventListener("click", () => {
-      definirModoEdicao(!editMode);
-    });
-  }
-
-  function obterValorEditado(element) {
-    const texto = element.innerText.replace(/ /g, " ");
-    if (element.dataset.allowBreaks === "true") {
-      return texto.trim();
-    }
-    return texto.replace(/\s+/g, " ").trim();
-  }
-
-  function atualizarDado(element) {
-    const yearIndex = Number(element.dataset.yearIndex);
-    const categoria = element.dataset.category || "ano";
-    const campo = element.dataset.field;
-    const itemIndex = element.dataset.itemIndex ? Number(element.dataset.itemIndex) : undefined;
-
-    if (!Number.isFinite(yearIndex) || !campo) {
-      return;
-    }
-
-    const ano = colecaoAnual[yearIndex];
-    if (!ano) {
-      return;
-    }
-
-    const valor = obterValorEditado(element);
-
-    if (categoria === "ano") {
-      ano[campo] = valor;
-    } else if (Array.isArray(ano[categoria]) && typeof itemIndex === "number" && ano[categoria][itemIndex]) {
-      ano[categoria][itemIndex][campo] = valor;
-    }
-
-    if (!editMode) {
-      salvarDados();
-    }
-  }
-
-  function obterEstadoExpansao(anoNumero, padrao = false) {
-    if (!estadoExpansao.has(anoNumero)) {
-      estadoExpansao.set(anoNumero, padrao);
-    }
-    return estadoExpansao.get(anoNumero);
-  }
-
-  function sincronizarEstadoAno(anoNumero) {
-    const card = document.getElementById(`ano-${anoNumero}`);
-    if (!card) {
-      return;
-    }
-
-    const expanded = Boolean(estadoExpansao.get(anoNumero));
-    const body = card.querySelector(".year-card-body");
-    const toggle = card.querySelector(".year-card-toggle");
-
-    card.classList.toggle("expanded", expanded);
-    if (body) {
-      body.hidden = !expanded;
-    }
-    if (toggle) {
-      toggle.setAttribute("aria-expanded", expanded ? "true" : "false");
-    }
-  }
-
-  function atualizarFiltrosAtivos() {
-    filterButtons.forEach((button, anoNumero) => {
-      const ativo = Boolean(estadoExpansao.get(anoNumero));
-      button.classList.toggle("active", ativo);
-      button.setAttribute("aria-pressed", ativo ? "true" : "false");
-    });
-  }
-
-  function abrirAno(anoNumero, { focar = false, exclusivo = false } = {}) {
-    if (exclusivo) {
-      colecaoAnual.forEach(ano => {
-        if (ano.anoNumero !== anoNumero) {
-          estadoExpansao.set(ano.anoNumero, false);
-          sincronizarEstadoAno(ano.anoNumero);
-        }
-      });
-    }
-
-    estadoExpansao.set(anoNumero, true);
-    sincronizarEstadoAno(anoNumero);
-    atualizarFiltrosAtivos();
-
-    if (focar) {
-      const card = document.getElementById(`ano-${anoNumero}`);
-      if (card) {
-        card.scrollIntoView({ behavior: "smooth", block: "start" });
-        if (typeof card.focus === "function") {
-          try {
-            card.focus({ preventScroll: true });
-          } catch (error) {
-            card.focus();
-          }
-        }
-      }
-    }
-  }
-
-  function alternarAno(anoNumero) {
-    const novoEstado = !Boolean(estadoExpansao.get(anoNumero));
-    estadoExpansao.set(anoNumero, novoEstado);
-    sincronizarEstadoAno(anoNumero);
-    atualizarFiltrosAtivos();
-  }
-
-  function criarCardItem(item, ano, anoIndex, categoria, itemIndex) {
-    const card = document.createElement("article");
-    card.className = "card";
-    card.tabIndex = 0;
-    const tipo = item.tipo || categoria;
-    card.setAttribute("aria-label", `${tipo}: ${item.titulo}`);
-
-    const tag = document.createElement("span");
-    tag.className = "card-tag";
-    tag.textContent = tipo;
-    card.appendChild(tag);
-
-    const imageWrapper = document.createElement("div");
-    imageWrapper.className = "card-image";
-    const img = document.createElement("img");
-    img.src = item.imagem;
-    img.alt = item.titulo;
-    img.loading = "lazy";
-    imageWrapper.appendChild(img);
-
-    const imageEditButton = document.createElement("button");
-    imageEditButton.type = "button";
-    imageEditButton.className = "image-edit-button";
-    imageEditButton.innerHTML = '<span aria-hidden="true">🖼️</span><span>Trocar foto</span>';
-    imageEditButton.addEventListener("click", event => {
-      event.preventDefault();
-      event.stopPropagation();
-      if (!editMode) {
-        return;
-      }
-
-      const sugestao = prompt("Cole a URL da nova imagem:", item.imagem ?? "");
-      if (sugestao === null) {
-        return;
-      }
-
-      const url = sugestao.trim();
-      if (!url) {
-        return;
-      }
-
-      atualizarImagemItem(anoIndex, categoria, itemIndex, url, img);
-    });
-    imageWrapper.appendChild(imageEditButton);
-    card.appendChild(imageWrapper);
-
-    const titulo = document.createElement("h3");
-    titulo.textContent = item.titulo;
-    registrarCampoEditavel(titulo, {
-      yearIndex: anoIndex,
-      category: categoria,
-      itemIndex,
-      field: "titulo",
-      placeholder: "Escreva um título"
-    });
-    card.appendChild(titulo);
-
-    const descricao = document.createElement("p");
-    descricao.className = "card-description";
-    descricao.textContent = item.descricao ?? "";
-    registrarCampoEditavel(descricao, {
-      yearIndex: anoIndex,
-      category: categoria,
-      itemIndex,
-      field: "descricao",
-      allowBreaks: true,
-      placeholder: "Conte porque isso foi especial"
-    });
-    card.appendChild(descricao);
-
-    const abrir = () => {
-      if (editMode) {
-        return;
-      }
-      abrirModal(item, ano.anoLabel);
-    };
-
-    card.addEventListener("click", abrir);
-    card.addEventListener("keypress", event => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        abrir();
-      }
-    });
-
-    return card;
-  }
-
-  function criarCategoriaGenerica(titulo, itens, ano, anoIndex, categoria) {
-    const section = document.createElement("section");
-    section.className = "category-section";
-
-    const heading = document.createElement("h3");
-    heading.className = "category-title";
-    heading.textContent = titulo;
-    section.appendChild(heading);
-
-    if (!Array.isArray(itens) || itens.length === 0) {
-      const empty = document.createElement("p");
-      empty.className = "category-empty";
-      empty.textContent = "Ainda não registramos nada aqui (por enquanto!).";
-      section.appendChild(empty);
-      return section;
-    }
-
-    const usarCarousel = categoria === "badges" || categoria === "cartas";
-
-    if (usarCarousel) {
-      const wrapper = document.createElement("div");
-      wrapper.className = "carousel";
-
-      const anterior = document.createElement("button");
-      anterior.type = "button";
-      anterior.className = "carousel-button carousel-button-prev";
-      anterior.setAttribute("aria-label", `Ver item anterior em ${titulo}`);
-      anterior.innerHTML = "&#10094;";
-
-      const proximo = document.createElement("button");
-      proximo.type = "button";
-      proximo.className = "carousel-button carousel-button-next";
-      proximo.setAttribute("aria-label", `Ver próximo item em ${titulo}`);
-      proximo.innerHTML = "&#10095;";
-
-      const trilho = document.createElement("div");
-      trilho.className = "carousel-track";
-      itens.forEach((item, index) => {
-        trilho.appendChild(criarCardItem(item, ano, anoIndex, categoria, index));
-      });
-
-      const atualizarBotoes = () => {
-        const alcance = trilho.scrollWidth - trilho.clientWidth;
-        anterior.disabled = trilho.scrollLeft <= 2;
-        proximo.disabled = trilho.scrollLeft >= alcance - 2;
-      };
-
-      const deslocar = direcao => {
-        const passo = Math.max(trilho.clientWidth * 0.85, 220);
-        trilho.scrollBy({ left: passo * direcao, behavior: "smooth" });
-      };
-
-      anterior.addEventListener("click", () => {
-        deslocar(-1);
-      });
-
-      proximo.addEventListener("click", () => {
-        deslocar(1);
-      });
-
-      trilho.addEventListener("scroll", () => {
-        window.requestAnimationFrame(atualizarBotoes);
-      });
-
-      window.addEventListener("resize", atualizarBotoes, { passive: true });
-
-      wrapper.appendChild(anterior);
-      wrapper.appendChild(trilho);
-      wrapper.appendChild(proximo);
-      section.appendChild(wrapper);
-
-      window.requestAnimationFrame(atualizarBotoes);
-    } else {
-      const grid = document.createElement("div");
-      grid.className = "category-grid";
-      itens.forEach((item, index) => {
-        grid.appendChild(criarCardItem(item, ano, anoIndex, categoria, index));
-      });
-      section.appendChild(grid);
-    }
-
-    return section;
-  }
-
-  function criarTicketFilme(filme, ano, anoIndex, filmeIndex) {
-    const article = document.createElement("article");
-    article.className = "movie-ticket";
-
-    const media = document.createElement("div");
-    media.className = "ticket-media";
-    const img = document.createElement("img");
-    img.src = filme.capa;
-    img.alt = `Cartaz do filme ${filme.nome}`;
-    img.loading = "lazy";
-    media.appendChild(img);
-
-    const imageEditButton = document.createElement("button");
-    imageEditButton.type = "button";
-    imageEditButton.className = "image-edit-button";
-    imageEditButton.innerHTML = '<span aria-hidden="true">🖼️</span><span>Trocar foto</span>';
-    imageEditButton.addEventListener("click", event => {
-      event.preventDefault();
-      event.stopPropagation();
-      if (!editMode) {
-        return;
-      }
-
-      const sugestao = prompt("Cole a URL do novo cartaz:", filme.capa ?? "");
-      if (sugestao === null) {
-        return;
-      }
-
-      const url = sugestao.trim();
-      if (!url) {
-        return;
-      }
-
-      atualizarImagemItem(anoIndex, "filmes", filmeIndex, url, img, "capa");
-    });
-    media.appendChild(imageEditButton);
-
-    const rating = document.createElement("div");
-    rating.className = "ticket-rating";
-    const ratingLabel = document.createElement("span");
-    ratingLabel.className = "ticket-rating-label";
-    ratingLabel.textContent = "Nota geral";
-    rating.appendChild(ratingLabel);
-    const ratingValue = document.createElement("span");
-    ratingValue.className = "ticket-rating-value";
-    ratingValue.textContent = filme.nota ?? "";
-    registrarCampoEditavel(ratingValue, {
-      yearIndex: anoIndex,
-      category: "filmes",
-      itemIndex: filmeIndex,
-      field: "nota",
-      placeholder: "0/10"
-    });
-    rating.appendChild(ratingValue);
-    media.appendChild(rating);
-
-    article.appendChild(media);
-
-    const details = document.createElement("div");
-    details.className = "ticket-details";
-
-    const yearTag = document.createElement("span");
-    yearTag.className = "ticket-year-tag";
-    yearTag.textContent = ano.anoLabel;
-    details.appendChild(yearTag);
-
-    const title = document.createElement("h4");
-    title.textContent = filme.nome;
-    registrarCampoEditavel(title, {
-      yearIndex: anoIndex,
-      category: "filmes",
-      itemIndex: filmeIndex,
-      field: "nome",
-      placeholder: "Nome do filme"
-    });
-    details.appendChild(title);
-
-    const metaList = document.createElement("ul");
-    metaList.className = "ticket-meta";
-
-    const dataItem = document.createElement("li");
-    const dataLabel = document.createElement("strong");
-    dataLabel.textContent = "Data:";
-    dataItem.appendChild(dataLabel);
-    dataItem.appendChild(document.createTextNode(" "));
-    const dataValor = document.createElement("span");
-    dataValor.textContent = filme.dataSessao ?? "";
-    registrarCampoEditavel(dataValor, {
-      yearIndex: anoIndex,
-      category: "filmes",
-      itemIndex: filmeIndex,
-      field: "dataSessao",
-      placeholder: "Quando assistimos?"
-    });
-    dataItem.appendChild(dataValor);
-    metaList.appendChild(dataItem);
-
-    const localItem = document.createElement("li");
-    const localLabel = document.createElement("strong");
-    localLabel.textContent = "Local:";
-    localItem.appendChild(localLabel);
-    localItem.appendChild(document.createTextNode(" "));
-    const localValor = document.createElement("span");
-    localValor.textContent = filme.local ?? "";
-    registrarCampoEditavel(localValor, {
-      yearIndex: anoIndex,
-      category: "filmes",
-      itemIndex: filmeIndex,
-      field: "local",
-      placeholder: "Onde foi?"
-    });
-    localItem.appendChild(localValor);
-    metaList.appendChild(localItem);
-
-    details.appendChild(metaList);
-
-    const comentario = document.createElement("p");
-    comentario.className = "ticket-comment";
-    comentario.textContent = filme.comentario ?? "";
-    registrarCampoEditavel(comentario, {
-      yearIndex: anoIndex,
-      category: "filmes",
-      itemIndex: filmeIndex,
-      field: "comentario",
-      allowBreaks: true,
-      placeholder: "Qual foi a sensação do filme?"
-    });
-    details.appendChild(comentario);
-
-    const destaque = document.createElement("p");
-    destaque.className = "ticket-highlight";
-    destaque.textContent = filme.destaque ?? "";
-    registrarCampoEditavel(destaque, {
-      yearIndex: anoIndex,
-      category: "filmes",
-      itemIndex: filmeIndex,
-      field: "destaque",
-      allowBreaks: true,
-      placeholder: "O que deixou o filme inesquecível?"
-    });
-    details.appendChild(destaque);
-
-    article.appendChild(details);
-
-    return article;
-  }
-
-  function criarCategoriaFilmes(ano, anoIndex) {
-    const section = document.createElement("section");
-    section.className = "category-section";
-
-    const heading = document.createElement("h3");
-    heading.className = "category-title";
-    heading.textContent = "Filmes favoritos";
-    section.appendChild(heading);
-
-    if (!Array.isArray(ano.filmes) || ano.filmes.length === 0) {
-      const empty = document.createElement("p");
-      empty.className = "category-empty";
-      empty.textContent = "Ainda não colamos os ingressos deste ano.";
-      section.appendChild(empty);
-      return section;
-    }
-
-    const lista = document.createElement("div");
-    lista.className = "movie-list";
-    ano.filmes.forEach((filme, index) => {
-      lista.appendChild(criarTicketFilme(filme, ano, anoIndex, index));
-    });
-    section.appendChild(lista);
-
-    return section;
-  }
-
-  function criarReviewComida(comida, ano, anoIndex, comidaIndex) {
-    const article = document.createElement("article");
-    article.className = "food-card";
-    article.tabIndex = 0;
-    article.setAttribute("aria-label", `${comida.tipo || "Review"}: ${comida.titulo}`);
-
-    const media = document.createElement("div");
-    media.className = "food-media";
-    const img = document.createElement("img");
-    img.src = comida.imagem;
-    img.alt = comida.titulo || "Foto do review gastronômico";
-    img.loading = "lazy";
-    media.appendChild(img);
-
-    const imageEditButton = document.createElement("button");
-    imageEditButton.type = "button";
-    imageEditButton.className = "image-edit-button";
-    imageEditButton.innerHTML = '<span aria-hidden="true">🖼️</span><span>Trocar foto</span>';
-    imageEditButton.addEventListener("click", event => {
-      event.preventDefault();
-      event.stopPropagation();
-      if (!editMode) {
-        return;
-      }
-
-      const sugestao = prompt("Cole a URL da nova foto do review:", comida.imagem ?? "");
-      if (sugestao === null) {
-        return;
-      }
-
-      const url = sugestao.trim();
-      if (!url) {
-        return;
-      }
-
-      atualizarImagemItem(anoIndex, "comidas", comidaIndex, url, img);
-      atualizarImagemComida(anoIndex, comidaIndex, url, img);
-    });
-    media.appendChild(imageEditButton);
-
-    let notaAtual = normalizarNotaEstrelas(comida.nota);
-    if (notaAtual !== comida.nota) {
-      comida.nota = notaAtual;
-      if (!editMode) {
-        salvarDados();
-      }
-    }
-
-    const rating = document.createElement("div");
-    rating.className = "food-rating";
-    const ratingLabel = document.createElement("span");
-    ratingLabel.textContent = "Nota";
-    rating.appendChild(ratingLabel);
-
-    const ratingScore = document.createElement("strong");
-    ratingScore.className = "food-rating-score";
-    ratingScore.textContent = formatarNotaEstrelas(notaAtual);
-    ratingScore.setAttribute("aria-hidden", "true");
-    rating.appendChild(ratingScore);
-
-    const ratingStars = criarDisplayEstrelas(notaAtual);
-    ratingStars.setAttribute("aria-hidden", "true");
-    rating.appendChild(ratingStars);
-
-    const ratingAssistiveText = document.createElement("span");
-    ratingAssistiveText.className = "sr-only";
-    ratingAssistiveText.textContent = `${formatarNotaEstrelas(notaAtual)} de 5 estrelas`;
-    rating.appendChild(ratingAssistiveText);
-
-    const ratingEditButton = document.createElement("button");
-    ratingEditButton.type = "button";
-    ratingEditButton.className = "rating-edit-button";
-    ratingEditButton.textContent = "Editar nota";
-    ratingEditButton.addEventListener("click", event => {
-      event.preventDefault();
-      event.stopPropagation();
-      if (!editMode) {
-        return;
-      }
-
-      const resposta = prompt("Qual a nova nota (0 a 5)?", formatarNotaEstrelas(notaAtual).replace(".", ","));
-      if (resposta === null) {
-        return;
-      }
-
-      const valorNumerico = parseFloat(resposta.replace(",", "."));
-      if (!Number.isFinite(valorNumerico)) {
-        return;
-      }
-
-      const notaAtualizada = atualizarNotaComida(anoIndex, comidaIndex, valorNumerico);
-      notaAtual = notaAtualizada;
-      ratingScore.textContent = formatarNotaEstrelas(notaAtualizada);
-      ratingAssistiveText.textContent = `${formatarNotaEstrelas(notaAtualizada)} de 5 estrelas`;
-      atualizarDisplayEstrelas(ratingStars, notaAtualizada);
-    });
-    rating.appendChild(ratingEditButton);
-
-    media.appendChild(rating);
-
-    article.appendChild(media);
-
-    const content = document.createElement("div");
-    content.className = "food-content";
-
-    const tag = document.createElement("span");
-    tag.className = "card-tag";
-    tag.textContent = comida.tipo || "Comidas & Restaurantes";
-    content.appendChild(tag);
-
-    const title = document.createElement("h4");
-    title.className = "food-title";
-    title.textContent = comida.titulo;
-    registrarCampoEditavel(title, {
-      yearIndex: anoIndex,
-      category: "comidas",
-      itemIndex: comidaIndex,
-      field: "titulo",
-      placeholder: "Nome do prato ou rolê"
-    });
-    title.addEventListener("input", () => {
-      const texto = title.textContent?.trim() ?? "";
-      img.alt = texto || "Foto do review gastronômico";
-    });
-    content.appendChild(title);
-
-    const location = document.createElement("p");
-    location.className = "food-location";
-    const locationLabel = document.createElement("strong");
-    locationLabel.textContent = "Lugar:";
-    location.appendChild(locationLabel);
-    location.appendChild(document.createTextNode(" "));
-    const locationValue = document.createElement("span");
-    locationValue.textContent = comida.local ?? "";
-    registrarCampoEditavel(locationValue, {
-      yearIndex: anoIndex,
-      category: "comidas",
-      itemIndex: comidaIndex,
-      field: "local",
-      placeholder: "Onde foi?"
-    });
-    location.appendChild(locationValue);
-    content.appendChild(location);
-
-    const description = document.createElement("p");
-    description.className = "food-description";
-    description.textContent = comida.descricao ?? "";
-    registrarCampoEditavel(description, {
-      yearIndex: anoIndex,
-      category: "comidas",
-      itemIndex: comidaIndex,
-      field: "descricao",
-      allowBreaks: true,
-      placeholder: "Descreva o sabor, o clima, o motivo de ser especial"
-    });
-    content.appendChild(description);
-
-    const highlight = document.createElement("p");
-    highlight.className = "food-highlight";
-    highlight.textContent = comida.destaque ?? "";
-    registrarCampoEditavel(highlight, {
-      yearIndex: anoIndex,
-      category: "comidas",
-      itemIndex: comidaIndex,
-      field: "destaque",
-      allowBreaks: true,
-      placeholder: "Qual foi o momento marcante desse rolê?"
-    });
-    content.appendChild(highlight);
-
-    article.appendChild(content);
-
-    const abrir = () => {
-      if (editMode) {
-        return;
-      }
-      abrirModal(comida, ano.anoLabel);
-    };
-
-    article.addEventListener("click", abrir);
-    article.addEventListener("keypress", event => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        abrir();
-      }
-    });
-
-    return article;
-  }
-
-  function criarCategoriaComidas(ano, anoIndex) {
-    const section = document.createElement("section");
-    section.className = "category-section";
-
-    const heading = document.createElement("h3");
-    heading.className = "category-title";
-    heading.textContent = "Comidas & Restaurantes";
-    section.appendChild(heading);
-
-    if (!Array.isArray(ano.comidas) || ano.comidas.length === 0) {
-      const empty = document.createElement("p");
-      empty.className = "category-empty";
-      empty.textContent = "Ainda não registramos os sabores deste ano.";
-      section.appendChild(empty);
-      return section;
-    }
-
-    ano.comidas.forEach((comida, index) => {
-      section.appendChild(criarReviewComida(comida, ano, anoIndex, index));
-    });
-
-    return section;
-  }
-
-  function criarCardAno(ano, anoIndex) {
-    const card = document.createElement("article");
-    card.className = "year-card";
-    card.id = `ano-${ano.anoNumero}`;
-    card.tabIndex = -1;
-
-    const expanded = obterEstadoExpansao(ano.anoNumero, anoIndex === 0);
-
-    const header = document.createElement("div");
-    header.className = "year-card-header";
-
-    const bodyId = `ano-${ano.anoNumero}-conteudo`;
-    const body = document.createElement("div");
-    body.className = "year-card-body";
-    body.id = bodyId;
-    body.hidden = !expanded;
-
-    const toggleButton = document.createElement("button");
-    toggleButton.type = "button";
-    toggleButton.className = "year-card-toggle";
-    toggleButton.setAttribute("aria-expanded", expanded ? "true" : "false");
-    toggleButton.setAttribute("aria-controls", bodyId);
-
-    const badge = document.createElement("span");
-    badge.className = "year-badge";
-    badge.textContent = ano.anoLabel;
-    toggleButton.appendChild(badge);
-
-    const textWrapper = document.createElement("div");
-    textWrapper.className = "year-header-text";
-
-    const title = document.createElement("h3");
-    title.className = "year-title";
-    title.textContent = ano.tema;
-    registrarCampoEditavel(title, {
-      yearIndex: anoIndex,
-      field: "tema",
-      placeholder: "Nomeie o tema do ano"
-    });
-    textWrapper.appendChild(title);
-
-    const summary = document.createElement("p");
-    summary.className = "year-summary";
-    summary.textContent = ano.resumo;
-    registrarCampoEditavel(summary, {
-      yearIndex: anoIndex,
-      field: "resumo",
-      allowBreaks: true,
-      placeholder: "Escreva um resuminho para este ano"
-    });
-    textWrapper.appendChild(summary);
-
-    toggleButton.appendChild(textWrapper);
-
-    const icon = document.createElement("span");
-    icon.className = "year-toggle-icon";
-    icon.setAttribute("aria-hidden", "true");
-    icon.textContent = "⌄";
-    toggleButton.appendChild(icon);
-
-    toggleButton.addEventListener("click", () => {
-      alternarAno(ano.anoNumero);
-    });
-
-    header.appendChild(toggleButton);
-
-    const actions = document.createElement("div");
-    actions.className = "year-card-actions";
-
-    const inlineEditButton = document.createElement("button");
-    inlineEditButton.type = "button";
-    inlineEditButton.className = "inline-edit-button";
-    inlineEditButton.innerHTML = '<span aria-hidden="true">✏️</span> Editar este ano';
-    inlineEditButton.addEventListener("click", () => {
-      abrirAno(ano.anoNumero, { focar: true });
-      definirModoEdicao(true);
-      requestAnimationFrame(() => {
-        card.scrollIntoView({ behavior: "smooth", block: "center" });
-      });
-    });
-    actions.appendChild(inlineEditButton);
-
-    const editHint = document.createElement("span");
-    editHint.className = "edit-hint";
-    editHint.innerHTML = '<span aria-hidden="true">🛠️</span> Modo edição ativo';
-    actions.appendChild(editHint);
-
-    header.appendChild(actions);
-
-    card.appendChild(header);
-
-    body.appendChild(criarCategoriaGenerica("Badges", ano.badges, ano, anoIndex, "badges"));
-    body.appendChild(criarCategoriaGenerica("Cartas especiais", ano.cartas, ano, anoIndex, "cartas"));
-    body.appendChild(criarCategoriaFilmes(ano, anoIndex));
-    body.appendChild(criarCategoriaComidas(ano, anoIndex));
-
-    card.appendChild(body);
-
-    card.classList.toggle("expanded", expanded);
-
-    return card;
-  }
-
-  function renderizarColecao() {
-    if (!yearsCollection) {
-      return;
-    }
-
-    yearsCollection.innerHTML = "";
-    colecaoAnual.forEach((ano, index) => {
-      yearsCollection.appendChild(criarCardAno(ano, index));
-      sincronizarEstadoAno(ano.anoNumero);
-    });
-
-    configurarCamposEditaveis();
-    aplicarModoEdicao();
-    atualizarFiltrosAtivos();
-  }
-
-  function criarNavegacaoAnos() {
-    if (!filtersContainer) {
-      return;
-    }
-
-    filtersContainer.innerHTML = "";
-    filterButtons.clear();
-
-    colecaoAnual.forEach(ano => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "filter-button";
-      button.textContent = ano.anoLabel;
-      button.dataset.yearNumero = String(ano.anoNumero);
-      button.setAttribute("aria-controls", `ano-${ano.anoNumero}`);
-      button.setAttribute("aria-pressed", "false");
-      button.addEventListener("click", () => {
-        abrirAno(ano.anoNumero, { focar: true, exclusivo: true });
-      });
-      filtersContainer.appendChild(button);
-      filterButtons.set(ano.anoNumero, button);
-    });
-
-    atualizarFiltrosAtivos();
-  }
-
-  function abrirModal(item, anoLabel) {
-    modalTitle.textContent = `${item.titulo ?? item.nome ?? ""} — ${anoLabel}`;
-    modalImage.src = item.imagem || item.capa || "";
-    modalImage.alt = item.titulo ?? item.nome ?? "";
-    modalDescription.textContent = item.descricao ?? item.comentario ?? "";
-
-    if (item.destaque) {
-      modalHighlight.hidden = false;
-      modalHighlight.textContent = item.destaque;
-    } else {
-      modalHighlight.hidden = true;
-      modalHighlight.textContent = "";
-    }
-
-    if (Array.isArray(item.momentos) && item.momentos.length > 0) {
-      modalMomentsWrapper.hidden = false;
-      modalMomentsList.innerHTML = "";
-      item.momentos.forEach(momento => {
-        const li = document.createElement("li");
-        li.textContent = momento;
-        modalMomentsList.appendChild(li);
-      });
-    } else {
-      modalMomentsWrapper.hidden = true;
-      modalMomentsList.innerHTML = "";
-    }
-
-    modalOverlay.classList.add("open");
-    modalOverlay.setAttribute("aria-hidden", "false");
-    closeButton?.focus();
-  }
-
-  function fecharModal() {
-    modalOverlay.classList.remove("open");
-    modalOverlay.setAttribute("aria-hidden", "true");
-  }
-
-  modalOverlay?.addEventListener("click", event => {
-    if (event.target === modalOverlay) {
-      fecharModal();
-    }
-  });
-
-  closeButton?.addEventListener("click", fecharModal);
-
-  document.addEventListener("keydown", event => {
-    if (event.key === "Escape" && modalOverlay?.classList.contains("open")) {
-      fecharModal();
-    }
-  });
-
-  atualizarContadorRelacionamento();
-  window.setInterval(atualizarContadorRelacionamento, 1000);
-  atualizarContadorDias();
-  window.setInterval(atualizarContadorDias, 60 * 1000);
-
-  criarNavegacaoAnos();
-  renderizarColecao();
-</script>
-
-</body>
-</html>
+diff --git a/index.html b/index.html
+index a8c7d5c08ac24359722f08d42e75672b0f9917bf..f163a044371051e67a36e15a49eed5b60c9a8152 100644
+--- a/index.html
++++ b/index.html
+@@ -20,88 +20,120 @@
+       --text-primary: #f9fafc;
+       --text-secondary: #d5d9e6;
+       --chip-bg: rgba(255, 143, 171, 0.14);
+       --chip-border: rgba(255, 199, 219, 0.4);
+       --chip-text: #ffd6e5;
+       --modal-overlay: rgba(5, 7, 12, 0.78);
+       --modal-bg: #141823;
+       --modal-shadow: 0 30px 60px rgba(3, 4, 8, 0.6);
+     }
+ 
+     * {
+       box-sizing: border-box;
+     }
+ 
+     body {
+       margin: 0;
+       font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+       background: var(--bg-gradient);
+       color: var(--text-primary);
+       min-height: 100vh;
+       display: flex;
+       flex-direction: column;
+     }
+ 
+     header.top-header {
+-      position: sticky;
+-      top: 0;
+-      z-index: 10;
++      position: static;
+       background: rgba(10, 13, 19, 0.85);
+       backdrop-filter: blur(12px);
+       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+       padding: 24px clamp(18px, 5vw, 48px) 16px;
+-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
++      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+     }
+ 
+     .header-content {
+       max-width: 960px;
+       margin: 0 auto;
+     }
+ 
+     .header-content h1 {
+       margin: 0;
+       font-size: clamp(2.1rem, 4vw, 3rem);
+       font-weight: 600;
+       letter-spacing: 0.06em;
+       text-transform: uppercase;
+     }
+ 
+     .header-content h2 {
+       margin: 10px 0 6px;
+       font-weight: 400;
+       font-size: clamp(1.1rem, 2.8vw, 1.4rem);
+       color: var(--text-secondary);
+     }
+ 
+     .header-content p {
+       margin: 0;
+       max-width: 560px;
+       font-size: 0.95rem;
+       color: rgba(213, 217, 230, 0.8);
+       line-height: 1.5;
+     }
+ 
++    .days-counter {
++      display: inline-flex;
++      flex-wrap: wrap;
++      align-items: center;
++      gap: 6px;
++      margin-top: 12px;
++      padding: 10px 16px;
++      border-radius: 999px;
++      background: rgba(26, 30, 40, 0.7);
++      border: 1px solid rgba(255, 143, 171, 0.22);
++      color: var(--text-secondary);
++      font-size: 0.95rem;
++      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
++    }
++
++    .days-counter-values {
++      display: inline-flex;
++      align-items: baseline;
++      gap: 6px;
++      flex-wrap: wrap;
++    }
++
++    .days-counter-value,
++    .time-counter-value {
++      font-size: 1.2rem;
++      font-weight: 600;
++      color: var(--accent-strong);
++      text-shadow: 0 0 12px rgba(255, 143, 171, 0.45);
++    }
++
++    .days-counter-unit {
++      color: rgba(213, 217, 230, 0.65);
++    }
++
+     .filters {
+       margin-top: 20px;
+       display: flex;
+       flex-wrap: nowrap;
+       gap: 12px;
+       overflow-x: auto;
+       padding-bottom: 6px;
+       scrollbar-width: thin;
+       scrollbar-color: rgba(255, 143, 171, 0.3) transparent;
+       scroll-snap-type: x proximity;
+       -webkit-overflow-scrolling: touch;
+     }
+ 
+     .filters::-webkit-scrollbar {
+       height: 6px;
+     }
+ 
+     .filters::-webkit-scrollbar-thumb {
+       background: rgba(255, 143, 171, 0.3);
+       border-radius: 999px;
+     }
+ 
+     .filters::-webkit-scrollbar-track {
+       background: transparent;
+     }
+@@ -410,69 +442,140 @@
+     }
+ 
+     [data-editable] {
+       position: relative;
+       transition: box-shadow 0.2s ease, background 0.2s ease;
+     }
+ 
+     body.edit-mode [data-editable] {
+       border-radius: 12px;
+       box-shadow: inset 0 0 0 1px rgba(255, 198, 217, 0.25);
+       background: rgba(255, 143, 171, 0.08);
+       padding: 6px 8px;
+     }
+ 
+     body.edit-mode [data-editable]:focus-visible {
+       outline: none;
+       box-shadow: inset 0 0 0 2px rgba(255, 198, 217, 0.9);
+       background: rgba(255, 143, 171, 0.12);
+     }
+ 
+     body.edit-mode [data-editable][data-placeholder]:empty::before {
+       content: attr(data-placeholder);
+       color: rgba(255, 231, 239, 0.65);
+     }
+ 
++    body.edit-mode .image-edit-button,
++    body.edit-mode .rating-edit-button {
++      display: inline-flex;
++    }
++
+     .category-section {
+       display: grid;
+       gap: 18px;
+     }
+ 
+     .category-title {
+       margin: 0;
+       font-size: 1rem;
+       text-transform: uppercase;
+       letter-spacing: 0.18em;
+       color: rgba(255, 198, 217, 0.8);
+     }
+ 
+     .category-grid {
+       display: grid;
+       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+       gap: 22px;
+     }
+ 
++    .carousel {
++      display: grid;
++      grid-template-columns: auto 1fr auto;
++      align-items: center;
++      gap: 12px;
++    }
++
++    .carousel-track {
++      display: flex;
++      gap: 18px;
++      overflow-x: auto;
++      padding: 10px 4px;
++      scroll-snap-type: x proximity;
++      scroll-behavior: smooth;
++      -webkit-overflow-scrolling: touch;
++      border-radius: 18px;
++    }
++
++    .carousel-track::-webkit-scrollbar {
++      height: 8px;
++    }
++
++    .carousel-track::-webkit-scrollbar-thumb {
++      background: rgba(255, 143, 171, 0.3);
++      border-radius: 999px;
++    }
++
++    .carousel-track::-webkit-scrollbar-track {
++      background: transparent;
++    }
++
++    .carousel-track > * {
++      flex: 0 0 clamp(220px, 80vw, 320px);
++      scroll-snap-align: start;
++    }
++
++    .carousel-button {
++      display: inline-flex;
++      align-items: center;
++      justify-content: center;
++      width: 38px;
++      height: 38px;
++      border-radius: 50%;
++      border: 1px solid rgba(255, 198, 217, 0.35);
++      background: rgba(12, 15, 24, 0.9);
++      color: var(--accent-strong);
++      font-size: 1rem;
++      cursor: pointer;
++      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
++    }
++
++    .carousel-button:hover,
++    .carousel-button:focus-visible {
++      background: rgba(18, 22, 32, 0.95);
++      border-color: rgba(255, 198, 217, 0.7);
++      color: #ffe0ec;
++      transform: translateY(-1px);
++      outline: none;
++    }
++
++    .carousel-button:disabled {
++      opacity: 0.35;
++      cursor: not-allowed;
++      transform: none;
++    }
++
+     .movie-list {
+       display: grid;
+       gap: 24px;
+     }
+ 
+     .category-empty {
+       margin: 0;
+       font-size: 0.9rem;
+       color: rgba(213, 217, 230, 0.7);
+     }
+ 
+     .card {
+       background: var(--card-bg);
+       border: 1px solid var(--card-border);
+       border-radius: 20px;
+       padding: 18px;
+       display: flex;
+       flex-direction: column;
+       gap: 14px;
+       cursor: pointer;
+       box-shadow: 0 18px 40px var(--card-shadow);
+       transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+     }
+ 
+     .card:hover,
+@@ -670,69 +773,146 @@
+       cursor: pointer;
+       transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+     }
+ 
+     .food-card:hover,
+     .food-card:focus-visible {
+       outline: none;
+       transform: translateY(-4px);
+       border-color: rgba(255, 143, 171, 0.35);
+       box-shadow: 0 28px 60px rgba(3, 5, 12, 0.6);
+     }
+ 
+     .food-media {
+       border-radius: 18px;
+       overflow: hidden;
+       background: rgba(255, 255, 255, 0.05);
+       position: relative;
+     }
+ 
+     .food-media img {
+       width: 100%;
+       height: 100%;
+       object-fit: cover;
+     }
+ 
++    .image-edit-button {
++      position: absolute;
++      inset: 12px 12px auto auto;
++      border: 1px solid rgba(255, 198, 217, 0.5);
++      border-radius: 999px;
++      background: rgba(7, 9, 16, 0.8);
++      color: var(--accent-strong);
++      font-size: 0.75rem;
++      font-weight: 500;
++      padding: 6px 12px;
++      display: none;
++      align-items: center;
++      gap: 6px;
++      cursor: pointer;
++      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
++    }
++
++    .image-edit-button span[aria-hidden="true"] {
++      font-size: 1rem;
++    }
++
++    .image-edit-button:hover,
++    .image-edit-button:focus-visible {
++      background: rgba(12, 16, 26, 0.95);
++      border-color: rgba(255, 198, 217, 0.8);
++      transform: translateY(-1px);
++      outline: none;
++    }
++
+     .food-rating {
+       position: absolute;
+       inset: auto 12px 12px 12px;
+       padding: 10px 14px;
+       border-radius: 12px;
+       background: rgba(7, 9, 16, 0.82);
+       border: 1px solid rgba(255, 255, 255, 0.1);
+       font-size: 0.85rem;
+       display: inline-flex;
+       gap: 6px;
+       align-items: center;
++      flex-wrap: wrap;
+       color: rgba(255, 231, 239, 0.75);
+     }
+ 
+     .food-rating strong {
+       color: var(--accent-strong);
+       font-weight: 600;
+     }
+ 
++    .food-rating-score {
++      font-size: 0.95rem;
++    }
++
++    .star-rating-display {
++      position: relative;
++      display: inline-block;
++      font-size: 1rem;
++      line-height: 1;
++      letter-spacing: 2px;
++    }
++
++    .star-rating-display .star-rating-base {
++      color: rgba(255, 255, 255, 0.18);
++      display: block;
++    }
++
++    .star-rating-display .star-rating-fill {
++      position: absolute;
++      inset: 0;
++      overflow: hidden;
++      color: var(--accent-strong);
++      display: block;
++      white-space: nowrap;
++    }
++
++    .rating-edit-button {
++      border: 1px solid rgba(255, 198, 217, 0.4);
++      background: rgba(12, 15, 24, 0.9);
++      color: var(--accent-strong);
++      border-radius: 999px;
++      font-size: 0.7rem;
++      font-weight: 500;
++      padding: 4px 10px;
++      display: none;
++      cursor: pointer;
++      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
++    }
++
++    .rating-edit-button:hover,
++    .rating-edit-button:focus-visible {
++      background: rgba(18, 21, 32, 0.95);
++      border-color: rgba(255, 198, 217, 0.8);
++      transform: translateY(-1px);
++      outline: none;
++    }
++
+     .food-content {
+       display: grid;
+       gap: 10px;
+       align-content: start;
+     }
+ 
+     .food-title {
+       margin: 0;
+       font-size: 1.2rem;
+       font-weight: 600;
+     }
+ 
+     .food-location,
+     .food-description,
+     .food-highlight {
+       margin: 0;
+       font-size: 0.9rem;
+       color: rgba(233, 237, 250, 0.85);
+       line-height: 1.6;
+     }
+ 
+     .food-highlight {
+       color: rgba(255, 198, 217, 0.88);
+       font-style: italic;
+     }
+@@ -740,50 +920,62 @@
+     .food-location strong {
+       color: rgba(255, 231, 239, 0.85);
+     }
+ 
+     footer {
+       margin-top: auto;
+       padding: 32px clamp(18px, 5vw, 48px) 48px;
+       text-align: center;
+       color: rgba(255, 231, 239, 0.72);
+       font-size: 0.9rem;
+       background: rgba(10, 13, 19, 0.85);
+       border-top: 1px solid rgba(255, 255, 255, 0.05);
+     }
+ 
+     footer a {
+       color: var(--accent-strong);
+       text-decoration: none;
+       border-bottom: 1px dashed rgba(255, 198, 217, 0.5);
+     }
+ 
+     footer a:hover,
+     footer a:focus-visible {
+       color: #ffe0ec;
+     }
+ 
++    .sr-only {
++      position: absolute;
++      width: 1px;
++      height: 1px;
++      padding: 0;
++      margin: -1px;
++      overflow: hidden;
++      clip: rect(0, 0, 0, 0);
++      white-space: nowrap;
++      border: 0;
++    }
++
+     .modal-overlay {
+       position: fixed;
+       inset: 0;
+       background: var(--modal-overlay);
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       opacity: 0;
+       visibility: hidden;
+       transition: opacity 0.3s ease;
+       padding: 24px;
+       z-index: 30;
+     }
+ 
+     .modal-overlay.open {
+       opacity: 1;
+       visibility: visible;
+     }
+ 
+     .modal {
+       background: var(--modal-bg);
+       border-radius: 22px;
+       border: 1px solid rgba(255, 255, 255, 0.06);
+       box-shadow: var(--modal-shadow);
+       max-width: min(760px, 90vw);
+@@ -878,74 +1070,101 @@
+         gap: 16px;
+       }
+ 
+       .dedication-content {
+         min-height: 120px;
+         padding: 16px;
+       }
+ 
+       .card {
+         padding: 16px;
+       }
+ 
+       .year-card {
+         padding: 24px;
+       }
+ 
+       .year-card-header {
+         flex-direction: column;
+         align-items: flex-start;
+       }
+ 
+       .category-grid {
+         grid-template-columns: 1fr;
+       }
+ 
++      .carousel {
++        grid-template-columns: 1fr;
++        gap: 8px;
++      }
++
++      .carousel-button {
++        display: none;
++      }
++
++      .carousel-track {
++        padding: 6px 2px;
++      }
++
+       .movie-ticket {
+         grid-template-columns: 1fr;
+       }
+ 
+       .ticket-media {
+         max-height: 220px;
+       }
+ 
+       .food-card {
+         grid-template-columns: 1fr;
+       }
+ 
+       .modal {
+         padding: 24px;
+       }
+     }
+   </style>
+ </head>
+ <body>
+   <header class="top-header">
+     <div class="header-content">
+       <h1>Anuário de Namoro</h1>
+       <h2>Um arquivo carinhoso com tudo o que vivemos ano após ano</h2>
+       <p>Escolha um ano para abrir a pasta, explorar badges, cartas especiais e agora até os nossos filmes favoritos.</p>
++      <p class="days-counter" aria-live="polite">
++        <span class="days-counter-label">Estamos juntos há</span>
++        <span class="days-counter-values">
++          <span class="days-counter-value" id="days-since-start">0</span>
++          <span class="days-counter-unit">dias,</span>
++          <span class="time-counter-value" id="hours-since-start">00</span>
++          <span class="days-counter-unit">horas,</span>
++          <span class="time-counter-value" id="minutes-since-start">00</span>
++          <span class="days-counter-unit">minutos e</span>
++          <span class="time-counter-value" id="seconds-since-start">00</span>
++          <span class="days-counter-unit">segundos</span>
++        </span>
++        <span class="days-counter-unit">desde 15 de setembro de 2023</span>
++      </p>
+       <nav class="filters" aria-label="Navegar por ano">
+         <!-- Botões de navegação são gerados dinamicamente via JavaScript -->
+       </nav>
+       <button class="edit-toggle" type="button" aria-pressed="false">Editar anuário</button>
+     </div>
+   </header>
+ 
+   <main>
+     <div class="grid-wrapper">
+       <section class="dedication-section" aria-labelledby="dedication-title">
+         <div class="dedication-header">
+           <h2 id="dedication-title">Dedicatória</h2>
+           <p class="dedication-subtitle">Não é bem uma dedicatória de livro, mas acho que vai gostar :).</p>
+         </div>
+         <div class="dedication-content">
+           <p>Desde setembro de 2023, quando você entrou na minha vida, tudo ganhou outra profundidade. Você mudou meu ritmo, meu olhar e a forma como eu enxergo o mundo.</p>
+           <p>Obrigado por cada detalhe seu: pela leveza, pela paciência (quem diria), pelo carinho e por esse amor que me encontra até nos dias mais pesados. Estar com você me faz sentir que estou exatamente onde eu sempre quis estar e me faz sentir em casa.</p>
+           <p>Dois anos depois, a certeza só cresce: quero continuar construindo com você, sonhando com você e vivendo tudo o que ainda falta a gente viver.</p>
+           <p>Eu te amo mais do que ontem e menos que amanhã :)<br>Pra sempre.</p>
+           <p>Com amor,<br>Garinho</p>
+           <p>P.s.: espero que goste da surpresa</p>
+         </div>
+       </section>
+       <section class="years-collection" aria-live="polite">
+         <!-- Pastas anuais são geradas dinamicamente via JavaScript -->
+@@ -1004,174 +1223,344 @@
+       cartas: [
+         {
+           titulo: "Carta Ano 1",
+           tipo: "Carta",
+           imagem: "https://images.unsplash.com/photo-1483794344563-d27a8d18014e?auto=format&fit=crop&w=800&q=80",
+           descricao: "Resumo da carta do Ano 1: memórias escritas à mão com promessas de novos capítulos juntos.",
+           momentos: []
+         }
+       ],
+       filmes: [
+         {
+           nome: "La La Land",
+           nota: "9.5/10",
+           capa: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=800&q=80",
+           dataSessao: "26 de setembro de 2023",
+           local: "Cinemark Downtown",
+           comentario: "Nosso primeiro filme como casal, com direito a mãos dadas do começo ao fim.",
+           destaque: "Saímos cantando 'City of Stars' até chegar no carro."
+         }
+       ],
+       comidas: [
+         {
+           titulo: "Jantar no Burger Garage",
+           tipo: "Review gastronômica",
+           imagem: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?auto=format&fit=crop&w=800&q=80",
+-          nota: "9/10",
++          nota: 4.5,
+           local: "Burger Garage — Barra da Tijuca",
+           descricao: "Descobrimos o burger suculento e dividimos batatas com cheddar até não aguentar mais.",
+           destaque: "Voltamos duas vezes no mesmo mês porque não conseguimos superar a batatinha.",
+           momentos: []
+         }
+       ]
+     },
+     {
+       anoNumero: 2,
+       anoLabel: "Ano 2 (2024)",
+       tema: "Ano das Constelações",
+       resumo: "Transformamos o céu em mapa para os nossos planos e sonhos compartilhados.",
+       badges: [
+         {
+           titulo: "Ano das Constelações",
+           tipo: "Badge",
+           imagem: "https://images.unsplash.com/photo-1527176930608-09cb256ab504?auto=format&fit=crop&w=800&q=80",
+           descricao: "Colecionamos estrelas e sonhos, com noites observando constelações e planos para o futuro.",
+           momentos: [
+             "Piquenique sob as estrelas",
+             "Nosso show favorito",
+             "Descobrimos a música que virou trilha sonora"
+           ]
+         }
+       ],
+       cartas: [
+         {
+           titulo: "Carta Ano 2",
+           tipo: "Carta",
+           imagem: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80",
+           descricao: "Uma carta cheia de planos, agradecendo por cada constelação que desenhamos juntos.",
+           momentos: []
+         }
+       ],
+       filmes: [
+         {
+           nome: "Interestelar",
+           nota: "10/10",
+           capa: "https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=800&q=80",
+           dataSessao: "12 de maio de 2024",
+           local: "Sessão pipoca em casa",
+           comentario: "Virou tradição: cobertor, chocolate quente e olhos marejados com o final.",
+           destaque: "Prometemos assistir novamente quando viajarmos para a nossa próxima constelação."
+         }
+       ],
+       comidas: [
+         {
+           titulo: "Brunch de domingo",
+           tipo: "Review gastronômica",
+           imagem: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=800&q=80",
+-          nota: "9.5/10",
++          nota: 4.8,
+           local: "Café da Praça — Botafogo",
+           descricao: "Virou ritual começar o domingo com panquecas, café coado e nossas conversas infinitas.",
+           destaque: "Você roubou metade do meu maple syrup e mesmo assim eu achei fofo.",
+           momentos: []
+         }
+       ]
+     }
+   ];
+ 
+   function clonar(obj) {
+     return JSON.parse(JSON.stringify(obj));
+   }
+ 
+   function normalizarColecao(dados) {
+     return clonar(dados).map(ano => ({
+       anoNumero: ano.anoNumero,
+       anoLabel: ano.anoLabel ?? `Ano ${ano.anoNumero}`,
+       tema: ano.tema ?? "",
+       resumo: ano.resumo ?? "",
+       badges: Array.isArray(ano.badges) ? ano.badges : [],
+       cartas: Array.isArray(ano.cartas) ? ano.cartas : [],
+       filmes: Array.isArray(ano.filmes) ? ano.filmes : [],
+       comidas: Array.isArray(ano.comidas) ? ano.comidas : [],
+     }));
+   }
+ 
+   function carregarDados() {
+     try {
+       const salvo = window.localStorage?.getItem(STORAGE_KEY);
+       if (salvo) {
+         const dados = JSON.parse(salvo);
+         if (Array.isArray(dados)) {
+           return normalizarColecao(dados);
+         }
+       }
+     } catch (error) {
+       console.warn("Não foi possível carregar dados salvos:", error);
+     }
+ 
+     return normalizarColecao(colecaoPadrao);
+   }
+ 
+   let colecaoAnual = carregarDados();
+   colecaoAnual.sort((a, b) => a.anoNumero - b.anoNumero);
+ 
+   const estadoExpansao = new Map();
+   const filtersContainer = document.querySelector(".filters");
+   const yearsCollection = document.querySelector(".years-collection");
+   const editToggleButton = document.querySelector(".edit-toggle");
++  const daysSinceStartValue = document.getElementById("days-since-start");
++  const hoursSinceStartValue = document.getElementById("hours-since-start");
++  const minutesSinceStartValue = document.getElementById("minutes-since-start");
++  const secondsSinceStartValue = document.getElementById("seconds-since-start");
+ 
+   const modalOverlay = document.querySelector(".modal-overlay");
+   const modalTitle = document.getElementById("modal-title");
+   const modalImage = document.getElementById("modal-image");
+   const modalDescription = document.getElementById("modal-description");
+   const modalHighlight = document.getElementById("modal-highlight");
+   const modalMomentsWrapper = document.querySelector(".modal-moments");
+   const modalMomentsList = document.querySelector(".moments-list");
+   const closeButton = document.querySelector(".close-button");
+ 
+   const editablesRegistrados = new WeakSet();
+   const filterButtons = new Map();
+   let editMode = false;
+ 
++  const referenciaRelacionamento = new Date(Date.UTC(2023, 8, 15));
++
++  function calcularDuracaoDesde(dataReferencia) {
++    const agora = Date.now();
++    const diferenca = Math.max(0, Math.floor((agora - dataReferencia.getTime()) / 1000));
++    const dias = Math.floor(diferenca / 86400);
++    const restanteDia = diferenca % 86400;
++    const horas = Math.floor(restanteDia / 3600);
++    const restanteHora = restanteDia % 3600;
++    const minutos = Math.floor(restanteHora / 60);
++    const segundos = restanteHora % 60;
++
++    return { dias, horas, minutos, segundos };
++  }
++
++  function formatarComDoisDigitos(valor) {
++    return valor.toLocaleString("pt-BR", {
++      minimumIntegerDigits: 2,
++      useGrouping: false
++    });
++  }
++
++  function atualizarContadorRelacionamento() {
++    if (!daysSinceStartValue) {
++      return;
++    }
++
++    const { dias, horas, minutos, segundos } = calcularDuracaoDesde(referenciaRelacionamento);
++    daysSinceStartValue.textContent = dias.toLocaleString("pt-BR");
++
++    if (hoursSinceStartValue) {
++      hoursSinceStartValue.textContent = formatarComDoisDigitos(horas);
++    }
++
++    if (minutesSinceStartValue) {
++      minutesSinceStartValue.textContent = formatarComDoisDigitos(minutos);
++    }
++
++    if (secondsSinceStartValue) {
++      secondsSinceStartValue.textContent = formatarComDoisDigitos(segundos);
++    }
++  }
++
+   function salvarDados() {
+     try {
+       window.localStorage?.setItem(STORAGE_KEY, JSON.stringify(colecaoAnual));
+     } catch (error) {
+       console.warn("Não foi possível salvar as alterações:", error);
+     }
+   }
+ 
+-  function registrarCampoEditavel(element, { yearIndex, category = "ano", itemIndex, field, allowBreaks = false, placeholder = "" }) {
++  function limitarValor(valor, minimo, maximo) {
++    return Math.min(Math.max(valor, minimo), maximo);
++  }
++
++  function normalizarNotaEstrelas(valor) {
++    if (typeof valor === "number" && Number.isFinite(valor)) {
++      return limitarValor(valor, 0, 5);
++    }
++
++    if (typeof valor === "string") {
++      const texto = valor.trim();
++      if (!texto) {
++        return 0;
++      }
++
++      const partes = texto.split("/");
++      if (partes.length === 2) {
++        const numerador = parseFloat(partes[0].replace(",", "."));
++        const denominador = parseFloat(partes[1].replace(",", "."));
++        if (Number.isFinite(numerador) && Number.isFinite(denominador) && denominador !== 0) {
++          return limitarValor((numerador / denominador) * 5, 0, 5);
++        }
++      }
++
++      const numero = parseFloat(texto.replace(",", "."));
++      if (Number.isFinite(numero)) {
++        return limitarValor(numero, 0, 5);
++      }
++    }
++
++    return 0;
++  }
++
++  function formatarNotaEstrelas(valor) {
++    return Number.isInteger(valor) ? String(valor) : valor.toFixed(1);
++  }
++
++  function atualizarDisplayEstrelas(container, valor) {
++    const preenchimento = container?.querySelector?.(".star-rating-fill");
++    if (preenchimento) {
++      const percentual = limitarValor(valor, 0, 5) / 5;
++      preenchimento.style.width = `${(percentual * 100).toFixed(2)}%`;
++    }
++    if (container) {
++      container.dataset.ratingValue = String(limitarValor(valor, 0, 5));
++    }
++  }
++
++  function criarDisplayEstrelas(valor) {
++    const element = document.createElement("span");
++    element.className = "star-rating-display";
++    element.dataset.ratingValue = String(valor);
++
++    const base = document.createElement("span");
++    base.className = "star-rating-base";
++    base.textContent = "★★★★★";
++    element.appendChild(base);
++
++    const preenchimento = document.createElement("span");
++    preenchimento.className = "star-rating-fill";
++    preenchimento.textContent = "★★★★★";
++    element.appendChild(preenchimento);
++
++    atualizarDisplayEstrelas(element, valor);
++
++    return element;
++  }
++
++  function atualizarImagemItem(anoIndex, categoria, itemIndex, novaUrl, imagemElemento, campoImagem = "imagem") {
++    const ano = colecaoAnual[anoIndex];
++    if (!ano) {
++      return;
++    }
++
++    const lista = Array.isArray(ano[categoria]) ? ano[categoria] : null;
++    if (!lista) {
++      return;
++    }
++
++    const item = lista[itemIndex];
++    if (!item) {
++      return;
++    }
++
++    const urlTratada = typeof novaUrl === "string" ? novaUrl.trim() : "";
++    if (!urlTratada) {
++      return;
++    }
++
++    item[campoImagem] = urlTratada;
++    if (imagemElemento) {
++      imagemElemento.src = urlTratada;
++    }
++
++    if (!editMode) {
++      salvarDados();
++    }
++  }
++
++  function atualizarNotaComida(anoIndex, comidaIndex, novoValor) {
++    const ano = colecaoAnual[anoIndex];
++    if (!ano || !Array.isArray(ano.comidas)) {
++      return 0;
++    }
++
++    const item = ano.comidas[comidaIndex];
++    if (!item) {
++      return 0;
++    }
++
++    const notaNormalizada = normalizarNotaEstrelas(novoValor);
++    item.nota = notaNormalizada;
++
++    if (!editMode) {
++      salvarDados();
++    }
++
++    return notaNormalizada;
++  }
++
++  function registrarCampoEditavel(
++    element,
++    { yearIndex, category = "ano", itemIndex, field, allowBreaks = false, placeholder = "" } = {}
++  ) {
+     element.dataset.editable = "true";
+     element.dataset.yearIndex = String(yearIndex);
+     element.dataset.field = field;
+     element.dataset.category = category;
+     if (typeof itemIndex === "number") {
+       element.dataset.itemIndex = String(itemIndex);
+     }
+     if (allowBreaks) {
+       element.dataset.allowBreaks = "true";
+     }
+     if (placeholder) {
+       element.dataset.placeholder = placeholder;
+     }
+   }
+ 
+   function configurarCamposEditaveis() {
+     document.querySelectorAll("[data-editable]").forEach(element => {
+       if (editablesRegistrados.has(element)) {
+         return;
+       }
+ 
+       element.addEventListener("keydown", event => {
+         if (event.key === "Enter" && element.dataset.allowBreaks !== "true") {
+           event.preventDefault();
+           element.blur();
+@@ -1321,50 +1710,75 @@
+     const novoEstado = !Boolean(estadoExpansao.get(anoNumero));
+     estadoExpansao.set(anoNumero, novoEstado);
+     sincronizarEstadoAno(anoNumero);
+     atualizarFiltrosAtivos();
+   }
+ 
+   function criarCardItem(item, ano, anoIndex, categoria, itemIndex) {
+     const card = document.createElement("article");
+     card.className = "card";
+     card.tabIndex = 0;
+     const tipo = item.tipo || categoria;
+     card.setAttribute("aria-label", `${tipo}: ${item.titulo}`);
+ 
+     const tag = document.createElement("span");
+     tag.className = "card-tag";
+     tag.textContent = tipo;
+     card.appendChild(tag);
+ 
+     const imageWrapper = document.createElement("div");
+     imageWrapper.className = "card-image";
+     const img = document.createElement("img");
+     img.src = item.imagem;
+     img.alt = item.titulo;
+     img.loading = "lazy";
+     imageWrapper.appendChild(img);
++
++    const imageEditButton = document.createElement("button");
++    imageEditButton.type = "button";
++    imageEditButton.className = "image-edit-button";
++    imageEditButton.innerHTML = '<span aria-hidden="true">🖼️</span><span>Trocar foto</span>';
++    imageEditButton.addEventListener("click", event => {
++      event.preventDefault();
++      event.stopPropagation();
++      if (!editMode) {
++        return;
++      }
++
++      const sugestao = prompt("Cole a URL da nova imagem:", item.imagem ?? "");
++      if (sugestao === null) {
++        return;
++      }
++
++      const url = sugestao.trim();
++      if (!url) {
++        return;
++      }
++
++      atualizarImagemItem(anoIndex, categoria, itemIndex, url, img);
++    });
++    imageWrapper.appendChild(imageEditButton);
+     card.appendChild(imageWrapper);
+ 
+     const titulo = document.createElement("h3");
+     titulo.textContent = item.titulo;
+     registrarCampoEditavel(titulo, {
+       yearIndex: anoIndex,
+       category: categoria,
+       itemIndex,
+       field: "titulo",
+       placeholder: "Escreva um título"
+     });
+     card.appendChild(titulo);
+ 
+     const descricao = document.createElement("p");
+     descricao.className = "card-description";
+     descricao.textContent = item.descricao ?? "";
+     registrarCampoEditavel(descricao, {
+       yearIndex: anoIndex,
+       category: categoria,
+       itemIndex,
+       field: "descricao",
+       allowBreaks: true,
+       placeholder: "Conte porque isso foi especial"
+     });
+     card.appendChild(descricao);
+@@ -1382,72 +1796,154 @@
+         event.preventDefault();
+         abrir();
+       }
+     });
+ 
+     return card;
+   }
+ 
+   function criarCategoriaGenerica(titulo, itens, ano, anoIndex, categoria) {
+     const section = document.createElement("section");
+     section.className = "category-section";
+ 
+     const heading = document.createElement("h3");
+     heading.className = "category-title";
+     heading.textContent = titulo;
+     section.appendChild(heading);
+ 
+     if (!Array.isArray(itens) || itens.length === 0) {
+       const empty = document.createElement("p");
+       empty.className = "category-empty";
+       empty.textContent = "Ainda não registramos nada aqui (por enquanto!).";
+       section.appendChild(empty);
+       return section;
+     }
+ 
+-    const grid = document.createElement("div");
+-    grid.className = "category-grid";
+-    itens.forEach((item, index) => {
+-      grid.appendChild(criarCardItem(item, ano, anoIndex, categoria, index));
+-    });
+-    section.appendChild(grid);
++    const usarCarousel = categoria === "badges" || categoria === "cartas";
++
++    if (usarCarousel) {
++      const wrapper = document.createElement("div");
++      wrapper.className = "carousel";
++
++      const anterior = document.createElement("button");
++      anterior.type = "button";
++      anterior.className = "carousel-button carousel-button-prev";
++      anterior.setAttribute("aria-label", `Ver item anterior em ${titulo}`);
++      anterior.innerHTML = "&#10094;";
++
++      const proximo = document.createElement("button");
++      proximo.type = "button";
++      proximo.className = "carousel-button carousel-button-next";
++      proximo.setAttribute("aria-label", `Ver próximo item em ${titulo}`);
++      proximo.innerHTML = "&#10095;";
++
++      const trilho = document.createElement("div");
++      trilho.className = "carousel-track";
++      itens.forEach((item, index) => {
++        trilho.appendChild(criarCardItem(item, ano, anoIndex, categoria, index));
++      });
++
++      const atualizarBotoes = () => {
++        const alcance = trilho.scrollWidth - trilho.clientWidth;
++        anterior.disabled = trilho.scrollLeft <= 2;
++        proximo.disabled = trilho.scrollLeft >= alcance - 2;
++      };
++
++      const deslocar = direcao => {
++        const passo = Math.max(trilho.clientWidth * 0.85, 220);
++        trilho.scrollBy({ left: passo * direcao, behavior: "smooth" });
++      };
++
++      anterior.addEventListener("click", () => {
++        deslocar(-1);
++      });
++
++      proximo.addEventListener("click", () => {
++        deslocar(1);
++      });
++
++      trilho.addEventListener("scroll", () => {
++        window.requestAnimationFrame(atualizarBotoes);
++      });
++
++      window.addEventListener("resize", atualizarBotoes, { passive: true });
++
++      wrapper.appendChild(anterior);
++      wrapper.appendChild(trilho);
++      wrapper.appendChild(proximo);
++      section.appendChild(wrapper);
++
++      window.requestAnimationFrame(atualizarBotoes);
++    } else {
++      const grid = document.createElement("div");
++      grid.className = "category-grid";
++      itens.forEach((item, index) => {
++        grid.appendChild(criarCardItem(item, ano, anoIndex, categoria, index));
++      });
++      section.appendChild(grid);
++    }
+ 
+     return section;
+   }
+ 
+   function criarTicketFilme(filme, ano, anoIndex, filmeIndex) {
+     const article = document.createElement("article");
+     article.className = "movie-ticket";
+ 
+     const media = document.createElement("div");
+     media.className = "ticket-media";
+     const img = document.createElement("img");
+     img.src = filme.capa;
+     img.alt = `Cartaz do filme ${filme.nome}`;
+     img.loading = "lazy";
+     media.appendChild(img);
+ 
++    const imageEditButton = document.createElement("button");
++    imageEditButton.type = "button";
++    imageEditButton.className = "image-edit-button";
++    imageEditButton.innerHTML = '<span aria-hidden="true">🖼️</span><span>Trocar foto</span>';
++    imageEditButton.addEventListener("click", event => {
++      event.preventDefault();
++      event.stopPropagation();
++      if (!editMode) {
++        return;
++      }
++
++      const sugestao = prompt("Cole a URL do novo cartaz:", filme.capa ?? "");
++      if (sugestao === null) {
++        return;
++      }
++
++      const url = sugestao.trim();
++      if (!url) {
++        return;
++      }
++
++      atualizarImagemItem(anoIndex, "filmes", filmeIndex, url, img, "capa");
++    });
++    media.appendChild(imageEditButton);
++
+     const rating = document.createElement("div");
+     rating.className = "ticket-rating";
+     const ratingLabel = document.createElement("span");
+     ratingLabel.className = "ticket-rating-label";
+     ratingLabel.textContent = "Nota geral";
+     rating.appendChild(ratingLabel);
+     const ratingValue = document.createElement("span");
+     ratingValue.className = "ticket-rating-value";
+     ratingValue.textContent = filme.nota ?? "";
+     registrarCampoEditavel(ratingValue, {
+       yearIndex: anoIndex,
+       category: "filmes",
+       itemIndex: filmeIndex,
+       field: "nota",
+       placeholder: "0/10"
+     });
+     rating.appendChild(ratingValue);
+     media.appendChild(rating);
+ 
+     article.appendChild(media);
+ 
+     const details = document.createElement("div");
+     details.className = "ticket-details";
+ 
+     const yearTag = document.createElement("span");
+@@ -1551,91 +2047,163 @@
+       empty.textContent = "Ainda não colamos os ingressos deste ano.";
+       section.appendChild(empty);
+       return section;
+     }
+ 
+     const lista = document.createElement("div");
+     lista.className = "movie-list";
+     ano.filmes.forEach((filme, index) => {
+       lista.appendChild(criarTicketFilme(filme, ano, anoIndex, index));
+     });
+     section.appendChild(lista);
+ 
+     return section;
+   }
+ 
+   function criarReviewComida(comida, ano, anoIndex, comidaIndex) {
+     const article = document.createElement("article");
+     article.className = "food-card";
+     article.tabIndex = 0;
+     article.setAttribute("aria-label", `${comida.tipo || "Review"}: ${comida.titulo}`);
+ 
+     const media = document.createElement("div");
+     media.className = "food-media";
+     const img = document.createElement("img");
+     img.src = comida.imagem;
+-    img.alt = comida.titulo;
++    img.alt = comida.titulo || "Foto do review gastronômico";
+     img.loading = "lazy";
+     media.appendChild(img);
+ 
++    const imageEditButton = document.createElement("button");
++    imageEditButton.type = "button";
++    imageEditButton.className = "image-edit-button";
++    imageEditButton.innerHTML = '<span aria-hidden="true">🖼️</span><span>Trocar foto</span>';
++    imageEditButton.addEventListener("click", event => {
++      event.preventDefault();
++      event.stopPropagation();
++      if (!editMode) {
++        return;
++      }
++
++      const sugestao = prompt("Cole a URL da nova foto do review:", comida.imagem ?? "");
++      if (sugestao === null) {
++        return;
++      }
++
++      const url = sugestao.trim();
++      if (!url) {
++        return;
++      }
++
++      atualizarImagemItem(anoIndex, "comidas", comidaIndex, url, img);
++    });
++    media.appendChild(imageEditButton);
++
++    let notaAtual = normalizarNotaEstrelas(comida.nota);
++    if (notaAtual !== comida.nota) {
++      comida.nota = notaAtual;
++      if (!editMode) {
++        salvarDados();
++      }
++    }
++
+     const rating = document.createElement("div");
+     rating.className = "food-rating";
+     const ratingLabel = document.createElement("span");
+     ratingLabel.textContent = "Nota";
+     rating.appendChild(ratingLabel);
+-    const ratingValue = document.createElement("strong");
+-    ratingValue.textContent = comida.nota ?? "";
+-    registrarCampoEditavel(ratingValue, {
+-      yearIndex: anoIndex,
+-      category: "comidas",
+-      itemIndex: comidaIndex,
+-      field: "nota",
+-      placeholder: "0/10"
++
++    const ratingScore = document.createElement("strong");
++    ratingScore.className = "food-rating-score";
++    ratingScore.textContent = formatarNotaEstrelas(notaAtual);
++    ratingScore.setAttribute("aria-hidden", "true");
++    rating.appendChild(ratingScore);
++
++    const ratingStars = criarDisplayEstrelas(notaAtual);
++    ratingStars.setAttribute("aria-hidden", "true");
++    rating.appendChild(ratingStars);
++
++    const ratingAssistiveText = document.createElement("span");
++    ratingAssistiveText.className = "sr-only";
++    ratingAssistiveText.textContent = `${formatarNotaEstrelas(notaAtual)} de 5 estrelas`;
++    rating.appendChild(ratingAssistiveText);
++
++    const ratingEditButton = document.createElement("button");
++    ratingEditButton.type = "button";
++    ratingEditButton.className = "rating-edit-button";
++    ratingEditButton.textContent = "Editar nota";
++    ratingEditButton.addEventListener("click", event => {
++      event.preventDefault();
++      event.stopPropagation();
++      if (!editMode) {
++        return;
++      }
++
++      const resposta = prompt("Qual a nova nota (0 a 5)?", formatarNotaEstrelas(notaAtual).replace(".", ","));
++      if (resposta === null) {
++        return;
++      }
++
++      const valorNumerico = parseFloat(resposta.replace(",", "."));
++      if (!Number.isFinite(valorNumerico)) {
++        return;
++      }
++
++      const notaAtualizada = atualizarNotaComida(anoIndex, comidaIndex, valorNumerico);
++      notaAtual = notaAtualizada;
++      ratingScore.textContent = formatarNotaEstrelas(notaAtualizada);
++      ratingAssistiveText.textContent = `${formatarNotaEstrelas(notaAtualizada)} de 5 estrelas`;
++      atualizarDisplayEstrelas(ratingStars, notaAtualizada);
+     });
+-    rating.appendChild(ratingValue);
++    rating.appendChild(ratingEditButton);
++
+     media.appendChild(rating);
+ 
+     article.appendChild(media);
+ 
+     const content = document.createElement("div");
+     content.className = "food-content";
+ 
+     const tag = document.createElement("span");
+     tag.className = "card-tag";
+     tag.textContent = comida.tipo || "Comidas & Restaurantes";
+     content.appendChild(tag);
+ 
+     const title = document.createElement("h4");
+     title.className = "food-title";
+     title.textContent = comida.titulo;
+     registrarCampoEditavel(title, {
+       yearIndex: anoIndex,
+       category: "comidas",
+       itemIndex: comidaIndex,
+       field: "titulo",
+       placeholder: "Nome do prato ou rolê"
+     });
++    title.addEventListener("input", () => {
++      const texto = title.textContent?.trim() ?? "";
++      img.alt = texto || "Foto do review gastronômico";
++    });
+     content.appendChild(title);
+ 
+     const location = document.createElement("p");
+     location.className = "food-location";
+     const locationLabel = document.createElement("strong");
+     locationLabel.textContent = "Lugar:";
+     location.appendChild(locationLabel);
+     location.appendChild(document.createTextNode(" "));
+     const locationValue = document.createElement("span");
+     locationValue.textContent = comida.local ?? "";
+     registrarCampoEditavel(locationValue, {
+       yearIndex: anoIndex,
+       category: "comidas",
+       itemIndex: comidaIndex,
+       field: "local",
+       placeholder: "Onde foi?"
+     });
+     location.appendChild(locationValue);
+     content.appendChild(location);
+ 
+     const description = document.createElement("p");
+     description.className = "food-description";
+     description.textContent = comida.descricao ?? "";
+     registrarCampoEditavel(description, {
+       yearIndex: anoIndex,
+@@ -1878,31 +2446,34 @@
+ 
+     modalOverlay.classList.add("open");
+     modalOverlay.setAttribute("aria-hidden", "false");
+     closeButton?.focus();
+   }
+ 
+   function fecharModal() {
+     modalOverlay.classList.remove("open");
+     modalOverlay.setAttribute("aria-hidden", "true");
+   }
+ 
+   modalOverlay?.addEventListener("click", event => {
+     if (event.target === modalOverlay) {
+       fecharModal();
+     }
+   });
+ 
+   closeButton?.addEventListener("click", fecharModal);
+ 
+   document.addEventListener("keydown", event => {
+     if (event.key === "Escape" && modalOverlay?.classList.contains("open")) {
+       fecharModal();
+     }
+   });
+ 
++  atualizarContadorRelacionamento();
++  window.setInterval(atualizarContadorRelacionamento, 1000);
++
+   criarNavegacaoAnos();
+   renderizarColecao();
+ </script>
+ 
+ </body>
+ </html>
