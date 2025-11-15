@@ -620,6 +620,16 @@
       transition: transform 0.3s ease;
     }
 
+    .card-badges .card-image {
+      aspect-ratio: 1;
+      padding: 12px;
+      background: rgba(147, 197, 253, 0.14);
+    }
+
+    .card-badges .card-image img {
+      object-fit: contain;
+    }
+
     .card:hover .card-image img {
       transform: scale(1.06);
     }
@@ -1790,7 +1800,7 @@
 
   function criarCardItem(item, ano, anoIndex, categoria, itemIndex) {
     const card = document.createElement("article");
-    card.className = "card";
+    card.className = `card card-${categoria}`;
     card.tabIndex = 0;
     const tipo = item.tipo || categoria;
     card.setAttribute("aria-label", `${tipo}: ${item.titulo}`);
