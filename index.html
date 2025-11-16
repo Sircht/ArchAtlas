@@ -929,43 +929,10 @@
       background: rgba(10, 24, 44, 0.9);
     }
 
-    .movie-carousel {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      gap: 12px;
-      align-items: center;
-    }
-
     .movie-list {
-      position: relative;
       display: grid;
-      grid-auto-flow: column;
-      grid-auto-columns: minmax(260px, clamp(280px, 45vw, 380px));
-      gap: 24px;
-      overflow-x: auto;
-      padding: 6px;
-      border-radius: 18px;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(59, 130, 246, 0.35) transparent;
-      background: rgba(8, 20, 38, 0.35);
-    }
-
-    .movie-list::-webkit-scrollbar {
-      height: 8px;
-    }
-
-    .movie-list::-webkit-scrollbar-thumb {
-      background: rgba(59, 130, 246, 0.35);
-      border-radius: 999px;
-    }
-
-    .movie-list::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    .movie-list .movie-ticket {
-      scroll-snap-align: center;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 22px;
     }
 
     .movie-search-feedback {
@@ -1059,37 +1026,9 @@
 
     .movie-ticket {
       position: relative;
-      display: grid;
-      grid-template-columns: minmax(160px, 220px) 1fr;
-      gap: 22px;
-      padding: 20px;
-      border-radius: 24px;
-      background: rgba(12, 26, 48, 0.9);
-      border: 1px solid rgba(147, 197, 253, 0.16);
-      box-shadow: 0 24px 45px rgba(3, 12, 28, 0.55);
-      overflow: hidden;
-    }
-
-    .movie-ticket::before,
-    .movie-ticket::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      width: 16px;
-      height: 16px;
-      background: var(--bg-gradient);
-      border: 1px solid rgba(147, 197, 253, 0.2);
-      border-radius: 50%;
-      transform: translateY(-50%);
-      box-shadow: inset 0 0 0 2px rgba(12, 26, 48, 0.9);
-    }
-
-    .movie-ticket::before {
-      left: -8px;
-    }
-
-    .movie-ticket::after {
-      right: -8px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
 
     .ticket-media {
@@ -1098,6 +1037,7 @@
       overflow: hidden;
       background: rgba(147, 197, 253, 0.12);
       display: grid;
+      aspect-ratio: 2 / 3;
     }
 
     .ticket-media img {
@@ -1148,10 +1088,13 @@
     }
 
     .ticket-year-tag {
-      font-size: 0.75rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: rgba(219, 234, 254, 0.7);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ticket-year-tag::before {
+      content: "🎬";
     }
 
     .ticket-details h4 {
@@ -1607,22 +1550,9 @@
         padding: 6px 2px;
       }
 
-      .movie-carousel {
-        grid-template-columns: 1fr;
-        gap: 8px;
-      }
-
-      .movie-carousel .carousel-button {
-        display: none;
-      }
-
       .movie-list {
-        padding: 4px 2px;
-        grid-auto-columns: minmax(240px, 85vw);
-      }
-
-      .movie-ticket {
         grid-template-columns: 1fr;
+        gap: 18px;
       }
 
       .ticket-media {
@@ -3739,10 +3669,10 @@
 
   function criarTicketFilme(filme, ano, anoIndex, filmeIndex) {
     const article = document.createElement("article");
-    article.className = "movie-ticket";
+    article.className = "card movie-ticket";
 
     const media = document.createElement("div");
-    media.className = "ticket-media";
+    media.className = "ticket-media card-image";
     const img = document.createElement("img");
     img.src = filme.capa;
     img.alt = `Cartaz do filme ${filme.nome}`;
@@ -3850,7 +3780,7 @@
     details.className = "ticket-details";
 
     const yearTag = document.createElement("span");
-    yearTag.className = "ticket-year-tag";
+    yearTag.className = "ticket-year-tag card-tag";
     yearTag.textContent = ano.anoLabel;
     details.appendChild(yearTag);
 
@@ -3980,29 +3910,10 @@
 
       section.appendChild(controls);
 
-      const carousel = document.createElement("div");
-      carousel.className = "movie-carousel";
-
-      const anterior = document.createElement("button");
-      anterior.type = "button";
-      anterior.className = "carousel-button";
-      anterior.setAttribute("aria-label", `Ver filme anterior em ${tituloSecao}`);
-      anterior.innerHTML = "&#10094;";
-
-      const proximo = document.createElement("button");
-      proximo.type = "button";
-      proximo.className = "carousel-button";
-      proximo.setAttribute("aria-label", `Ver próximo filme em ${tituloSecao}`);
-      proximo.innerHTML = "&#10095;";
-
       const lista = document.createElement("div");
-      lista.className = "movie-list";
-
-      carousel.appendChild(anterior);
-      carousel.appendChild(lista);
-      carousel.appendChild(proximo);
-
-      section.appendChild(carousel);
+      lista.className = "movie-list category-grid";
+      lista.setAttribute("aria-label", `Lista de filmes em ${tituloSecao}`);
+      section.appendChild(lista);
 
       const mensagemBusca = document.createElement("p");
       mensagemBusca.className = "category-empty movie-search-feedback";
@@ -4012,40 +3923,16 @@
 
       const filmesEnumerados = ano.filmes.map((filme, index) => ({ filme, index }));
 
-      const atualizarBotoes = () => {
-        const alcance = lista.scrollWidth - lista.clientWidth;
-        const semOverflow = alcance <= 2;
-        anterior.disabled = semOverflow || lista.scrollLeft <= 2;
-        proximo.disabled = semOverflow || lista.scrollLeft >= alcance - 2;
-      };
-
-      const deslocar = direcao => {
-        const passo = Math.max(lista.clientWidth * 0.85, 240);
-        lista.scrollBy({ left: passo * direcao, behavior: "smooth" });
-      };
-
-      anterior.addEventListener("click", () => deslocar(-1));
-      proximo.addEventListener("click", () => deslocar(1));
-
-      lista.addEventListener("scroll", () => {
-        window.requestAnimationFrame(atualizarBotoes);
-      });
-
-      window.addEventListener("resize", atualizarBotoes, { passive: true });
-
       const renderFilmes = filmesParaRender => {
         lista.innerHTML = "";
-        lista.scrollLeft = 0;
 
         filmesParaRender.forEach(({ filme, index }) => {
           lista.appendChild(criarTicketFilme(filme, ano, anoIndex, index));
         });
 
         const temResultados = filmesParaRender.length > 0;
-        carousel.hidden = !temResultados;
+        lista.hidden = !temResultados;
         mensagemBusca.hidden = temResultados;
-
-        window.requestAnimationFrame(atualizarBotoes);
       };
 
       renderFilmes(filmesEnumerados);
