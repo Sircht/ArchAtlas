@@ -2388,6 +2388,18 @@
       return;
     }
 
+    const marcarConexaoRestabelecida = (mensagem = "Conectado em tempo real ✨") => {
+      definirStatusSalvamento("synced", mensagem);
+    };
+
+    eventSource.addEventListener("open", () => {
+      marcarConexaoRestabelecida();
+    });
+
+    eventSource.addEventListener("connected", () => {
+      marcarConexaoRestabelecida();
+    });
+
     eventSource.addEventListener("collection-update", event => {
       if (!event?.data) {
         return;
